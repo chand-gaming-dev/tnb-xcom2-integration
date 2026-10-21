@@ -1,0 +1,8 @@
+# Preserve existing mixed source/localization encodings and line endings exactly.
+# In particular, do not implicitly rewrite localization encodings/line endings.
+* -text
+*.int -text
+*.ico binary
+*.jpg binary
+*.png binary
+.scripts/X2ModBuildCommon/EmptyUMap binary

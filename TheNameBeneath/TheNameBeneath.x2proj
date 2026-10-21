@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>a700f0e0-1d71-43fc-81c8-4a4521fb2c4f</Guid>
+    <Name>TheNameBeneath</Name>
+    <Description>The Name Beneath integration for XCOM 2: War of the Chosen.</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>TheNameBeneath</AssemblyName>
+    <RootNamespace>TheNameBeneath</RootNamespace>
+    <ProjectGuid>{760cbe81-422b-4829-bbae-b0b3076a0769}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Config\Base\" />
+    <Folder Include="Localization\" />
+    <Folder Include="Src\" />
+    <Folder Include="Content\" />
+    <Folder Include="ContentForCook\" />
+    <Folder Include="Src\TheNameBeneath\" />
+    <Folder Include="Src\TheNameBeneath\Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
+    <Content Include="Config\XComTheNameBeneath.ini" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Button.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Checkbox.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Dropdown.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Instance.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Label.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Setting.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_SettingsGroup.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_SettingsPage.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Slider.uc" />
+    <Content Include="Src\ModConfigMenuAPI\Classes\MCM_API_Spinner.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_LoopbackClient.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_Types.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_MappingConfig.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_MappingResolver.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_PolicyTests.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_CampaignService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_EffectPresentation.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_CaptivityCaptureService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_CaptivityProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBJourneyLabel.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UITNBSoldierProfile.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UITNBCommanderProfile.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UIListItem_TNBEffect.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_PresentationProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_EventTypes.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_BondCaptureService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_BondProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_EventFactory.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_EventCaptureService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_SoldierConditionObserver.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_EventPump.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_ReportingSafety.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_PromotionCaptureService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_MissionInjuryCapture.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_GameplayFixProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_MissionAttemptService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_AttemptProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_EventProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBEventLedger.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBEventOutbox.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\X2EventListener_TNBGameplay.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBReporting.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UITNBCampaignJourney.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_AvengerJourneyPrompt.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBAvenger.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBPromptPreference.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_SoldierEffectService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_CommanderBonusService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBCommanderRewards.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_CommanderRewardPresentation.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UITNBScroungerReward.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBCommanderRewards.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_CommanderRewardProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_ResourceRewardHook.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBCampaignLink.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBLinkIntent.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBSoldierLink.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UITNBCharacterPicker.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\X2EventListener_TNBResources.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\X2EventListener_TNBArmory.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UIListItem_TNBArmory.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_ProbeGameInfo.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_MCMController.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBMCM.uc" />
+    <Content Include="ModPreview.jpg" />
+    <Content Include="ContentOptions.json" />
+    <Content Include="Config\Base\XComEditor.ini" />
+    <Content Include="Config\Base\XComEngine.ini" />
+    <Content Include="Config\Base\XComGame.ini" />
+    <Content Include="Config\XComTemplateCreator.ini" />
+    <Content Include="Config\XComTemplateEditor.ini" />
+    <Content Include="Localization\XComGame.int" />
+    <Content Include="Localization\TheNameBeneath.int" />
+    <Content Include="Src\extra_globals.uci" />
+    <Content Include="Src\TheNameBeneath\Classes\X2DLCInfo_TheNameBeneath.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\Help.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\ConfigEngine.uc" />
+  </ItemGroup>
+  <PropertyGroup>
+    <SolutionRoot>$(MSBuildProjectDirectory)\..\</SolutionRoot>
+    <ScriptsDir>$(SolutionRoot).scripts\\</ScriptsDir>
+    <BuildCommonRoot>$(ScriptsDir)X2ModBuildCommon\</BuildCommonRoot>
+  </PropertyGroup>
+  <Import Project="$(BuildCommonRoot)XCOM2.targets" />
+</Project>

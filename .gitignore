@@ -1,0 +1,52 @@
+# Build outputs and local IDE state (never game/SDK binaries).
+**/bin/
+**/obj/
+/Artifacts/
+/BuildCache/
+.vs/
+.idea/
+*.suo
+*.XCOM_suo
+*.user
+*.userosscache
+*.sln.docstates
+*.pubxml.user
+*.VC.db
+
+# Credentials, private configuration and gameplay data.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.log
+*.jsonl
+*.ndjson
+*.bin
+*.zip
+*.XComSave
+*.sav
+*.dmp
+/LocalData/
+/Backups/
+
+# Private development archive, retained on disk but not published.
+/Native/
+/Docs/Validation/
+/Docs/Prototypes/
+/TheNameBeneath/xcom2_api_integration_guide.md
+/TheNameBeneath/threadline_xcom2_v1_implementation_plan.md
+
+# Generated game and SDK content, not this project's sources/artwork.
+*.exe
+*.dll
+*.pdb
+*.u
+*.upk
+*.umap
+*.tfc
+*.tmp
+Thumbs.db
+Desktop.ini
