@@ -42,6 +42,10 @@ and transfer/delivery pause while saved links and bonuses remain in the game.
 There is no release package in this initial source snapshot. See
 [BUILDING.md](BUILDING.md) for building and installing locally. When available,
 compiled packages belong under this repository's GitHub Releases, not in Git.
+Before the official release, a ready-to-run Windows x64 companion executable will
+be attached to [GitHub Releases](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases)
+and linked here. Players will not need to build it or install the .NET SDK/runtime.
+See the [release checklist](Docs/RELEASE_CHECKLIST.md); no release is published yet.
 
 1. Build/install the mod and companion, then launch the companion for the intended
    API origin. Paste the Journey credential into its masked field and validate/save.

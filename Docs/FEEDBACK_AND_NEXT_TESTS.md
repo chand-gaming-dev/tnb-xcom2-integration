@@ -1,5 +1,13 @@
 # Feedback and next tests
 
+## Before official release
+
+- Publish the tested, self-contained Windows x64 `TheNameBeneathCompanion.exe`
+  as a GitHub Release asset and link it from the README and player setup guide.
+  Players must not need to build from source. Keep binaries out of source commits.
+  See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md). This is a pending release
+  requirement, not authorization to publish a release before acceptance/approval.
+
 ## Current test build: mod 0.9.0 / companion 0.10.2
 
 - Public naming cleanup: project/executable TheNameBeneathCompanion, namespace
