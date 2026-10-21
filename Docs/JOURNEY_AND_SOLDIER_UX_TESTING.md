@@ -34,7 +34,7 @@ Reviewed latest GitHub main `df280dd`, including
 `apps/portal/src/assets/canonical-artwork.ts` and `canonical-glyph.tsx`: canonical IDs
 select inline 48×48 SVG paths, with category/polarity colors and fallbacks. They are
 not a remote image library or API artwork fields. No API/image changes are needed.
-This build shows the Threadline source name beside the actual installed XCOM
+This build shows the source definition name from The Name Beneath beside the actual installed XCOM
 ability icon, or native PCS/perk stat artwork; missing targets use a safe fallback.
 Portal SVGs were not copied into game config or passed as URLs. Adding a second
 source-art icon would need a separate offline texture/package conversion and a

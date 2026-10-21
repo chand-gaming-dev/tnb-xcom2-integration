@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>embedded</DebugType>
+    <AssemblyName>TheNameBeneathCompanion</AssemblyName>
+    <RootNamespace>TheNameBeneath.Companion</RootNamespace>
+    <Version>0.10.2</Version>
+    <ApplicationIcon>Assets\Companion.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Companion.ico" LogicalName="TheNameBeneath.Companion.Icon" />
+  </ItemGroup>
+</Project>

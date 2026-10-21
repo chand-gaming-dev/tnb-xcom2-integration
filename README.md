@@ -1,9 +1,9 @@
 # The Name Beneath - XCOM 2 Integration
 
 An unofficial XCOM 2: War of the Chosen mod and Windows companion connecting a
-campaign, its commander and selected soldiers to a Threadline Journey.
+campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
-**Alpha:** mod **0.9.0**, companion **0.10.1**. This is a source snapshot of an
+**Alpha:** mod **0.9.0**, companion **0.10.2**. This is a source snapshot of an
 actively tested integration, not a finished Workshop release. Back up campaign
 saves; start a new campaign for acceptance testing. Not every mapping or gameplay
 event has completed in-game acceptance.
@@ -31,7 +31,7 @@ See [mapping customization](Docs/MAPPING_CUSTOMIZATION.md).
   development baseline and declared minimum **1.31.3**.
 - [Mod Config Menu](https://steamcommunity.com/sharedfiles/filedetails/?id=667104300).
 - The mod enabled in your mod launcher and the companion running alongside XCOM.
-- An authorized Threadline Journey credential and a reachable compatible backend.
+- A Journey credential for The Name Beneath and a reachable compatible backend.
   The private backend is not included. The current default API is a temporary
   development origin, not a promised public service endpoint.
 
@@ -61,7 +61,7 @@ Journey's existing instance; local saved grants must not stack.
 | Location | Contents |
 | --- | --- |
 | `TheNameBeneath/` | ModBuddy project, UnrealScript, mappings, localization, preview |
-| `Companion/ThreadlineCompanion/` | .NET Windows Forms companion and synthetic tests |
+| `Companion/TheNameBeneathCompanion/` | .NET Windows Forms companion and synthetic tests |
 | `.scripts/` | Build/start helpers and licensed vendored mod build system |
 | `Docs/` | Design, setup, mapping guidance and acceptance checklists |
 
@@ -76,3 +76,7 @@ Original code is [MIT licensed](LICENSE). See [LICENSING.md](LICENSING.md) for
 third-party notices and the exclusions for branding, game assets and the private
 backend. Never include credentials, personal pools/saves, or unredacted gameplay
 logs in issues or commits.
+
+Use **The Name Beneath** as the product name in all documentation, UI and new code.
+See [public naming](Docs/PUBLIC_NAMING.md) for the narrowly preserved compatibility
+identifiers; these are not alternate product names.

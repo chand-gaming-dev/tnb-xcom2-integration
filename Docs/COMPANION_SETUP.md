@@ -5,12 +5,16 @@ commands. The startup helper now accepts `-DevelopmentConfig` and otherwise read
 the ignored `.env.local` beside the solution; it no longer assumes the author's
 private backend checkout. Dated notes below describe earlier development builds.
 
-**Current companion 0.10.1 / mod 0.9.0:** the desktop title is
+**Current companion 0.10.2 / mod 0.9.0:** the desktop title is
 The Name Beneath - XCom 2 Companion <version>. Separate Journey, Gameplay reporting
 and Character Pools tabs organize setup, delivery counts/diagnostics and pool import.
 Existing credentials and delivery journals are retained. New capture/freedom and
 bond formed/developed events use the backend factual types; legacy milestone reports
 remain unchanged. See CAPTIVITY_RELATIONSHIPS_UX_TESTING.md.
+
+The companion project/executable is now TheNameBeneathCompanion. The official
+product name is The Name Beneath; existing API identifiers, environment keys,
+credentials, context and journals retain compatibility. See PUBLIC_NAMING.md.
 
 The header includes the original favicon and uses text-sized stacked rows so
 title/subtitle do not overlap as the window or Windows text scaling changes.
@@ -39,7 +43,7 @@ Current lifecycle amendment (2026-10-19): companion 0.5.0 plus the matching mod 
 
 Current UI amendment (2026-10-19): campaign association has moved out of the Armory. Use the Avenger reminder or loaded-campaign MCM > The Name Beneath > Campaign Journey > Connect / View Journey. It reviews commander effects before confirmation and needs no soldier links. The same action shows saved commander effects offline afterward. Not now dismisses the reminder for the current load/session; disable future reminders using the campaign-local MCM checkbox, Save Changes, then save the XCOM campaign. Main-menu and tactical MCM retain connection status but cannot associate a campaign. Companion 0.4.1 is unchanged; install the new mod scripts/localization only. See CAMPAIGN_JOURNEY_TESTING.md. The earlier milestone descriptions below are historical where they describe Armory-based association.
 
-Companion 0.4.1 / protocol 2 / Armory feature 2. The experimental local build includes Armory linking, campaign association, frozen mappings and initial resource/Scrounger paths. The loaded save now owns soldier pairings: a pre-link save can choose again or opt out, while existing committed links cannot stack stats. Threadline instances/snapshots remain immutable and reusable. Commander association is unchanged. Actual-game acceptance is pending; see ARMORY_TESTING.md and RESOURCE_COVERAGE.md. Update both mod and companion; no credential re-import is needed. Event delivery is not enabled yet.
+Companion 0.4.1 / protocol 2 / Armory feature 2. The experimental local build includes Armory linking, campaign association, frozen mappings and initial resource/Scrounger paths. The loaded save now owns soldier pairings: a pre-link save can choose again or opt out, while existing committed links cannot stack stats. The Name Beneath instances/snapshots remain immutable and reusable. Commander association is unchanged. Actual-game acceptance is pending; see ARMORY_TESTING.md and RESOURCE_COVERAGE.md. Update both mod and companion; no credential re-import is needed. Event delivery is not enabled yet.
 
 ## Dependencies
 
@@ -47,7 +51,7 @@ Companion 0.4.1 / protocol 2 / Armory feature 2. The experimental local build in
 - WOTC Community Highlander; development baseline 1.31.3, Workshop item 1796402257.
 - Mod Config Menu, Workshop item 667104300.
 - The Name Beneath local mod, enabled through AML.
-- ThreadlineCompanion.exe running alongside XCOM. No custom DLL goes in the game's Binaries folder. The published executable includes its runtime; building from source requires .NET SDK 10 with Windows desktop support.
+- TheNameBeneathCompanion.exe running alongside XCOM. No custom DLL goes in the game's Binaries folder. The published executable includes its runtime; building from source requires .NET SDK 10 with Windows desktop support.
 
 ## Start the desktop app locally
 
@@ -83,7 +87,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Start-Compani
 3. Confirm the displayed commander, Journey ID, and lifecycle status. Credential stored is a read-only vault-backed indicator; connection validity is separate.
 4. Test connection verifies the stored credential. Offline failures retain it. Restart reports Stored, not yet verified this session until a test succeeds.
 5. To rotate/switch, enter another credential and select Validate and save; replacement requires confirmation. Failed validation preserves the previous credential. Switching active Journey does not move existing campaign links or history.
-6. Remove credential requires confirmation and deletes only the active local vault entry. It does not revoke the server credential or remove Threadline activations/history. Other previously stored Journey credentials are not erased.
+6. Remove credential requires confirmation and deletes only the active local vault entry. It does not revoke the server credential or remove The Name Beneath activations/history. Other previously stored Journey credentials are not erased.
 
 No real credential is prefilled or read back into the field. No secret is returned to XCOM, written to an INI/save, or included in UI error text. Normal Windows credential-field input necessarily exists briefly in process memory; clearing the field is not a guarantee that immutable managed-string copies are erased.
 
@@ -110,11 +114,11 @@ Historical note: the user supplied two actual-game screenshots on 2026-10-19 con
 
 After starting companion 0.3.0, load a campaign through AML and open a soldier's Armory main menu. Select The Name Beneath - Journey preview. It should display the organizing commander, Journey/game/lifecycle context, separate Trait/Skill counts when available, and up to five eligible character names. It explicitly states that no association, activation, or bonuses were applied. No character is selected or linked. A full paginated picker is future linking work; this preview labels the first page rather than claiming a complete roster.
 
-Try reopening or cycling soldiers to check that only one menu entry appears. Closing the Armory or changing the selected soldier during a request must not show a stale result for a different soldier. Missing companion/API errors should leave the menu usable. These are the next actual-game checks, not yet claimed as passed. No campaign save transaction or Threadline POST occurs.
+Try reopening or cycling soldiers to check that only one menu entry appears. Closing the Armory or changing the selected soldier during a request must not show a stale result for a different soldier. Missing companion/API errors should leave the menu usable. These are the next actual-game checks, not yet claimed as passed. No campaign save transaction or The Name Beneath POST occurs.
 
 The preview uses additive protocol-2 operations that an older 0.2.0 companion does not support; update the companion as well as the mod. Existing Windows credential targets and the startup command are unchanged; no re-import is required.
 
-For developer-only read-only context and first-page roster projection validation, run the published EXE with --dev-config D:\Projects\project-threadline\.env.codex.local --check-development-journey. It prints only redacted results, stable errors and HTTP status. A temporary HTTP 404/non-JSON failure cleared after the user restarted the sleeping development app; the existing token still worked. Do not infer that a credential needs replacement solely from a hosting error. If the development app is unavailable, first confirm it is running, then repeat the check.
+For developer-only read-only context and first-page roster projection validation, run the published EXE with --dev-config C:\private\integration.env --check-development-journey. It prints only redacted results, stable errors and HTTP status. A temporary HTTP 404/non-JSON failure cleared after the user restarted the sleeping development app; the existing token still worked. Do not infer that a credential needs replacement solely from a hosting error. If the development app is unavailable, first confirm it is running, then repeat the check.
 
 ## Storage, configuration, and trust
 
@@ -134,7 +138,7 @@ No production secrets, Windows service, firewall rule, scheduled task, AML setti
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Build-Companion.ps1
 ```
 
-This runs fake-API/loopback tests, hidden synthetic desktop UI tests, and an isolated Windows credential-vault roundtrip, then publishes Artifacts\Companion\ThreadlineCompanion.exe. Synthetic vault entries and unique test directories are cleaned afterward. Tests do not change the real Journey or its stored credential. Exit the companion before replacing its running EXE.
+This runs fake-API/loopback tests, hidden synthetic desktop UI tests, and an isolated Windows credential-vault roundtrip, then publishes Artifacts\Companion\TheNameBeneathCompanion.exe. Synthetic vault entries and unique test directories are cleaned afterward. Tests do not change the real Journey or its stored credential. Exit the companion before replacing its running EXE.
 
 Internal --headless starts only the listener for diagnostics; it cannot import/remove credentials. --ui-self-test uses synthetic data in an invisible test window and tests shared desktop/socket status and shutdown. No GitHub packaging/publication has been performed.
 

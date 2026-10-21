@@ -1,5 +1,13 @@
 # Implementation status
 
+**Public naming: companion 0.10.2 / unchanged mod 0.9.0 (2026-10-21):**
+The Name Beneath is the sole public product name. Project/executable renamed to
+TheNameBeneathCompanion, namespace to TheNameBeneath.Companion and API client to
+JourneyApi. Public prose, build helpers and source examples use the official name.
+Established API event names, environment keys and vault/data locations remain
+unchanged by explicit compatibility policy; see PUBLIC_NAMING.md. No saved-game,
+event, credential or backend migration is performed. Earlier entries are history.
+
 Updated: 2026-10-21. Implementation and the localhost companion EXE are approved. GitHub publication remains deferred until local integration works.
 
 ## Current milestone
@@ -283,7 +291,7 @@ The subsequent simplified MCM page uses The Name Beneath branding, separates com
 - Normal TLS certificate validation, bounded HTTPS responses/deadlines, redirect rejection, redacted stable errors, development protection using the Vanguard configuration convention.
 - Masked desktop entry with standard paste/type support validates format/context/scopes before replacement; Windows Credential Manager stores the secret under an endpoint/Journey-specific target. The field is cleared before validation and never repopulated from the vault.
 - Atomic endpoint-specific nonsecret context persistence; restart reports unverified rather than claiming an online connection.
-- Serialized import/test/remove mutations. Offline verification preserves the stored secret. Removal does not delete Threadline data.
+- Serialized import/test/remove mutations. Offline verification preserves the stored secret. Removal does not delete The Name Beneath data.
 - Desktop test/replace/remove, with confirmation before replacement/removal. MCM shows a disabled vault-backed Credential stored checkbox and Refresh/Test; connection validity is separate. Closing the companion cancels its listener; minimizing keeps it running. UI-close cancellation and companion-unavailable handling remain in the UnrealScript client.
 - TNBStatus and TNBProbeCompanion diagnostic commands; neither accepts a credential.
 - Build/start scripts, standalone executable, and setup/testing instructions. No Windows service or game-binary DLL installation.

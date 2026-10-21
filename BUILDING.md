@@ -1,7 +1,7 @@
 # Building locally
 
 Use Windows. Clone the complete repository; both projects and `.scripts` are
-needed. Normal builds do not require the private Threadline source repository.
+needed. Normal builds do not require the private backend source repository.
 
 ## Companion
 
@@ -13,7 +13,7 @@ powershell.exe -NoProfile -File .\.scripts\Build-Companion.ps1
 
 The script runs synthetic connection/activation, UI, character-pool and event
 tests, then publishes the self-contained Win64 executable to
-`Artifacts/Companion/ThreadlineCompanion.exe`. Use `-TestOnly` to skip publication.
+`Artifacts/Companion/TheNameBeneathCompanion.exe`. Use `-TestOnly` to skip publication.
 Tests use fake HTTP handlers, temporary data and synthetic credentials, not a
 live Journey. Credential tests require access to Windows Credential Manager.
 Run them outside an active game/companion session. Native cross-language event
@@ -23,7 +23,7 @@ script alone. No personal `.bin` fixtures are needed for the synthetic pool test
 Start an unprotected deployment explicitly:
 
 ```powershell
-.\Artifacts\Companion\ThreadlineCompanion.exe --api https://your-api-origin.example/
+.\Artifacts\Companion\TheNameBeneathCompanion.exe --api https://your-api-origin.example/
 ```
 
 For a protected development origin, copy `.env.example` to the ignored `.env.local`,
@@ -77,8 +77,9 @@ do not require a game package rebuild. Neither build requires a custom DLL.
 
 The checked-in icon and preview are sufficient for builds. Optional regeneration
 scripts use a separately installed `sharp` package resolved from the checkout
-argument; their private Threadline checkout examples are conveniences, not normal
-build dependencies. Preserve the artwork's separate licensing status.
+argument; no private backend checkout is needed for artwork regeneration. These
+scripts are optional, not normal build dependencies. Preserve the artwork's
+separate licensing status.
 
 Create release archives from reviewed build outputs separately. Never package
 credentials, development `.env` files, gameplay journals, personal pools, saves,

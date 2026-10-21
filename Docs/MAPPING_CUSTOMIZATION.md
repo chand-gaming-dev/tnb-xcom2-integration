@@ -2,7 +2,7 @@
 
 Edit `TheNameBeneath/Config/XComTheNameBeneath.ini` in your local mod build (and deploy it to the installed mod when building). Keep a backup: mod updates can replace this file. Restart XCOM to reload configuration. Changes affect **future associations/links only**; existing saved effects do not refresh or reapply.
 
-Approved rollback policy (0.4.1): a save from before a soldier link has none of that link's benefits, so a newly confirmed link may resolve current mappings once. The original Threadline instance/snapshot is still reused. A save containing a committed link retains its already frozen mappings and cannot gain the bonuses again. Commander association policy is unchanged.
+Approved rollback policy (0.4.1): a save from before a soldier link has none of that link's benefits, so a newly confirmed link may resolve current mappings once. The original The Name Beneath instance/snapshot is still reused. A save containing a committed link retains its already frozen mappings and cannot gain the bonuses again. Commander association policy is unchanged.
 
 The section is `[TheNameBeneath.TNB_MappingConfig]`. Shipped rows are in `ShippedMappings`; put player changes in the separate `Overrides` array. The resolver matches canonical definition ID, Trait/Skill kind, Character/Commander context and the reviewed version range, not display names. Each effect has its own stable Key, so one characteristic may grant multiple effects.
 

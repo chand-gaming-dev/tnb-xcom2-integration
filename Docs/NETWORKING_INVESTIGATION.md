@@ -4,7 +4,7 @@ Inspected locally on 2026-10-18, after the user downloaded Workshop item 3066536
 
 ## Result
 
-The inspected session-related code reuses XCOM's existing online subsystem and game-session interfaces. It adds lobby metadata, matchmaking filters, validation and presentation behavior. It does not provide a reusable Threadline HTTP/TLS client or a mechanism for calling an arbitrary native DLL from UnrealScript.
+The inspected session-related code reuses XCOM's existing online subsystem and game-session interfaces. It adds lobby metadata, matchmaking filters, validation and presentation behavior. It does not provide a reusable The Name Beneath HTTP/TLS client or a mechanism for calling an arbitrary native DLL from UnrealScript.
 
 XCOM does support networking exposed to UnrealScript. The failed implementation gate is specifically the planned DLLBind/dllimport interface, not a general inability to communicate over a network.
 
@@ -42,13 +42,13 @@ The embedded XComOnlineEventMgr_Override.OnGameInviteAccepted caches point limit
 
 UIMPShell_ServerBrowser_Override adjusts browser columns, labels and sorting. XComGameState_BattleDataMP_Override suppresses first-contact visualization. Neither implements an HTTP transport.
 
-## What this means for Threadline
+## What this means for The Name Beneath
 
-Steam session APIs exchange game/session data with other game clients. Threadline endpoints require authenticated HTTP requests over TLS, with JSON request/response bodies and the correct HTTP verbs and authorization header.
+Steam session APIs exchange game/session data with other game clients. The Name Beneath endpoints require authenticated HTTP requests over TLS, with JSON request/response bodies and the correct HTTP verbs and authorization header.
 
 The SDK IpDrv.TcpLink class exposes TCP Open, SendText, SendBinary, ReadText and receive events. It could carry local bridge messages. TCP alone does not supply TLS, certificate verification, clipboard access or Windows Credential Manager operations.
 
-A small companion process was subsequently approved by the user: XCOM talks to it over loopback, and it handles Threadline HTTPS, credential import/storage and eventually the durable event queue. Runtime loopback interoperability still needs its own proof before gameplay integration proceeds. See COMPANION_SETUP.md and IMPLEMENTATION_STATUS.md for the implemented connection milestone.
+A small companion process was subsequently approved by the user: XCOM talks to it over loopback, and it handles The Name Beneath HTTPS, credential import/storage and eventually the durable event queue. Runtime loopback interoperability still needs its own proof before gameplay integration proceeds. See COMPANION_SETUP.md and IMPLEMENTATION_STATUS.md for the implemented connection milestone.
 
 The other candidate is a custom in-process native loader. The multiplayer mod supplies no such loader, so that route would require a separate investigation and installation design.
 
@@ -57,4 +57,4 @@ The other candidate is a custom in-process native loader. The multiplayer mod su
 - Readable source, configuration and native SDK declarations were inspected; the mod was not enabled or executed.
 - The game's beta branch and AML selections were not changed.
 - Absence of a client in this mod does not prove that every possible HTTPS or native-loading route is impossible.
-- No companion, service, listener, credential or Threadline API operation was created during the multiplayer investigation itself. Subsequent companion development and read-only live checks are documented separately in IMPLEMENTATION_STATUS.md.
+- No companion, service, listener, credential or The Name Beneath API operation was created during the multiplayer investigation itself. Subsequent companion development and read-only live checks are documented separately in IMPLEMENTATION_STATUS.md.

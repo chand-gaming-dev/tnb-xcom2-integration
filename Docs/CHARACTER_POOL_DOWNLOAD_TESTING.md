@@ -31,7 +31,7 @@
    No active/default pool, campaign soldier, link, activation or event is modified.
 6. In XCOM's main-menu Character Pool, choose **Import Character**, select the new
    pool, and inspect/import the desired characters. Downloading does not perform
-   the game import, recruit soldiers, or automatically pair them with Threadline.
+   the game import, recruit soldiers, or automatically pair them with The Name Beneath.
    Required cosmetic/perk mods still need to be installed. A multi-soldier export
    imports all its records, not just the character named on its portal attachment.
 
@@ -129,4 +129,4 @@ redistribute the external utility or include its code. No new package dependency
 
 No live API requests, uploads, grants, real credential edits or game-pool imports
 were made during automated validation. API schema/storage changes belong to the
-already-existing Threadline feature; none are included in this companion patch.
+already-existing The Name Beneath feature; none are included in this companion patch.

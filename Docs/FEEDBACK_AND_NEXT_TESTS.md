@@ -1,6 +1,11 @@
 # Feedback and next tests
 
-## Current test build: mod 0.9.0 / companion 0.10.1
+## Current test build: mod 0.9.0 / companion 0.10.2
+
+- Public naming cleanup: project/executable TheNameBeneathCompanion, namespace
+  TheNameBeneath.Companion, JourneyApi client and official branding throughout
+  documentation. Persisted/API compatibility identifiers stay unchanged. No mod
+  script, mapping, event payload, grant or saved-game migration changes.
 
 - Header clipping follow-up: automatic stacked title/subtitle layout and wrapping;
   original favicon restored beside the title. Verify at the player's desktop scale.
@@ -51,7 +56,7 @@
 
 ## Pre-closeout review: complete Trait/Skill mapping catalog (OPEN)
 
-Added by user on 2026-10-21. Review the full current canonical Threadline Trait and
+Added by user on 2026-10-21. Review the full current canonical The Name Beneath Trait and
 Skill catalog, not just definitions used by the alpha test roster. Each definition
 must have an explicit reviewed disposition in each applicable soldier/commander
 context: a default XCOM mapping, or intentional exclusion with a clear rationale.
@@ -92,14 +97,14 @@ backlog/design review only; no implementation or event representation approved y
 - Review dedicated standard event types versus an appropriate existing event
   representation, portal wording, companion validation and XP policy explicitly.
   Do not label captivity as injury/death or promise XP implicitly.
-- Preserve the original soldier/Threadline instance and link across capture and
+- Preserve the original soldier/The Name Beneath instance and link across capture and
   return; do not relink, reactivate or reapply traits/stats as part of rescue.
 - Use verified native capture and confirmed return facts, not mission title or
   success alone. Cover left-behind/Chosen/covert capture paths where feasible;
   do not count a rescued prisoner as deployed with the rescuing squad.
 - Plan repeated capture episodes, reload/retry dedup, failed rescue and unknown
   state/history-gap behavior without changing earlier accepted events.
-- User stopped the current tactical test to move to Threadline work; mission was
+- User stopped the current tactical test to move to The Name Beneath work; mission was
   NOT completed. Do not claim capture/rescue acceptance or require finishing it now.
 
 ### Prior 0.8.6 notes
@@ -189,7 +194,7 @@ User approved combining the local UI/diagnostic fixes in one build to reduce XCO
 - MCM has a permanent **View Commander & Bonuses** action for a connected campaign, or **Connect Campaign Journey** when unconnected. The action's right-side button is **Open**. Refresh/reopen MCM after linking to update the summary. Main-menu/tactical setup stays disabled.
 - Commander rows show readable signed effects with explicit one-time/ongoing behavior, actual committed deltas, skipped/no-eligible changes, and frozen saved mappings. The report opens offline and never resolves mappings or regrants rewards.
 - The linked Armory entry becomes **The Name Beneath - Traits & Abilities**. Improve the existing read-only report rather than add a class-tree row or an Officer-mod dependency. Show friendly stats and ability names, installed ability descriptions/icons, source Trait/Skill, immutable link-time result and current missing-template availability. Already-owned abilities are distinct from newly supplied mappings. No template fallback grants or stat changes occur while viewing.
-- Correct companion closing guidance, contradictory Journey-start text, mislabelled game-name-as-Journey text, and remaining player-facing Threadline wording in these screens. Technical binary/API/vault identifiers remain unchanged. Journey ID is retained; no Journey title is invented.
+- Correct companion closing guidance, contradictory Journey-start text, mislabelled game-name-as-Journey text, and remaining player-facing internal-codename wording in these screens. Technical binary/API/vault identifiers remain unchanged. Journey ID is retained; no Journey title is invented.
 
 ## User-confirmed on previous 0.5.0 build
 

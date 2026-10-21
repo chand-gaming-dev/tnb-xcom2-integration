@@ -30,9 +30,9 @@ that our MIT license grants unrestricted rights to those upstream portions.
 
 ## Branding and artwork
 
-The Name Beneath / Threadline names, logos and branding artwork are excluded
+The Name Beneath name, logos and branding artwork are excluded
 from the source-code MIT grant. This includes
-`Companion/ThreadlineCompanion/Assets/PortalFavicon.svg`, the derived
+`Companion/TheNameBeneathCompanion/Assets/PortalFavicon.svg`, the derived
 `Companion.ico`, and `TheNameBeneath/ModPreview.jpg`. No additional permission
 to reuse the branding or imply endorsement is granted by the code license.
 
@@ -55,7 +55,7 @@ references. Their code and binaries are not bundled as dependencies.
 
 ## Backend and credentials
 
-The private Threadline backend is not part of this repository and is not
+The private backend for The Name Beneath is not part of this repository and is not
 licensed by this project's MIT license. Use of the hosted service requires
 authorization and remains subject to its separate terms. A public integration
 does not grant backend source access, service credentials, or service rights.

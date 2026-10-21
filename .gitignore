@@ -37,7 +37,7 @@
 /Docs/Validation/
 /Docs/Prototypes/
 /TheNameBeneath/xcom2_api_integration_guide.md
-/TheNameBeneath/threadline_xcom2_v1_implementation_plan.md
+/TheNameBeneath/*implementation_plan.md
 
 # Generated game and SDK content, not this project's sources/artwork.
 *.exe

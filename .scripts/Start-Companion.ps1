@@ -2,7 +2,7 @@
 param([switch]$Development, [switch]$CheckOnly, [string]$DevelopmentConfig)
 $ErrorActionPreference = 'Stop'
 $solutionDirectory = Split-Path $PSScriptRoot -Parent
-$executable = Join-Path $solutionDirectory 'Artifacts\Companion\ThreadlineCompanion.exe'
+$executable = Join-Path $solutionDirectory 'Artifacts\Companion\TheNameBeneathCompanion.exe'
 if (-not (Test-Path -LiteralPath $executable)) { throw 'Build the companion first with .scripts\Build-Companion.ps1.' }
 $launchArguments = @()
 if ($Development) {

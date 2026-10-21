@@ -11,7 +11,7 @@
   first mission/one kill, Rookie-to-Squaddie Quartermaster promotion and Low Profile.
 - Summary 1 wounded is the unlinked Templar hit for 1 damage, whose modded ability
   reduced recovery to zero; 1 killed is the VIP. Correct deployed-squad counts are
-  1 injury/0 deaths. No individual Threadline event is attributed to the unlinked
+  1 injury/0 deaths. No individual The Name Beneath event is attributed to the unlinked
   Templar. Being Active after return is not proof of never having been wounded.
 - The existing accepted report incorrectly contains 0 squad injuries/0 deaths;
   its failure result is correct. The companion has no queued/held/accepted promotion.

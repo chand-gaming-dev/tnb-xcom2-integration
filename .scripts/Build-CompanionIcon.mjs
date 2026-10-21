@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(join(resolve(process.argv[2] ?? process.cwd()), 'package.json'));
 const sharp = require('sharp');
-const source = fileURLToPath(new URL('../Companion/ThreadlineCompanion/Assets/PortalFavicon.svg', import.meta.url));
-const destination = fileURLToPath(new URL('../Companion/ThreadlineCompanion/Assets/Companion.ico', import.meta.url));
+const source = fileURLToPath(new URL('../Companion/TheNameBeneathCompanion/Assets/PortalFavicon.svg', import.meta.url));
+const destination = fileURLToPath(new URL('../Companion/TheNameBeneathCompanion/Assets/Companion.ico', import.meta.url));
 const sizes = [16, 32, 48, 64, 128, 256];
 const svg = await readFile(source);
 const frames = await Promise.all(sizes.map(size => sharp(svg, { density: 576 }).resize(size, size).png().toBuffer()));

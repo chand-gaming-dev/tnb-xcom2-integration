@@ -1,5 +1,5 @@
 // Deterministic layout of the existing vector logo, not a redesigned favicon.
-// Run from the mod solution: node .scripts/Build-ModPreview.mjs <project-threadline checkout>
+// Run from the mod solution: node .scripts/Build-ModPreview.mjs <Node tooling checkout containing sharp>
 import { createRequire } from 'node:module';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(join(resolve(process.argv[2] ?? process.cwd()), 'package.json'));
 const sharp = require('sharp');
-const source = fileURLToPath(new URL('../Companion/ThreadlineCompanion/Assets/PortalFavicon.svg', import.meta.url));
+const source = fileURLToPath(new URL('../Companion/TheNameBeneathCompanion/Assets/PortalFavicon.svg', import.meta.url));
 const destination = fileURLToPath(new URL('../TheNameBeneath/ModPreview.jpg', import.meta.url));
 const favicon = await readFile(source);
 const layout = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">

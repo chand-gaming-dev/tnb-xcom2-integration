@@ -22,7 +22,7 @@ Create a manual save after commander association but BEFORE confirming any soldi
 
 1. Link soldier A to character C and record the instance/snapshot, applied effects and resulting stats. Save to a different slot.
 2. Reload the pre-link slot. A must remain unlinked with the pre-link stats. Do not restore automatically from the companion journal. Leaving the Armory without linking is a valid opt-out.
-3. Open soldier B's picker and choose C. It should use C's already established Journey instance and original snapshot, but resolve current local mappings once against B's pre-link stats. A remains unlinked in this loaded timeline. Existing Threadline activation/history is not erased.
+3. Open soldier B's picker and choose C. It should use C's already established Journey instance and original snapshot, but resolve current local mappings once against B's pre-link stats. A remains unlinked in this loaded timeline. Existing The Name Beneath activation/history is not erased.
 4. Reload the pre-link slot again and choose a different character D for A. This should succeed; C's instance remains intact but unused locally in that timeline. The companion must not apply old effects or force the old pairing.
 5. Reload the POST-link slot from step 1. A must still have exactly its saved effects. Reopening/retrying/reporting must not re-resolve mappings, add stats again, or offer reassignment. C remains unavailable to a second soldier in this same loaded timeline.
 6. Optional balance test: change mappings, restart, and load the pre-link slot. A newly confirmed link may use current mappings. Loading an existing post-link slot must retain its old frozen mappings instead.

@@ -1,6 +1,8 @@
 # Factual captivity/relationships, ability labels and companion UX
 
-2026-10-21. Mod 0.9.0 / companion 0.10.1 (header follow-up to 0.10.0). Both must be updated from older feature builds; the header follow-up changes the companion only.
+2026-10-21. Mod 0.9.0 / companion 0.10.2 (public-naming follow-up to 0.10.1).
+Both must be updated from older feature builds; the naming follow-up changes the
+companion only and preserves API/storage compatibility identifiers.
 No new credential, relink, character activation or mapping refresh is required.
 Use separate non-Ironman test saves; preserve the only campaign copy and journals.
 
@@ -58,7 +60,7 @@ Avenger prompt remain. No background writes during load/travel/latent mission st
 
 ## First acceptance: UI and multi-character mission
 
-1. Start companion. Confirm title `The Name Beneath - XCom 2 Companion 0.10.1`.
+1. Start TheNameBeneathCompanion.exe. Confirm title `The Name Beneath - XCom 2 Companion 0.10.2`.
    Journey tab shows named Journey/Commander, connection and masked credential field.
    Gameplay reporting shows queued/retrying/paused/held/accepted counts and scoped
    diagnostics separately. Character Pools retains explicit download, Save As,
@@ -84,7 +86,7 @@ Avenger prompt remain. No background writes during load/travel/latent mission st
    capture. No new synthetic live events or XP grants are part of this build.
 2. Complete a genuine capture: one Character captured for that immutable instance;
    no death merely because absent, and unrelated/unlinked soldiers get no individual
-   Threadline event. Mission facts remain separate. Inspect MCM/logs if held.
+   The Name Beneath event. Mission facts remain separate. Inspect MCM/logs if held.
 3. Generating/viewing/launching a rescue mission must NOT report freed. Failed rescue
    must not either. On actual return, expect one Character freed on the SAME instance,
    with no reactivation/relink/reapplication. The rescued prisoner is not deployed
@@ -97,7 +99,7 @@ Avenger prompt remain. No background writes during load/travel/latent mission st
 
 1. Confirm a real level-1 bond in the native UI: one Relationship formed involving
    both linked instances, or one linked instance plus the unlinked partner in facts.
-   Two unlinked soldiers produce no Threadline event. Availability/cohesion alone
+   Two unlinked soldiers produce no The Name Beneath event. Availability/cohesion alone
    is not formation. Existing bonds on load/link are not backfilled.
 2. Start/cancel training: no upgrade event. Complete training: one Relationship
    developed with resulting level, native previous level retained in private data.

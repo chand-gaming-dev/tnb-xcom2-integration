@@ -1,8 +1,8 @@
-The Name Beneath - factual events mod 0.9.0 / XCom 2 companion 0.10.1
+The Name Beneath - factual events mod 0.9.0 / XCom 2 companion 0.10.2
 
 New committed captures and confirmed returns from captivity report Character
 captured/freed. Bond formation and upgrades now report Relationship formed/developed
-using the new Threadline contracts. These fact-only types award zero XP; historical
+using the new The Name Beneath contracts. These fact-only types award zero XP; historical
 milestones, accepted facts and queued legacy reports are not rewritten. Missing
 native relationship data is not treated as bond breakage. Existing links remain.
 
@@ -141,7 +141,7 @@ Do not delete events-v1 or links journals as a repair. Conflicts/invalid
 reports are held; network errors retry. No automatic Journey start/reopen
 or client-authored XP. No hits/misses, guessed kills/damage/turn totals.
 Native negative conditions are local injury/recovery records, not direct
-changes to Threadline Traits. Existing mappings/rewards are unchanged.
+changes to The Name Beneath Traits. Existing mappings/rewards are unchanged.
 
 The older milestone notes below are retained for background; use companion
 0.8.0 with this mod (protocol 2, gameplay events feature 1, bond milestones 1).
@@ -165,7 +165,7 @@ Save after the campaign association. Existing frozen rewards/links remain.
 Requires XCOM 2: War of the Chosen, WOTC Community Highlander (development
 baseline 1.31.3), and Mod Config Menu. Enable all three mods through AML.
 
-Start the separate ThreadlineCompanion.exe before opening the mod's MCM page.
+Start the separate TheNameBeneathCompanion.exe before opening the mod's MCM page.
 No custom DLL is installed in the game's Binaries folder. The companion is a
 self-contained Windows x64 build. From the source solution directory:
 

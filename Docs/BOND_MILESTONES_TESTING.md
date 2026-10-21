@@ -2,7 +2,7 @@
 
 Bond formation and level increases now use the existing standard
 `threadline.narrative.milestone_reached`, type version 1. No API/schema change is
-needed. This records an XCOM fact for future Threadline interpretation; it does not
+needed. This records an XCOM fact for future The Name Beneath interpretation; it does not
 create a canonical relationship, alter Traits/Skills or choose an XP award.
 
 ## Captured facts
@@ -15,7 +15,7 @@ create a canonical relationship, alter Traits/Skills or choose an XP award.
   are retained in the raw report, not currently exposed in shared Portal history.
 - One event describes the pair. Both current-Journey linked instances participate
   if available; with one linked soldier the other remains local partner detail.
-  Neither linked: no report. No activation or invented Threadline identity occurs.
+  Neither linked: no report. No activation or invented The Name Beneath identity occurs.
 
 Native sources: installed `UISoldierBondConfirmScreen` fires `BondCreated` after
 setting both level-1 bond records; SDK `XComGameState_HeadquartersProjectBondSoldiers`
