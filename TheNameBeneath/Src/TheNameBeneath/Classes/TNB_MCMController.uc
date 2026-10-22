@@ -12,6 +12,7 @@ var MCM_API_Button RefreshButton;
 var MCM_API_Button TestButton;
 var MCM_API_Button CampaignButton;
 var MCM_API_Label CampaignLabel;
+var string ReminderCampaignID;
 var bool bCampaignMode;
 var TNB_LoopbackClient ReportingRequest;
 var MCM_API_Label ReportingLabel;
@@ -48,7 +49,9 @@ function BuildPage(MCM_API_Instance API, int GameMode)
     Group = Page.AddGroup('Campaign', CampaignGroup);
     CampaignLabel = Group.AddLabel('CampaignState', CampaignUnavailable, CampaignHelp);
     CampaignButton = Group.AddButton('CampaignJourney', ConnectCampaignText, CampaignHelp, OpenCampaignText, CampaignClicked);
-    Group.AddLabel('AutomaticReminders', RemindersDisabledText, CampaignHelp);
+    Group.AddLabel('AutomaticReminders', class'TNB_AvengerJourneyPrompt'.default.bEnableAutomaticInvitations ? "Automatic invitation: enabled on the idle Avenger" : RemindersDisabledText, CampaignHelp);
+    if (bCampaignMode) ReminderCampaignID = class'TNB_CampaignService'.static.CampaignID();
+    Group.AddCheckbox('SuppressReminder', SuppressText, SuppressHelp, bCampaignMode && class'XComGameState_TNBPromptPreference'.static.IsSuppressed(), ReminderSaved).SetEditable(bCampaignMode);
     Group = Page.AddGroup('Reporting', "Gameplay reporting");
     ReportingLabel = Group.AddLabel('ReportingState', "Reading saved capture state...", "Captured in this save, durably queued in the companion, and accepted online are separate stages. Remote history and handed-off reports do not rewind with a save. No client-authored XP is reported.");
     ReportingQueueLabel = Group.AddLabel('ReportingQueue', "Companion queue: not checked", "Queue counts are scoped to the loaded campaign/Journey, not another campaign's reports.");
@@ -140,6 +143,14 @@ function ReportingComplete(JsonObject Result, string ErrorCode)
 
 function RefreshClicked(MCM_API_Setting Setting) { StartRequest("status"); }
 function TestClicked(MCM_API_Setting Setting) { StartRequest("test"); }
+
+// Runs only for an explicit MCM Save, never from the invitation/readiness path.
+function ReminderSaved(MCM_API_Setting Setting, bool Suppress)
+{
+    if (!bCampaignMode || ParentScreen == none || ParentScreen.bIsRemoved || ReminderCampaignID == "") return;
+    if (class'TNB_ReportingSafety'.static.BlockReason(class'WorldInfo'.static.GetWorldInfo(), `XCOMHISTORY) != "") return;
+    if (ReminderCampaignID == class'TNB_CampaignService'.static.CampaignID()) class'XComGameState_TNBPromptPreference'.static.SetSuppressed(Suppress);
+}
 
 function CampaignClicked(MCM_API_Setting Setting)
 {

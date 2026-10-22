@@ -5,6 +5,7 @@ class X2DLCInfo_TheNameBeneath extends X2DownloadableContentInfo dependson(X2Str
 var TNB_LoopbackClient Probe;
 // Runtime DLC-instance cache, not config or save data. Survives HUD/mission travel.
 var transient array<string> PromptedCampaigns;
+var transient int PromptGeneration;
 
 static function bool DisplayQueuedDynamicPopup(DynamicPropertySet PropertySet)
 {
@@ -15,10 +16,25 @@ static function X2DLCInfo_TheNameBeneath SessionState()
 {
     local array<X2DownloadableContentInfo> Infos;
     local X2DownloadableContentInfo Info;
+    if (`ONLINEEVENTMGR == none) return none;
     Infos = `ONLINEEVENTMGR.GetDLCInfos(false);
     foreach Infos(Info)
         if (X2DLCInfo_TheNameBeneath(Info) != none) return X2DLCInfo_TheNameBeneath(Info);
     return none;
+}
+
+static function int ReminderGeneration()
+{
+    local X2DLCInfo_TheNameBeneath Session;
+    Session = SessionState();
+    return Session == none ? -1 : Session.PromptGeneration;
+}
+
+static function InvalidateReminderCallbacks()
+{
+    local X2DLCInfo_TheNameBeneath Session;
+    Session = SessionState();
+    if (Session != none) Session.PromptGeneration++;
 }
 
 static function bool ReminderOffered(string CampaignID)
@@ -37,21 +53,24 @@ static function MarkReminderOffered(string CampaignID)
 
 static event OnLoadedSavedGameToStrategy()
 {
-    class'TNB_ReportingSafety'.static.Trace("LOAD_STRATEGY build=0.9.0");
-    // Automatic Avenger reminders are disabled for the reload diagnostic.
-    // Do not discover, reset or attach prompt actors on a loaded world.
+    class'TNB_ReportingSafety'.static.Trace("LOAD_STRATEGY build=0.9.1");
+    // Primitive epoch only: invalidate stale answers without creating/caching
+    // prompt actors in a load callback. Facility-grid focus owns scheduling.
+    InvalidateReminderCallbacks();
     class'TNB_EventPump'.static.Ensure();
 }
 
 static event OnLoadedSavedGameToTactical()
 {
-    class'TNB_ReportingSafety'.static.Trace("LOAD_TACTICAL build=0.9.0");
+    InvalidateReminderCallbacks();
+    class'TNB_ReportingSafety'.static.Trace("LOAD_TACTICAL build=0.9.1");
     class'TNB_EventPump'.static.Ensure();
 }
 
 static event OnPreMission(XComGameState StartGameState, XComGameState_MissionSite MissionState)
 {
-    class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.0", StartGameState);
+    InvalidateReminderCallbacks();
+    class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.1", StartGameState);
     class'TNB_EventCaptureService'.static.CarryToStartState(StartGameState);
     class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_CARRIED", StartGameState);
     class'TNB_EventCaptureService'.static.PrepareMission(StartGameState, MissionState);

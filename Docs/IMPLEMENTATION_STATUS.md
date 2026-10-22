@@ -1,5 +1,20 @@
 # Implementation status
 
+**Avenger invitation retry: mod 0.9.1 / unchanged companion 0.10.3 (2026-10-21):**
+Replaces the dormant always-ticking HUD-holder with facility-grid lifecycle hooks
+and short-lived, world-owned local readiness work. The listener retains no fields;
+native DialogBox callbacks bind that listener and carry primitive campaign/epoch
+data, not a map actor. Screen loss/removal cancels the request/timers; map load,
+screen removal and pre-mission invalidate stale answers. Phase/world/top-screen/
+camera/tutorial/link/preference checks fail closed. Readiness uses only local status;
+no game states, API transitions or grants are created by offering/dismissing it.
+Existing review/explicit confirmation remains unchanged. Session offer flags are
+runtime strings only. Config kill switch and saved MCM reminder opt-out are present.
+SDK compile/pure/source regressions do not establish retail GC/reload acceptance;
+see AVENGER_INVITATION_TESTING.md. No live Journey or save was changed by testing.
+
+User confirmed companion 0.10.3 minimize/restore fixed; that UI issue is closed.
+
 **Window restore fix: companion 0.10.3 / unchanged mod 0.9.0 (2026-10-21):**
 Reproduced the green-only window after minimize/restore: a transient zero-width
 client area set header text constraints to one pixel; restored AutoSize height

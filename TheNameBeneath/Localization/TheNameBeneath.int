@@ -43,9 +43,9 @@ CampaignHelp="Open campaign Journey setup or its saved commander bonus report. T
 ConnectCampaignText="Connect Campaign Journey"
 ViewCommanderText="View Commander & Bonuses"
 OpenCampaignText="Open"
-RemindersDisabledText="Automatic reminders: disabled (MCM-only test build)"
+RemindersDisabledText="Automatic invitation: disabled in mod configuration"
 SuppressText="Don't remind me to connect this campaign"
-SuppressHelp="Campaign-local preference, saved when you Save Changes in MCM. Save your XCOM campaign afterward. You can always connect manually here. Uncheck to allow future reminders; Not now otherwise defers the prompt until a later campaign load."
+SuppressHelp="Campaign-local preference, saved only when you Save Changes in MCM. Save your XCOM campaign afterward. You can always connect manually here. Uncheck to allow future play-session invitations; Not now only dismisses the current play session's invitation."
 
 [UIListItem_TNBArmory]
 MenuLabel="The Name Beneath - Link character"
@@ -122,6 +122,6 @@ LostSuppliesText="Some supplies were scattered, lost, or taken before recovery."
 
 [TNB_AvengerJourneyPrompt]
 PromptTitle="The Name Beneath - Connect a Journey?"
-PromptText="This campaign has no connected Journey. Connect one to review and apply your commander bonuses; linking soldiers is optional. Nothing is applied until you review and confirm. Not now dismisses this reminder for this play session. You can always connect through Mod Config Menu > The Name Beneath > Campaign Journey, or disable reminders there for this campaign."
-ConnectNowText="Connect now"
+PromptText="This campaign has no connected Journey. Review a Journey to see your commander bonuses; linking soldiers is optional. Nothing starts or applies until you explicitly confirm on the next screen. Not now dismisses this invitation for this play session. Mod Config Menu > The Name Beneath > Campaign Journey remains available for manual setup and reminder preferences."
+ConnectNowText="Review Journey"
 NotNowText="Not now"

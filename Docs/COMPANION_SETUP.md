@@ -5,12 +5,19 @@ commands. The startup helper now accepts `-DevelopmentConfig` and otherwise read
 the ignored `.env.local` beside the solution; it no longer assumes the author's
 private backend checkout. Dated notes below describe earlier development builds.
 
-**Current companion 0.10.3 / mod 0.9.0:** the desktop title is
+**Current companion 0.10.3 / mod 0.9.1:** the desktop title is
 The Name Beneath - XCom 2 Companion <version>. Separate Journey, Gameplay reporting
 and Character Pools tabs organize setup, delivery counts/diagnostics and pool import.
 Existing credentials and delivery journals are retained. New capture/freedom and
 bond formed/developed events use the backend factual types; legacy milestone reports
 remain unchanged. See CAPTIVITY_RELATIONSHIPS_UX_TESTING.md.
+
+Mod 0.9.1 restores a read-only invitation on the quiet Avenger for an unlinked
+campaign when the companion has a configured Upcoming/Started Journey. Review
+Journey opens commander preview/confirmation directly; no MCM navigation or MCM
+save dialog is involved. Not now defers this campaign for the play session. MCM
+remains a fallback and contains the saved reminder opt-out. This controlled retry
+still needs actual-game reload/transition acceptance; see AVENGER_INVITATION_TESTING.md.
 
 The companion project/executable is now TheNameBeneathCompanion. The official
 product name is The Name Beneath; existing API identifiers, environment keys,

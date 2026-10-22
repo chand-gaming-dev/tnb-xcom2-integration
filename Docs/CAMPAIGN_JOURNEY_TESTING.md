@@ -1,5 +1,11 @@
 # Campaign Journey setup and fresh skill test
 
+Current mod 0.9.1 restores the automatic Avenger invitation with new lifecycle
+ownership and read-only readiness. Start with AVENGER_INVITATION_TESTING.md for
+the controlled reload/transition retry. Review Journey reaches the existing
+confirmation directly; MCM is the fallback and saved opt-out UI. Companion remains
+0.10.3. Older milestone instructions below are historical where superseded.
+
 **Current 0.7.0:** Journey title appears in setup/confirmation and the saved report;
 Refresh Journey name is cosmetic only. Follow [JOURNEY_AND_SOLDIER_UX_TESTING.md](JOURNEY_AND_SOLDIER_UX_TESTING.md)
 for the current UI/reload checks. Automatic Avenger prompts stay disabled; MCM is the

@@ -67,6 +67,8 @@
     <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBReporting.uc" />
     <Content Include="Src\TheNameBeneath\Classes\UITNBCampaignJourney.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_AvengerJourneyPrompt.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_AvengerPromptData.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_AvengerPromptProbeCommandlet.uc" />
     <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBAvenger.uc" />
     <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBPromptPreference.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_SoldierEffectService.uc" />

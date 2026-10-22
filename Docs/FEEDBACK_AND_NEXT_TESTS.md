@@ -8,13 +8,21 @@
   See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md). This is a pending release
   requirement, not authorization to publish a release before acceptance/approval.
 
-## Current test build: mod 0.9.0 / companion 0.10.3
+## Current test build: mod 0.9.1 / companion 0.10.3
+
+- Automatic Avenger invitation restored for controlled acceptance: focus-driven,
+  short-lived readiness work, stateless listener and primitive-only native dialog
+  callback data. No background state submissions; existing explicit confirmation
+  owns Journey start/commander bonuses. Once per campaign/play session; Not now,
+  saved MCM opt-out and global INI fail-safe. Companion unchanged. Reload/transition
+  and no-duplicate-bonus tests remain OPEN: AVENGER_INVITATION_TESTING.md.
 
 - Minimize/restore layout fix: do not update header wrapping constraints while the
   native client area is collapsed. Before the fix, restoring grew the header to
   720 px and shrank tabs to 1 px. Automated normal/maximized, minimum-size and all
   tab regressions pass with empty/connected fake Journeys. Verify the restored UI
-  manually at the player's actual desktop scale. No native mod/API/data changes.
+  manually at the player's actual desktop scale. User subsequently confirmed it
+  fixed on 0.10.3: minimize/restore is CLOSED. No native mod/API/data changes.
 
 - Public naming cleanup: project/executable TheNameBeneathCompanion, namespace
   TheNameBeneath.Companion, JourneyApi client and official branding throughout

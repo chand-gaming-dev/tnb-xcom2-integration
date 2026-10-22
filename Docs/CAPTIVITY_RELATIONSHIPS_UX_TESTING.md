@@ -1,8 +1,8 @@
 # Factual captivity/relationships, ability labels and companion UX
 
-2026-10-21. Mod 0.9.0 / companion 0.10.3 (minimize/restore follow-up to 0.10.2).
-Both must be updated from older feature builds; the window-layout follow-up changes
-the companion only and preserves API/storage compatibility identifiers.
+2026-10-21. Mod 0.9.1 / companion 0.10.3. The new mod restores the automatic
+Avenger invitation for controlled testing; see AVENGER_INVITATION_TESTING.md.
+Capture/bond contracts and API/storage compatibility identifiers are unchanged.
 No new credential, relink, character activation or mapping refresh is required.
 Use separate non-Ironman test saves; preserve the only campaign copy and journals.
 
@@ -112,8 +112,9 @@ Avenger prompt remain. No background writes during load/travel/latent mission st
 
 Retail native/Portal acceptance of these transitions, multi-soldier attribution,
 injury/healing, negative-condition acquisition/cure, bonds and normal campaign play.
-Complete Trait/Skill catalog mapping audit remains open. Optional automatic Journey
-prompt remains disabled. GitHub packaging/publication is a separate later discussion.
+Complete Trait/Skill catalog mapping audit remains open. Automatic invitation reload
+acceptance is a separate gate. Source is public; official release assets remain
+pending acceptance/approval per RELEASE_CHECKLIST.md.
 
 Offline compilation, pure commandlet probes and fake-network tests establish policy,
 serialized shape, compatibility and queue invariants—not full retail history/save

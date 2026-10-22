@@ -16,7 +16,9 @@ static function SetSuppressed(bool Suppress)
 {
     local XComGameState Change;
     local XComGameState_TNBPromptPreference Preference, Existing;
-    if (`HQPRES == none || class'TNB_CampaignService'.static.CampaignID() == "") return;
+    if (`HQPRES == none) return;
+    if (class'TNB_ReportingSafety'.static.BlockReason(class'WorldInfo'.static.GetWorldInfo(), `XCOMHISTORY) != "") return;
+    if (class'TNB_CampaignService'.static.CampaignID() == "") return;
     foreach `XCOMHISTORY.IterateByClassType(class'XComGameState_TNBPromptPreference', Preference)
         if (Preference.CampaignID == class'TNB_CampaignService'.static.CampaignID()) { Existing = Preference; break; }
     if (Existing != none && Existing.bSuppressReminder == Suppress) return;

@@ -3,7 +3,7 @@
 An unofficial XCOM 2: War of the Chosen mod and Windows companion connecting a
 campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
-**Alpha:** mod **0.9.0**, companion **0.10.3**. This is a source snapshot of an
+**Alpha:** mod **0.9.1**, companion **0.10.3**. This is a source snapshot of an
 actively tested integration, not a finished Workshop release. Back up campaign
 saves; start a new campaign for acceptance testing. Not every mapping or gameplay
 event has completed in-game acceptance.
@@ -50,9 +50,10 @@ See the [release checklist](Docs/RELEASE_CHECKLIST.md); no release is published 
 1. Build/install the mod and companion, then launch the companion for the intended
    API origin. Paste the Journey credential into its masked field and validate/save.
    It is stored in Windows Credential Manager, never in mod configuration.
-2. In a loaded Avenger campaign, open MCM > The Name Beneath > Campaign Journey
-   to associate the campaign and review commander effects. Automatic invitations
-   are intentionally disabled.
+2. In an unlinked campaign, wait for a quiet Avenger screen and choose **Review
+   Journey** in the automatic invitation. Review and explicitly confirm commander
+   effects; **Not now** applies nothing and dismisses it for this play session.
+   MCM > The Name Beneath > Campaign Journey remains the manual fallback.
 3. Optionally link soldiers from the Armory. Commander-only play is supported.
 4. Keep the companion running for linking and online reporting; save your campaign.
 
@@ -71,6 +72,8 @@ Journey's existing instance; local saved grants must not stack.
 
 Start with [current acceptance work](Docs/FEEDBACK_AND_NEXT_TESTS.md) and
 [capture/bond/multi-soldier testing](Docs/CAPTIVITY_RELATIONSHIPS_UX_TESTING.md).
+The restored invitation has a separate
+[reload/lifecycle acceptance checklist](Docs/AVENGER_INVITATION_TESTING.md).
 Older documents contain dated milestones and machine-specific examples; the
 current version headers, this README and BUILDING.md take precedence for setup.
 Archived validation logs, screenshots, original prototypes and personal pools

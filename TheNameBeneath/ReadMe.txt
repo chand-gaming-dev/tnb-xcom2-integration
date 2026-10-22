@@ -1,4 +1,14 @@
-The Name Beneath - factual events mod 0.9.0 / XCom 2 companion 0.10.3
+The Name Beneath - mod 0.9.1 / XCom 2 companion 0.10.3
+
+Automatic Journey invitation is restored as a controlled test. On the quiet Avenger,
+Review Journey opens the existing commander preview/confirmation directly, without
+MCM. Not now makes no saved/remote changes and defers this campaign for the current
+play session. Soldier linking remains optional. Bonuses and Journey start still
+require explicit confirmation. MCM remains a fallback and offers the saved campaign
+reminder opt-out. Global fail-safe: set bEnableAutomaticInvitations=false under
+[TheNameBeneath.TNB_AvengerJourneyPrompt] in XComTheNameBeneath.ini, then restart.
+Companion does not need an update. See Docs/AVENGER_INVITATION_TESTING.md for the
+required reload/mission acceptance. Older notes below are historical where superseded.
 
 New committed captures and confirmed returns from captivity report Character
 captured/freed. Bond formation and upgrades now report Relationship formed/developed
