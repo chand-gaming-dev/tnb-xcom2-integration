@@ -1,4 +1,4 @@
-The Name Beneath - factual events mod 0.9.0 / XCom 2 companion 0.10.2
+The Name Beneath - factual events mod 0.9.0 / XCom 2 companion 0.10.3
 
 New committed captures and confirmed returns from captivity report Character
 captured/freed. Bond formation and upgrades now report Relationship formed/developed

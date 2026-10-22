@@ -1,8 +1,8 @@
 # Factual captivity/relationships, ability labels and companion UX
 
-2026-10-21. Mod 0.9.0 / companion 0.10.2 (public-naming follow-up to 0.10.1).
-Both must be updated from older feature builds; the naming follow-up changes the
-companion only and preserves API/storage compatibility identifiers.
+2026-10-21. Mod 0.9.0 / companion 0.10.3 (minimize/restore follow-up to 0.10.2).
+Both must be updated from older feature builds; the window-layout follow-up changes
+the companion only and preserves API/storage compatibility identifiers.
 No new credential, relink, character activation or mapping refresh is required.
 Use separate non-Ironman test saves; preserve the only campaign copy and journals.
 
@@ -60,7 +60,7 @@ Avenger prompt remain. No background writes during load/travel/latent mission st
 
 ## First acceptance: UI and multi-character mission
 
-1. Start TheNameBeneathCompanion.exe. Confirm title `The Name Beneath - XCom 2 Companion 0.10.2`.
+1. Start TheNameBeneathCompanion.exe. Confirm title `The Name Beneath - XCom 2 Companion 0.10.3`.
    Journey tab shows named Journey/Commander, connection and masked credential field.
    Gameplay reporting shows queued/retrying/paused/held/accepted counts and scoped
    diagnostics separately. Character Pools retains explicit download, Save As,

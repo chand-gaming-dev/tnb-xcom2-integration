@@ -2,7 +2,7 @@ namespace TheNameBeneath.Companion;
 
 internal static class Program
 {
-    internal const string Version = "0.10.2";
+    internal const string Version = "0.10.3";
 
     [STAThread]
     internal static int Main(string[] args)

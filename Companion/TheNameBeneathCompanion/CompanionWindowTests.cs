@@ -23,13 +23,14 @@ internal static class CompanionWindowTests
             int port = ready.Task.GetAwaiter().GetResult();
             using var window = new CompanionWindow(config, service, cancel) { ShowInTaskbar = false, Opacity = 0 };
             window.ObserveListener(server);
-            using var deadline = new System.Windows.Forms.Timer { Interval = 15000 };
+            using var deadline = new System.Windows.Forms.Timer { Interval = 30000 };
             deadline.Tick += (_, _) => { result = 1; window.Close(); };
             window.Shown += async (_, _) =>
             {
                 try
                 {
                     CompanionIconTests.CheckWindowAndExecutable(window);
+                    await CheckMinimizeRestoreLayout(window);
                     CheckHeaderLayout(window);
                     Check(window.Text == "The Name Beneath - XCom 2 Companion " + Program.Version);
                     Check(window.ClosingHelpLabel.Text.Contains("XCOM continues running", StringComparison.Ordinal));
@@ -48,6 +49,7 @@ internal static class CompanionWindowTests
                     Check(window.JourneyLabel.Text.Contains("Ren\u00e9's Resistance & Resolve", StringComparison.Ordinal) && !window.JourneyLabel.UseMnemonic);
                     Check(window.JourneyLabel.Text.Contains("Game: XCOM 2", StringComparison.Ordinal) && window.JourneyLabel.MaximumSize.Width == 700);
                     Check(window.Tabs.TabPages.Count == 3 && window.Tabs.TabPages[1].Text == "Gameplay reporting");
+                    await CheckMinimizeRestoreLayout(window);
                     if (Environment.GetEnvironmentVariable("TNB_UI_TEST_PREVIEW") is { Length: > 0 } linkedPreview)
                     {
                         using var bitmap = new Bitmap(window.Width, window.Height);
@@ -100,13 +102,58 @@ internal static class CompanionWindowTests
             Application.Run(window);
             Check(cancel.IsCancellationRequested);
             server.GetAwaiter().GetResult();
-            Console.WriteLine(result == 0 ? "PASS: portal icon resource/window/executable, masked entry, validation, Journey confirmation, credential lifecycle, shared socket status and shutdown." : "FAIL: companion UI self-test.");
+            Console.WriteLine(result == 0 ? "PASS: portal icon resource/window/executable, header sizing, minimize/restore for all tabs and normal/maximized windows, masked entry, validation, Journey confirmation, credential lifecycle, shared socket status and shutdown." : "FAIL: companion UI self-test.");
             return result;
         }
         catch { Console.Error.WriteLine("FAIL: companion UI self-test."); return 1; }
         finally
         {
             if (Path.GetFileName(data).StartsWith("TNB-UI-Tests-", StringComparison.Ordinal) && Directory.Exists(data)) Directory.Delete(data, true);
+        }
+    }
+
+    private static async Task CheckMinimizeRestoreLayout(CompanionWindow window)
+    {
+        var shell = (TableLayoutPanel)window.Tabs.Parent!;
+        var heading = shell.GetControlFromPosition(0, 0)!;
+        Size originalSize = window.Size;
+        int originalTab = window.Tabs.SelectedIndex;
+        string journeyText = window.JourneyLabel.Text;
+        bool stored = window.StoredIndicator.Checked;
+        try
+        {
+            foreach (Size size in new[] { originalSize, window.MinimumSize })
+                foreach (FormWindowState state in new[] { FormWindowState.Normal, FormWindowState.Maximized })
+                    for (int tab = 0; tab < window.Tabs.TabPages.Count; tab++)
+                    {
+                        window.WindowState = FormWindowState.Normal;
+                        window.Size = size;
+                        window.WindowState = state;
+                        window.Tabs.SelectedIndex = tab;
+                        await Task.Delay(30);
+                        int headerHeight = heading.Height;
+                        Size titleConstraint = window.HeaderTitle.MaximumSize;
+                        Size subtitleConstraint = window.HeaderSubtitle.MaximumSize;
+                        window.WindowState = FormWindowState.Minimized;
+                        await Task.Delay(30);
+                        window.RefreshStatus(); // The normal reporting timer also runs while minimized.
+                        Check(window.WindowState == FormWindowState.Minimized);
+                        Check(window.HeaderTitle.MaximumSize == titleConstraint && window.HeaderSubtitle.MaximumSize == subtitleConstraint);
+                        window.WindowState = state;
+                        await Task.Delay(30); // Let native restore/layout messages run, without forcing a repair.
+                        if (!window.Tabs.Visible || window.Tabs.Height < 120 || window.Tabs.Bottom > shell.ClientSize.Height || heading.Height != headerHeight)
+                            throw new InvalidOperationException("Restoring the window hides the main tab content.");
+                        Check(window.WindowState == state && window.Tabs.SelectedIndex == tab);
+                        Check(window.Tabs.SelectedTab!.ClientRectangle.Height > 0);
+                        Check(window.StoredIndicator.Checked == stored && window.JourneyLabel.Text == journeyText);
+                    }
+        }
+        finally
+        {
+            window.WindowState = FormWindowState.Normal;
+            window.Size = originalSize;
+            window.Tabs.SelectedIndex = originalTab;
+            await Task.Delay(30);
         }
     }
 

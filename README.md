@@ -3,7 +3,7 @@
 An unofficial XCOM 2: War of the Chosen mod and Windows companion connecting a
 campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
-**Alpha:** mod **0.9.0**, companion **0.10.2**. This is a source snapshot of an
+**Alpha:** mod **0.9.0**, companion **0.10.3**. This is a source snapshot of an
 actively tested integration, not a finished Workshop release. Back up campaign
 saves; start a new campaign for acceptance testing. Not every mapping or gameplay
 event has completed in-game acceptance.

@@ -5,7 +5,7 @@ commands. The startup helper now accepts `-DevelopmentConfig` and otherwise read
 the ignored `.env.local` beside the solution; it no longer assumes the author's
 private backend checkout. Dated notes below describe earlier development builds.
 
-**Current companion 0.10.2 / mod 0.9.0:** the desktop title is
+**Current companion 0.10.3 / mod 0.9.0:** the desktop title is
 The Name Beneath - XCom 2 Companion <version>. Separate Journey, Gameplay reporting
 and Character Pools tabs organize setup, delivery counts/diagnostics and pool import.
 Existing credentials and delivery journals are retained. New capture/freedom and
@@ -18,6 +18,12 @@ credentials, context and journals retain compatibility. See PUBLIC_NAMING.md.
 
 The header includes the original favicon and uses text-sized stacked rows so
 title/subtitle do not overlap as the window or Windows text scaling changes.
+Minimize/restore ignores the transient zero-width client area when constraining
+header text. This prevents the green header from expanding over the tabs after
+restore. Regression tests exercise all tabs, normal/maximized windows and minimum
+size with empty and connected synthetic Journey states. Credentials/data and the
+native mod are unchanged. Verify by minimizing/restoring each tab repeatedly;
+tabs and controls should remain visible and the selected tab/Journey should stay.
 
 Download the current Journey's complete authorized ZIP with
 the existing credential; save the original or a separately merged .bin pool for

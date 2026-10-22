@@ -72,7 +72,10 @@ internal sealed class CompanionWindow : Form
         headerText.Controls.Add(HeaderTitle, 0, 0); headerText.Controls.Add(HeaderSubtitle, 0, 1);
         headerText.SizeChanged += (_, _) =>
         {
-            int width = Math.Max(1, headerText.ClientSize.Width);
+            // Minimize temporarily collapses the client area. Measuring wrapped
+            // text at one pixel poisons the AutoSize table's restored height.
+            if (WindowState == FormWindowState.Minimized || ClientSize.Width <= 0 || ClientSize.Height <= 0 || headerText.ClientSize.Width <= 1) return;
+            int width = headerText.ClientSize.Width;
             HeaderTitle.MaximumSize = new Size(width, 0); HeaderSubtitle.MaximumSize = new Size(width, 0);
         };
         heading.Controls.Add(HeaderLogo, 0, 0); heading.Controls.Add(headerText, 1, 0);

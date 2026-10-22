@@ -1,5 +1,17 @@
 # Implementation status
 
+**Window restore fix: companion 0.10.3 / unchanged mod 0.9.0 (2026-10-21):**
+Reproduced the green-only window after minimize/restore: a transient zero-width
+client area set header text constraints to one pixel; restored AutoSize height
+grew from 118 to 720 px, leaving a 1 px tab area. Ignore collapsed/minimized sizes
+when updating wrapping constraints. The same reproduction then retained 118 px
+header and 491 px tabs. Added 24 native-window minimize/restore cycles spanning
+all three tabs, normal/maximized states, default/minimum sizes and empty/connected
+fake Journeys. Selected tab, credential indicator and Journey text must persist;
+existing header/font/icon regressions remain. No real credentials/API requests,
+gameplay changes, native mod rebuild or data migration. Manual desktop acceptance
+remains to be confirmed by the player.
+
 **Public naming: companion 0.10.2 / unchanged mod 0.9.0 (2026-10-21):**
 The Name Beneath is the sole public product name. Project/executable renamed to
 TheNameBeneathCompanion, namespace to TheNameBeneath.Companion and API client to
@@ -8,7 +20,8 @@ Established API event names, environment keys and vault/data locations remain
 unchanged by explicit compatibility policy; see PUBLIC_NAMING.md. No saved-game,
 event, credential or backend migration is performed. Earlier entries are history.
 
-Updated: 2026-10-21. Implementation and the localhost companion EXE are approved. GitHub publication remains deferred until local integration works.
+Updated: 2026-10-21. Source is now public in the integration repository. Official
+release assets remain pending gameplay acceptance and approval; see RELEASE_CHECKLIST.md.
 
 ## Current milestone
 
