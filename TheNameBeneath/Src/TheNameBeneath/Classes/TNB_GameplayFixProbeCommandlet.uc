@@ -6,26 +6,71 @@ event int Main(string Params)
     local SoldierObservation Previous, Current, Rebased, RankUp;
     local ConditionEpisode Episode;
     local MissionInjurySnapshot InjurySnapshot;
-    local XComGameState_TNBEventLedger Ledger;
+    local XComGameState_TNBEventLedger Ledger, PromotionLedger, RewoundLedger;
+    local XComGameState_TNBEventOutbox PromotionOutbox, RewoundOutbox;
     local JsonObject Report, Facts;
     local array<string> Instances;
-    local string PromotionKey;
+    local string PromotionKey, LegacyKey, SavedCapture, OccurrenceA, OccurrenceB;
     if (!class'TNB_ReportingSafety'.static.RunChecks()) return 1;
     if (!class'TNB_PromotionCaptureService'.static.ValidTransition(0, 1) || !class'TNB_PromotionCaptureService'.static.ValidTransition(2, 4)) return 2;
     if (class'TNB_PromotionCaptureService'.static.ValidTransition(1, 1) || class'TNB_PromotionCaptureService'.static.ValidTransition(2, 1) || class'TNB_PromotionCaptureService'.static.ValidTransition(-1, 1)) return 3;
     if (class'TNB_PromotionCaptureService'.static.ObservedFromRank(0, 1) != 1 || class'TNB_PromotionCaptureService'.static.ObservedFromRank(2, 1) != 2 || class'TNB_PromotionCaptureService'.static.ValidTransition(class'TNB_PromotionCaptureService'.static.ObservedFromRank(1, 2), 2)) return 22;
     RankUp.UnitID = 17; RankUp.InstanceID = "33333333-3333-4333-8333-333333333333"; RankUp.LinkToken = "link-a"; RankUp.Rank = 1;
-    PromotionKey = class'TNB_PromotionCaptureService'.static.Key(RankUp, 0);
-    if (PromotionKey != "unit:17:33333333-3333-4333-8333-333333333333:rank:0:1") return 4;
+    OccurrenceA = "AAAAAAAA-BBBB-4CCC-8DDD-EEEEEEEEEEEE";
+    OccurrenceB = "FFFFFFFF-BBBB-4CCC-8DDD-EEEEEEEEEEEE";
+    LegacyKey = "unit:17:33333333-3333-4333-8333-333333333333:rank:0:1";
+    PromotionKey = class'TNB_PromotionCaptureService'.static.Key(RankUp, 0, OccurrenceA);
+    if (PromotionKey != (LegacyKey $ ":occurrence:AAAAAAAABBBB4CCC8DDDEEEEEEEEEEEE")) return 4;
     RankUp.LinkToken = "rewound-link-b";
-    if (class'TNB_PromotionCaptureService'.static.Key(RankUp, 0) != PromotionKey) return 5;
+    if (class'TNB_PromotionCaptureService'.static.Key(RankUp, 0, OccurrenceA) != PromotionKey) return 5;
     RankUp.CapturedLocal = class'TNB_EventFactory'.static.CaptureClock();
-    Report = class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0);
-    if (Report == none || Report.GetObject("facts").GetStringValue("from_rank") != "0" || Report.GetObject("facts").GetStringValue("to_rank") != "1") return 6;
+    Report = class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0, OccurrenceA);
+    if (Report == none || Report.GetObject("facts").GetStringValue("from_rank") != "0" || Report.GetObject("facts").GetStringValue("to_rank") != "1" || Report.GetObject("facts").GetStringValue("promotion_track") != "xcom2_soldier_rank") return 6;
     `log("TNB_NATIVE_PROMOTION_CAPTURE=" $ class'TNB_EventFactory'.static.ASCIIJson(Report));
-    if (class'TNB_PromotionCaptureService'.static.Capture(RankUp, 1) != none) return 7;
+    if (class'TNB_PromotionCaptureService'.static.Capture(RankUp, 1, OccurrenceA) != none) return 7;
     RankUp.InstanceID = "";
-    if (class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0) != none) return 8;
+    if (class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0, OccurrenceA) != none) return 8;
+    RankUp.InstanceID = "33333333-3333-4333-8333-333333333333";
+    if (class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0, "") != none ||
+        class'TNB_PromotionCaptureService'.static.NormalizeOccurrenceID("00000000-0000-0000-0000-000000000000") != "" ||
+        class'TNB_PromotionCaptureService'.static.NormalizeOccurrenceID("not-an-occurrence") != "") return 23;
+    PromotionLedger = new class'XComGameState_TNBEventLedger';
+    PromotionOutbox = new class'XComGameState_TNBEventOutbox';
+    Previous = RankUp; Previous.Rank = 0;
+    PromotionLedger.Soldiers.AddItem(Previous);
+    // An existing old-format report stays byte-for-byte intact; it is not re-keyed.
+    Instances.AddItem(RankUp.InstanceID);
+    Report = class'TNB_EventFactory'.static.Capture(LegacyKey, "threadline.character.promoted", "XCOM soldier promoted", class'TNB_PromotionCaptureService'.static.Facts(0, 1), Instances,,, RankUp.CapturedLocal);
+    PromotionOutbox.Add(LegacyKey, Report); PromotionLedger.SeenKeys.AddItem(LegacyKey);
+    SavedCapture = PromotionOutbox.Reports[0].CaptureJSON;
+    if (class'TNB_PromotionCaptureService'.static.Store(PromotionLedger, PromotionOutbox, RankUp, 0, "") || PromotionLedger.Soldiers[0].Rank != 0 || PromotionOutbox.Reports.Length != 1) return 31;
+    if (!class'TNB_PromotionCaptureService'.static.Store(PromotionLedger, PromotionOutbox, RankUp, 0, OccurrenceA)) return 24;
+    if (PromotionOutbox.Reports.Length != 2 || PromotionOutbox.Reports[0].Key != LegacyKey || PromotionOutbox.Reports[0].CaptureJSON != SavedCapture || PromotionLedger.Soldiers[0].Rank != 1) return 25;
+    // Duplicate native callback/history scan or a loaded post-promotion observation:
+    // even a DIFFERENT proposed GUID cannot manufacture another occurrence.
+    if (class'TNB_PromotionCaptureService'.static.Store(PromotionLedger, PromotionOutbox, RankUp, 0, OccurrenceB) || PromotionOutbox.Reports.Length != 2) return 26;
+    `log("TNB_NATIVE_PROMOTION_OCCURRENCE=" $ PromotionOutbox.Reports[1].CaptureJSON);
+    // Simulate independent saved-record branches from a pre-promotion baseline.
+    RewoundLedger = new class'XComGameState_TNBEventLedger';
+    RewoundOutbox = new class'XComGameState_TNBEventOutbox';
+    RewoundLedger.Soldiers.AddItem(Previous);
+    if (!class'TNB_PromotionCaptureService'.static.Store(RewoundLedger, RewoundOutbox, RankUp, 0, OccurrenceB) || RewoundOutbox.Reports[0].Key == PromotionKey) return 27;
+    `log("TNB_NATIVE_PROMOTION_OCCURRENCE=" $ RewoundOutbox.Reports[0].CaptureJSON);
+    RankUp.Rank = 2;
+    if (!class'TNB_PromotionCaptureService'.static.Store(RewoundLedger, RewoundOutbox, RankUp, 1, OccurrenceA)) return 28;
+    `log("TNB_NATIVE_PROMOTION_OCCURRENCE=" $ RewoundOutbox.Reports[1].CaptureJSON);
+    RankUp.Rank = 1;
+    if (class'TNB_PromotionCaptureService'.static.CanRecord(RewoundLedger, RankUp, 0)) return 29;
+    RankUp.Rank = 2; RankUp.LinkToken = "different-link";
+    if (class'TNB_PromotionCaptureService'.static.CanRecord(RewoundLedger, RankUp, 1)) return 30;
+    PromotionLedger.Soldiers[0] = Previous;
+    RankUp = Previous; RankUp.Rank = 1;
+    PromotionOutbox.Reports.Length = 512;
+    if (class'TNB_PromotionCaptureService'.static.Store(PromotionLedger, PromotionOutbox, RankUp, 0, OccurrenceB) || PromotionLedger.Soldiers[0].Rank != 0 || PromotionOutbox.Reports.Length != 512) return 32;
+    RankUp.Rank = 8;
+    Report = class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0, OccurrenceB);
+    if (Report == none || Report.GetObject("facts").GetStringValue("to_rank") != "8") return 33;
+    Instances.Length = 0;
 
     if (!class'TNB_EventCaptureService'.static.NeedsHistoryRebaseline(10, 20, false) || !class'TNB_EventCaptureService'.static.NeedsHistoryRebaseline(20, 10, true)) return 9;
     if (class'TNB_EventCaptureService'.static.NeedsHistoryRebaseline(10, 20, true) || class'TNB_EventCaptureService'.static.NeedsHistoryRebaseline(10, 10, false)) return 10;
@@ -61,7 +106,7 @@ event int Main(string Params)
     if (InStr(class'TNB_EventFactory'.static.ASCIIJson(Facts), "squad_injuries") != INDEX_NONE) return 20;
     Facts = class'TNB_MissionInjuryCapture'.static.CompletionFacts("success", false, 0, false, 0);
     if (InStr(class'TNB_EventFactory'.static.ASCIIJson(Facts), "squad_deaths") != INDEX_NONE) return 21;
-    `log("TNB_GAMEPLAY_FIX_PASS: native promotion shape/identity, no eligibility or rank reset event, gap/no-gap policy, counter-preserving silent rebaseline, all-squad mission wound snapshot, duplicate snapshot and unknown-total omission.");
+    `log("TNB_GAMEPLAY_FIX_PASS: promotion occurrence GUID shape, duplicate-hook/post-promotion high-water guards, rewound/new-rank occurrences, immutable legacy/outbox records, capacity failure without rank advance, factual extended ranks; no eligibility or rank reset event, gap/no-gap policy, counter-preserving silent rebaseline, all-squad mission wound snapshot, duplicate snapshot and unknown-total omission. Real GUID generation and save/load require retail acceptance.");
     return 0;
 }
 

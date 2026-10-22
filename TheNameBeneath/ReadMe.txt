@@ -1,4 +1,13 @@
-The Name Beneath - mod 0.9.1 / XCom 2 companion 0.10.3
+The Name Beneath - mod 0.9.2 / XCom 2 companion 0.10.3
+
+New rank increases get a saved occurrence ID rather than a rank-only event key.
+Replaying a real promotion from a pre-promotion save can therefore create another
+journal entry; delivery retries and post-promotion reloads keep the original report.
+TNB, not this mod, decides XP. A compatible backend recognizes previously credited
+ordinary ranks in the same Journey and explains their 0 XP in the portal. Extended
+or modded rank tracks remain subject to the backend's event-based XP fallback.
+No historical events/queues are re-keyed; no credential or companion update is needed.
+See Docs/PROMOTION_OCCURRENCE_TESTING.md for the focused acceptance checklist.
 
 Automatic Journey invitation is restored as a controlled test. On the quiet Avenger,
 Review Journey opens the existing commander preview/confirmation directly, without
@@ -8,7 +17,9 @@ require explicit confirmation. MCM remains a fallback and offers the saved campa
 reminder opt-out. Global fail-safe: set bEnableAutomaticInvitations=false under
 [TheNameBeneath.TNB_AvengerJourneyPrompt] in XComTheNameBeneath.ini, then restart.
 Companion does not need an update. See Docs/AVENGER_INVITATION_TESTING.md for the
-required reload/mission acceptance. Older notes below are historical where superseded.
+reload/mission acceptance. The user passed the main dismissal/reload, review/link,
+navigation and two-linked-soldier mission-return checks on 0.9.1. Optional opt-out,
+offline/timing stress and longer campaign coverage remain. Older notes are historical.
 
 New committed captures and confirmed returns from captivity report Character
 captured/freed. Bond formation and upgrades now report Relationship formed/developed

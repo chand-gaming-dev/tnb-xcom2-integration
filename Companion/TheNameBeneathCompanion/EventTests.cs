@@ -59,6 +59,7 @@ internal static class EventTests
         }
         BondMilestoneTests.Run(config, fixtures, nativeLog);
         FactualEventTests.Run(config, fixtures, nativeLog);
+        PromotionOccurrenceTests.Run(config, fixtures, nativeLog);
         AtomicFiles.Write(Path.Combine(root, "contract-fixtures.json"), fixtures.ToJsonString());
         var outbox = new EventOutbox(config);
         var limited = new EventOutbox(config with { DataDirectory = Path.Combine(root, "capacity") }, 1);

@@ -1,5 +1,23 @@
 # Implementation status
 
+**Promotion occurrences: mod 0.9.2 / unchanged companion 0.10.3 (2026-10-22):**
+New committed rank increases receive a platform GUID within the existing pending
+capture transaction. The GUID is frozen in the event key/outbox; no delivery-time
+ID minting, gameplay RNG use, new background submission, save schema migration,
+baseline backfill or re-keying of old records. Native and history capture share a
+saved high-water guard. A real replay from a pre-promotion baseline gets a distinct
+occurrence, while post-promotion reloads do not. Facts, participant roles, endpoint,
+credentials and receipt contract are unchanged. TNB owns XP recognition and portal
+history explanations; ordinary numeric ranks only are covered by its new credit
+protection. The companion already transports these reports unchanged; added tests
+cover new IDs, exact retries, accepted receipts without XP fields and legacy data.
+Retail replay/next-rank acceptance remains OPEN: PROMOTION_OCCURRENCE_TESTING.md.
+
+User subsequently passed the 0.9.1 invitation's main retail dismissal/reload,
+review/link/navigation checks and completed a two-linked-soldier mission with both
+participants shown in backend history. That closes the reported invitation/mission
+regression, not every optional lifecycle stress case or injury/death/condition test.
+
 **Avenger invitation retry: mod 0.9.1 / unchanged companion 0.10.3 (2026-10-21):**
 Replaces the dormant always-ticking HUD-holder with facility-grid lifecycle hooks
 and short-lived, world-owned local readiness work. The listener retains no fields;

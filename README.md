@@ -3,7 +3,7 @@
 An unofficial XCOM 2: War of the Chosen mod and Windows companion connecting a
 campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
-**Alpha:** mod **0.9.1**, companion **0.10.3**. This is a source snapshot of an
+**Alpha:** mod **0.9.2**, companion **0.10.3**. This is a source snapshot of an
 actively tested integration, not a finished Workshop release. Back up campaign
 saves; start a new campaign for acceptance testing. Not every mapping or gameplay
 event has completed in-game acceptance.
@@ -74,6 +74,8 @@ Start with [current acceptance work](Docs/FEEDBACK_AND_NEXT_TESTS.md) and
 [capture/bond/multi-soldier testing](Docs/CAPTIVITY_RELATIONSHIPS_UX_TESTING.md).
 The restored invitation has a separate
 [reload/lifecycle acceptance checklist](Docs/AVENGER_INVITATION_TESTING.md).
+Promotion replay reporting and server-owned XP recognition are covered by
+[promotion occurrence testing](Docs/PROMOTION_OCCURRENCE_TESTING.md).
 Older documents contain dated milestones and machine-specific examples; the
 current version headers, this README and BUILDING.md take precedence for setup.
 Archived validation logs, screenshots, original prototypes and personal pools

@@ -8,14 +8,27 @@
   See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md). This is a pending release
   requirement, not authorization to publish a release before acceptance/approval.
 
-## Current test build: mod 0.9.1 / companion 0.10.3
+## Current test build: mod 0.9.2 / companion 0.10.3
+
+- Promotion replay reporting: a new observed rank increase is given one platform
+  GUID, frozen in the saved outbox with the unchanged v1 facts/participant. A genuine
+  replay from a pre-promotion save can be recorded again; retries/post-promotion
+  saves do not mint new reports. TNB owns ordinary-rank XP recognition and history
+  explanations. Companion runtime/protocol unchanged; new native and companion
+  coverage checks legacy preservation and occurrence/retry behavior. Retail
+  acceptance OPEN: PROMOTION_OCCURRENCE_TESTING.md. Injury/condition occurrence
+  identity and XP, missions, bonds, capture/freedom and mappings are unchanged.
 
 - Automatic Avenger invitation restored for controlled acceptance: focus-driven,
   short-lived readiness work, stateless listener and primitive-only native dialog
   callback data. No background state submissions; existing explicit confirmation
   owns Journey start/commander bonuses. Once per campaign/play session; Not now,
-  saved MCM opt-out and global INI fail-safe. Companion unchanged. Reload/transition
-  and no-duplicate-bonus tests remain OPEN: AVENGER_INVITATION_TESTING.md.
+  saved MCM opt-out and global INI fail-safe. Companion unchanged. User accepted
+  Not now, mixed pre/post-link save reloads, fresh-process Review Journey followed
+  by commander/soldier flows, normal Research/Engineering responsiveness, and a
+  completed two-linked-soldier mission with both participants in backend history.
+  Main invitation regression checks passed on 0.9.1; optional opt-out/offline/timing
+  stress remain listed separately in AVENGER_INVITATION_TESTING.md.
 
 - Minimize/restore layout fix: do not update header wrapping constraints while the
   native client area is collapsed. Before the fix, restoring grew the header to

@@ -13,10 +13,25 @@ static function int ObservedFromRank(int NativeBefore, int CapturedBefore)
     return Max(NativeBefore, CapturedBefore);
 }
 
-static function string Key(SoldierObservation Current, int FromRank)
+static function string NormalizeOccurrenceID(string Value)
 {
-    // Same occurrence identity as the existing observer; no new replay/award namespace.
-    return class'TNB_SoldierConditionObserver'.static.Identity(Current) $ ":rank:" $ FromRank $ ":" $ Current.Rank;
+    local string Result;
+    local int Index;
+    if (Len(Value) > 38) return "";
+    Result = Caps(Repl(Repl(Repl(Value, "-", ""), "{", ""), "}", ""));
+    if (Len(Result) != 32 || Result == "00000000000000000000000000000000") return "";
+    for (Index = 0; Index < Len(Result); Index++)
+        if (InStr("0123456789ABCDEF", Mid(Result, Index, 1)) == INDEX_NONE) return "";
+    return Result;
+}
+
+static function string Key(SoldierObservation Current, int FromRank, string OccurrenceID)
+{
+    local string ID;
+    ID = NormalizeOccurrenceID(OccurrenceID);
+    if (ID == "") return "";
+    // New occurrence identity, not an XP achievement key. Never re-key old reports.
+    return class'TNB_SoldierConditionObserver'.static.Identity(Current) $ ":rank:" $ FromRank $ ":" $ Current.Rank $ ":occurrence:" $ ID;
 }
 
 static function JsonObject Facts(int FromRank, int ToRank)
@@ -29,26 +44,58 @@ static function JsonObject Facts(int FromRank, int ToRank)
     return Result;
 }
 
-static function JsonObject Capture(SoldierObservation Current, int FromRank)
+static function JsonObject Capture(SoldierObservation Current, int FromRank, string OccurrenceID)
 {
     local array<string> Instances;
-    if (Current.InstanceID == "" || !ValidTransition(FromRank, Current.Rank)) return none;
+    if (Current.InstanceID == "" || !ValidTransition(FromRank, Current.Rank) || Key(Current, FromRank, OccurrenceID) == "") return none;
     Instances.AddItem(Current.InstanceID);
-    return class'TNB_EventFactory'.static.Capture(Key(Current, FromRank), "threadline.character.promoted", "XCOM soldier promoted",
+    return class'TNB_EventFactory'.static.Capture(Key(Current, FromRank, OccurrenceID), "threadline.character.promoted", "XCOM soldier promoted",
         Facts(FromRank, Current.Rank), Instances,,, Current.CapturedLocal);
+}
+
+static function bool CanRecord(XComGameState_TNBEventLedger Ledger, SoldierObservation Current, int FromRank)
+{
+    local int Index;
+    if (Ledger == none || Current.InstanceID == "") return false;
+    Index = Ledger.Soldiers.Find('UnitID', Current.UnitID);
+    if (Index == INDEX_NONE || Ledger.Soldiers[Index].InstanceID != Current.InstanceID || Ledger.Soldiers[Index].LinkToken != Current.LinkToken) return false;
+    return ValidTransition(ObservedFromRank(FromRank, Ledger.Soldiers[Index].Rank), Current.Rank);
+}
+
+// Production storage seam: plain saved objects only, also exercised by native probes.
+// Updating the high-water mark in the SAME pending transaction prevents a history
+// scan or second UnitRankUp callback from minting another occurrence for this rank.
+static function bool Store(XComGameState_TNBEventLedger Ledger, XComGameState_TNBEventOutbox Outbox, SoldierObservation Current, int FromRank, string OccurrenceID)
+{
+    local JsonObject Report;
+    local string EventKey;
+    local int Index;
+    if (Outbox == none || !CanRecord(Ledger, Current, FromRank)) return false;
+    Index = Ledger.Soldiers.Find('UnitID', Current.UnitID);
+    FromRank = ObservedFromRank(FromRank, Ledger.Soldiers[Index].Rank);
+    Report = Capture(Current, FromRank, OccurrenceID);
+    if (Report == none) return false;
+    EventKey = Report.GetStringValue("key");
+    if (Ledger.SeenKeys.Find(EventKey) != INDEX_NONE || !Outbox.Add(EventKey, Report))
+    { Ledger.Diagnostic = Outbox.Diagnostic; return false; }
+    Ledger.SeenKeys.AddItem(EventKey);
+    Ledger.Soldiers[Index].Rank = Current.Rank;
+    return true;
 }
 
 static function bool Queue(XComGameState Pending, XComGameState_TNBEventLedger Ledger, SoldierObservation Current, int FromRank, optional name Source='history')
 {
-    local JsonObject Report;
-    local array<string> Instances;
+    local XComGameState_TNBEventOutbox Outbox;
+    local string OccurrenceID;
     local bool bQueued;
-    if (Ledger == none) return false;
-    Report = Capture(Current, FromRank);
-    if (Report == none) return false;
-    Instances.AddItem(Current.InstanceID);
-    class'TNB_EventFactory'.static.Queue(Pending, Ledger, Key(Current, FromRank), "threadline.character.promoted", Report.GetStringValue("summary"), Report.GetObject("facts"), Instances,,, Current.CapturedLocal);
-    bQueued = Ledger.SeenKeys.Find(Key(Current, FromRank)) != INDEX_NONE;
+    if (Pending == none || !CanRecord(Ledger, Current, FromRank)) return false;
+    // Platform GUID, not the campaign's gameplay random stream. Generated only
+    // for a new observed transition, then frozen in the saved outbox. Delivery,
+    // restart, post-promotion reload and authorization retries never call this.
+    if (`FXSLIVE != none) OccurrenceID = NormalizeOccurrenceID(`FXSLIVE.GetGUID());
+    if (OccurrenceID == "") { Ledger.Diagnostic = "promotion_occurrence_id_unavailable"; return false; }
+    Outbox = class'XComGameState_TNBEventOutbox'.static.Edit(Pending);
+    bQueued = Store(Ledger, Outbox, Current, FromRank, OccurrenceID);
     class'TNB_ReportingSafety'.static.Trace("PROMOTION source=" $ Source $ " from=" $ FromRank $ " to=" $ Current.Rank $ " captured=" $ bQueued, Pending);
     return bQueued;
 }

@@ -1,5 +1,11 @@
 # Automatic Avenger invitation: controlled retry
 
+Retail follow-up: the user passed Not now, mixed linked/unlinked same-session
+reloads, fresh-process review followed by commander and soldier linking, normal
+Research/Engineering response, and a completed two-linked-soldier mission on 0.9.1.
+The reported invitation/mission-load regression is closed. Optional saved-opt-out,
+offline/timing stress and longer campaign acceptance are not implied by that result.
+
 Mod **0.9.1**, companion **0.10.3** unchanged. No credential replacement,
 relinking, API change, event rewrite or balance/mapping change is required.
 This is a new implementation, not simply re-enabling the old actor. The exact

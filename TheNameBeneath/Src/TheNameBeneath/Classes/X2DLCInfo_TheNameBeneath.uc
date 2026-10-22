@@ -53,7 +53,7 @@ static function MarkReminderOffered(string CampaignID)
 
 static event OnLoadedSavedGameToStrategy()
 {
-    class'TNB_ReportingSafety'.static.Trace("LOAD_STRATEGY build=0.9.1");
+    class'TNB_ReportingSafety'.static.Trace("LOAD_STRATEGY build=0.9.2");
     // Primitive epoch only: invalidate stale answers without creating/caching
     // prompt actors in a load callback. Facility-grid focus owns scheduling.
     InvalidateReminderCallbacks();
@@ -63,14 +63,14 @@ static event OnLoadedSavedGameToStrategy()
 static event OnLoadedSavedGameToTactical()
 {
     InvalidateReminderCallbacks();
-    class'TNB_ReportingSafety'.static.Trace("LOAD_TACTICAL build=0.9.1");
+    class'TNB_ReportingSafety'.static.Trace("LOAD_TACTICAL build=0.9.2");
     class'TNB_EventPump'.static.Ensure();
 }
 
 static event OnPreMission(XComGameState StartGameState, XComGameState_MissionSite MissionState)
 {
     InvalidateReminderCallbacks();
-    class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.1", StartGameState);
+    class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.2", StartGameState);
     class'TNB_EventCaptureService'.static.CarryToStartState(StartGameState);
     class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_CARRIED", StartGameState);
     class'TNB_EventCaptureService'.static.PrepareMission(StartGameState, MissionState);
