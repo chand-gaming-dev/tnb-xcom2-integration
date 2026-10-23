@@ -50,6 +50,7 @@ static function string Summary(ResolvedEffect Effect)
     if (Effect.EffectKind == 'Stat') return Signed(Effect.Magnitude) @ StatLabel(Effect.Target);
     if (Effect.EffectKind == 'Ability') return AbilityName(Effect.Target);
     if (Effect.EffectKind == 'ResourcePercent') return Percentage(Effect.Magnitude) @ string(Effect.Target);
+    if (Effect.EffectKind == 'RecruitCostPercent') return Percentage(Effect.Magnitude) @ "recruit hiring cost";
     if (Effect.EffectKind == 'SupplyDropItem') return "1 item / monthly rollover";
     if (Effect.EffectKind == 'DetectionRange') return "Increased enemy detection range (" $ Percentage(Effect.Magnitude) $ " baseline)";
     if (Effect.EffectKind == 'RecoveryDuration') return Percentage(Effect.Magnitude) @ (Effect.Target == 'Will' ? "fatigue recovery duration" : "wound recovery duration");
@@ -133,6 +134,7 @@ static function string TimingText(name EffectKind, bool Committed)
         case 'RecoveryDuration': return "Ongoing recovery-duration adjustment. Opposing duration adjustments add before conversion to recovery speed; native hour rounding applies. Tactical damage is unchanged.";
         case 'CovertRisk': return "Ongoing adjustment to existing eligible covert-action risks only. Native protections and final 0-100% limits still apply.";
         case 'ResearchSpeed': return "Ongoing Science Score modifier, including Shadow Chamber research. Does not speed Proving Ground projects or breakthroughs that ignore Science Score. Native rounding applies; no scientists or prerequisite unlocks are granted.";
+        case 'RecruitCostPercent': return "Ongoing Supplies cost adjustment for standard Recruit Soldiers purchases, after normal discounts and native rounding. Midnight Raids still applies. Free recruits stay free; reward recruits, delivery time and candidate count are unchanged.";
         case 'ResourcePercent': return "Ongoing modifier on supported positive resource gains, not existing stock. Whole-resource rounding applies.";
         case 'ParticipantResource': return "Only actual positive mission/covert-action rewards with this linked soldier on the retained deployment/assignment roster. Adds to eligible Commander percentages against the original reward; no reward means no change. Supplies cannot fall below zero.";
         case 'SupplyDropItem': return "Ongoing: one random common item at each monthly rollover, even with zero supply income. A dismissible popup identifies the item added to inventory.";
@@ -197,7 +199,7 @@ static function string EffectImage(ResolvedEffect Effect)
     if (Effect.EffectKind == 'DetectionRange') return StatImage('eStat_SightRadius');
     if (Effect.EffectKind == 'RecoveryDuration') return StatImage(Effect.Target == 'Will' ? 'eStat_Will' : 'eStat_HP');
     if (Effect.EffectKind == 'CovertRisk' || Effect.EffectKind == 'CovertDurationOnce' || Effect.EffectKind == 'ContactOnce') return StatImage('eStat_SightRadius');
-    if (Effect.EffectKind == 'ResourcePercent' || Effect.EffectKind == 'ResourceOnce' || Effect.EffectKind == 'ParticipantResource')
+    if (Effect.EffectKind == 'ResourcePercent' || Effect.EffectKind == 'ResourceOnce' || Effect.EffectKind == 'ParticipantResource' || Effect.EffectKind == 'RecruitCostPercent')
     {
         if (Effect.Target == 'Supplies') return SafeImage("img:///UILibrary_XPACK_StrategyImages.Invx_Supplies");
         if (Effect.Target == 'Intel') return SafeImage("img:///UILibrary_XPACK_StrategyImages.Invx_Intel");
@@ -224,7 +226,7 @@ static function string TimingBadge(name Kind)
 {
     if (IsOneTime(Kind)) return "ONE-TIME";
     if (Kind == 'SupplyDropItem') return "MONTHLY";
-    if (Kind == 'ResourcePercent' || Kind == 'RecoveryDuration' || Kind == 'CovertRisk' || Kind == 'ResearchSpeed' || Kind == 'ParticipantResource' || Kind == 'DetectionRange') return "ONGOING";
+    if (Kind == 'ResourcePercent' || Kind == 'RecoveryDuration' || Kind == 'CovertRisk' || Kind == 'ResearchSpeed' || Kind == 'ParticipantResource' || Kind == 'DetectionRange' || Kind == 'RecruitCostPercent') return "ONGOING";
     return "SAVED";
 }
 
@@ -235,7 +237,7 @@ static function EUIState EffectColor(ResolvedEffect Effect)
     if (Effect.Status == "active" || Effect.Status == "applied")
     {
         Amount = Effect.Status == "active" ? Effect.Magnitude : Effect.AppliedMagnitude;
-        if (Effect.EffectKind == 'AvatarOnce' || Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'CovertRisk' || Effect.EffectKind == 'CovertDurationOnce' || Effect.EffectKind == 'DetectionRange') Amount = -Amount;
+        if (Effect.EffectKind == 'AvatarOnce' || Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'CovertRisk' || Effect.EffectKind == 'CovertDurationOnce' || Effect.EffectKind == 'DetectionRange' || Effect.EffectKind == 'RecruitCostPercent') Amount = -Amount;
         if (Amount < 0) return eUIState_Bad;
         return Amount > 0 ? eUIState_Good : eUIState_Normal;
     }

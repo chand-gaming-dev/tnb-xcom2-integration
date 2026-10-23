@@ -566,6 +566,19 @@ expensive. Approved design only; implementation and gameplay acceptance are pend
   concealment-exposure effect. No gameplay configuration, code, canonical catalog,
   dependencies, saves or release output changed.
 
+### Approved implementation scope: Commander Conspicuous (2026-10-22)
+
+After native pricing-path analysis, the Product Owner approved using the existing
+recruit-price scalar, registered once at future association, with preserved Midnight
+Raids activation/deactivation delegates to retain the +25% through native resets.
+Normal recruitment discounts and shared UI/affordability/payment pricing remain.
+No timer, extra history submission, hidden payment, core class override or new
+dependency. Existing frozen links remain unchanged. Arbitrary other-mod scalar
+overwrites/replacement recruitment systems cannot be guaranteed; this compatibility
+boundary is accepted, not an instruction to override those mods continually.
+Native gameplay acceptance remains required. This clarifies implementation scope,
+not the approved amount or canonical catalog; the frozen Portal package is untouched.
+
 ## Approved review decision: Commander Poor Stamina (2026-10-22)
 
 The Product Owner carried forward **Commander Poor Stamina -> 10% longer soldier

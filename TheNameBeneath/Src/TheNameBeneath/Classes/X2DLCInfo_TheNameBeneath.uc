@@ -107,6 +107,7 @@ static event OnPostTemplatesCreated()
     if (class'TNB_EffectPresentation'.static.RunChecks()) `log("Read-only effect presentation checks passed. Automatic Avenger prompt disabled (MCM-only diagnostic build).",, 'TheNameBeneath');
     else `log("WARNING: effect presentation checks failed.",, 'TheNameBeneath');
     class'TNB_CommanderBonusService'.static.InstallRewardHooks();
+    class'TNB_RecruitCostService'.static.Install();
 }
 
 static function ModifyEarnedSoldierAbilities(out array<SoldierClassAbilityType> EarnedAbilities, XComGameState_Unit UnitState)

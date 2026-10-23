@@ -44,8 +44,8 @@ static function bool CatalogCoverage(array<TNB_MappingConfig.MappingRow> Rows)
     if (Effects.Length != 23) return false;
     foreach Effects(Effect)
         if (Effect.Status == "resolved") Resolved++;
-        else if (Effect.Status != "unmapped" || (Effect.SourceID != "trait.conspicuous" && Effect.SourceID != "trait.battle-scarred")) return false;
-    return Resolved == 21 && Rows.Length == 47;
+        else if (Effect.Status != "unmapped" || Effect.SourceID != "trait.battle-scarred") return false;
+    return Resolved == 22 && Rows.Length == 48;
 }
 
 static function bool DetectionChecks()
@@ -90,7 +90,7 @@ event int Main(string Params)
     Shipped = Fixture.default.SourceRows;
     if (Shipped.Length < 25) return 23;
     if (!CatalogCoverage(Shipped)) return 34;
-    `log("TNB_MAPPING_CATALOG_COVERAGE_PASS: 26 Character and 21 Commander mappings; only blocked Commander Conspicuous and acquisition-inapplicable Commander Battle-Scarred remain unmatched.");
+    `log("TNB_MAPPING_CATALOG_COVERAGE_PASS: 26 Character and 22 Commander mappings; only acquisition-inapplicable Commander Battle-Scarred remains unmatched.");
     if (!class'TNB_PolicyTests'.static.Run()) return 1;
     Effect.EffectKind = 'CovertRisk'; Effect.Target = 'CovertActionRisk_Ambush'; Effect.Magnitude = -5; Effect.Status = "active";
     Effects.AddItem(Effect);

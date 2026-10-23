@@ -34,6 +34,7 @@ Effect kinds:
 | Character/Commander | RecoveryDuration | `Wound` (either context), `Will` (Commander); signed duration basis points. -1000 = 10% shorter, +2000 = 20% longer. Add durations, then use reciprocal work rate |
 | Commander | CovertRisk | Existing `CovertActionRisk_Ambush`, `CovertActionRisk_SoldierWounded`, `CovertActionRisk_SoldierCaptured`; signed **percentage points**, so 5 = +5 pp, not 500 |
 | Commander | ResearchSpeed | `Science`; speed basis points, 1000 = +10%; native Science Score progress scope |
+| Commander | RecruitCostPercent | `Supplies`; signed basis points, default 2500 = +25% standard Recruit Soldiers cost after normal discounts/native rounding. Registered once; native Midnight Raids callbacks preserve the factor. Aggregate limited to -99% through +1000% |
 | Commander | ContactOnce | +1 to +10 contact capacity at association; normal contact costs/research remain |
 | Commander | RosterIntelligenceOnce | Number of distinct random eligible barracks recipients (default 2), +1 tier each, no retroactive AP/backfill |
 | Commander | CovertDurationOnce | Negative duration basis points (default -1000): register native 0.90 duration multiplier once |
@@ -43,7 +44,9 @@ Effect kinds:
 | Commander | AvatarOnce | Signed pip delta, limited to eligible progress/capacity; no deferred award |
 | Commander | SupplyDropItem | Magnitude 1; monthly rollover, including zero-income months |
 
-Unknown/missing mappings, invalid rows, disabled effects, missing ability templates and already-present abilities are reported separately. A missing optional ability's frozen template name is retained; it can be supplied by the earned-ability hook if that template is installed again. The report records **link-time results**, not a promise that a removed ability mod is still present. Optional ability compatibility still needs tactical testing. See [the implementation checkpoint](ALPHA_MAPPING_IMPLEMENTATION.md) for approved acquired-Trait mappings, Character Conspicuous's accepted native stacking, and Commander Conspicuous which remains blocked, not excluded. The alpha mapping set is not complete or accepted for release.
+Unknown/missing mappings, invalid rows, disabled effects, missing ability templates and already-present abilities are reported separately. A missing optional ability's frozen template name is retained; it can be supplied by the earned-ability hook if that template is installed again. The report records **link-time results**, not a promise that a removed ability mod is still present. Optional ability compatibility still needs tactical testing. See [the implementation checkpoint](ALPHA_MAPPING_IMPLEMENTATION.md) for all 48 applicable default mappings, Character Conspicuous's accepted native stacking, and Commander Conspicuous's native pricing adapter/third-party limits. Native gameplay acceptance is still required before release.
+
+Recruitment pricing uses the same native getter for display, affordability and payment. No reward recruits, delivery time or candidate count are changed. Arbitrary scalar writes or replacement callbacks by other mods can bypass the modifier; it is not repaired by a timer or by opening a screen. Existing frozen associations are never retrofitted by a config change.
 
 ## Ability provenance comments
 

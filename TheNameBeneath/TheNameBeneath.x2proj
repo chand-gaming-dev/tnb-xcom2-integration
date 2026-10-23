@@ -84,6 +84,9 @@
     <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBCommanderRewards.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_CommanderRewardProbeCommandlet.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_ResourceRewardHook.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_RecruitCostService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_RecruitCostHook.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_RecruitProbeCommandlet.uc" />
     <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBCampaignLink.uc" />
     <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBLinkIntent.uc" />
     <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBSoldierLink.uc" />

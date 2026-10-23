@@ -36,6 +36,7 @@ static function bool ValidRow(TNB_MappingConfig.MappingRow Row)
     else
     {
         if (Row.EffectKind == 'ResourcePercent') return (Row.Target == 'Supplies' || Row.Target == 'Intel') && Row.Magnitude >= -10000 && Row.Magnitude <= 100000;
+        if (Row.EffectKind == 'RecruitCostPercent') return Row.Target == 'Supplies' && Row.Magnitude >= -9900 && Row.Magnitude <= 100000;
         if (Row.EffectKind == 'ResourceOnce') return (Row.Target == 'Supplies' || Row.Target == 'Intel') && Abs(Row.Magnitude) <= 100000;
         if (Row.EffectKind == 'StaffOnce') return (Row.Target == 'Engineer' || Row.Target == 'Scientist') && Row.Magnitude >= 1 && Row.Magnitude <= 10;
         if (Row.EffectKind == 'AvatarOnce') return Abs(Row.Magnitude) <= 12;
@@ -136,6 +137,7 @@ static function string Describe(ResolvedEffect Effect)
     local string Amount;
     Amount = ((Effect.Magnitude > 0) ? "+" : "") $ string(Effect.Magnitude);
     if (Effect.EffectKind == 'Ability') return "Ability: " $ string(Effect.Target);
+    if (Effect.EffectKind == 'RecruitCostPercent') return class'TNB_EffectPresentation'.static.Percentage(Effect.Magnitude) $ " Supplies cost for standard Recruit Soldiers purchases";
     if (Effect.EffectKind == 'ResourcePercent') return ((Effect.Magnitude > 0) ? "+" : "") $ string(float(Effect.Magnitude) / 100.0) $ "% " $ string(Effect.Target) $ " on qualifying gains";
     if (Effect.EffectKind == 'ParticipantResource') return ((Effect.Magnitude > 0) ? "+" : "") $ string(float(Effect.Magnitude) / 100.0) $ "% " $ string(Effect.Target) $ " rewards from missions/covert actions this soldier participates in";
     if (Effect.EffectKind == 'SupplyDropItem') return "1 random common item at each monthly rollover (even with no income)";

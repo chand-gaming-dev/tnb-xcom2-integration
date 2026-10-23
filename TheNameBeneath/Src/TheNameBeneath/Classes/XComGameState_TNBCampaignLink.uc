@@ -36,6 +36,11 @@ struct ResourceAdjustment
 };
 var array<ResourceAdjustment> RewardAdjustments;
 
+// Frozen future-association receipt; defaults leave existing linked saves alone.
+var bool bRecruitCostRegistered;
+var int RecruitCostBasisPoints;
+var float RecruitCostExpectedScalar;
+
 static function XComGameState_TNBCampaignLink Get(optional XComGameState Pending)
 {
     local XComGameState_TNBCampaignLink State;

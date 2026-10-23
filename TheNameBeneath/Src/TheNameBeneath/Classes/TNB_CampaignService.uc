@@ -75,7 +75,7 @@ static function bool Associate(JourneyContext Journey, out string ErrorCode)
     for (Index = 0; Index < Effects.Length; Index++)
     {
         if (Effects[Index].Status != "resolved") continue;
-        if (Effects[Index].EffectKind == 'ResourcePercent' || Effects[Index].EffectKind == 'CovertRisk' || Effects[Index].EffectKind == 'RecoveryDuration' || Effects[Index].EffectKind == 'ResearchSpeed') Effects[Index].Status = "active";
+        if (Effects[Index].EffectKind == 'ResourcePercent' || Effects[Index].EffectKind == 'CovertRisk' || Effects[Index].EffectKind == 'RecoveryDuration' || Effects[Index].EffectKind == 'ResearchSpeed' || Effects[Index].EffectKind == 'RecruitCostPercent') Effects[Index].Status = "active";
         else if (Effects[Index].EffectKind == 'SupplyDropItem')
         {
             Effects[Index].Status = (Link.FrozenScroungerItems.Length > 0) ? "active" : "skipped";
@@ -148,6 +148,10 @@ static function bool Associate(JourneyContext Journey, out string ErrorCode)
         }
     }
     Link.Effects = Effects; Link.bOneTimeEffectsCommitted = true;
+    if (class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'RecruitCostPercent', 'Supplies') != 0 && !class'TNB_RecruitCostService'.static.Register(Change, Link))
+    {
+        `XCOMHISTORY.CleanupPendingGameState(Change); ErrorCode = "recruit_cost_registration_unavailable"; return false;
+    }
     class'TNB_StrategyMappingService'.static.RefreshAssociationProjects(Change, HQ, Link);
     // One existing association transaction, no UI timer or independent history write.
     if (class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'CovertRisk', 'CovertActionRisk_Ambush') != 0 || class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'CovertRisk', 'CovertActionRisk_SoldierWounded') != 0 || class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'CovertRisk', 'CovertActionRisk_SoldierCaptured') != 0)
