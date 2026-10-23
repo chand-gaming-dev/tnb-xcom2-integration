@@ -96,6 +96,12 @@
     <Content Include="Src\TheNameBeneath\Classes\UIListItem_TNBArmory.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_ProbeGameInfo.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_MCMController.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_DejaVuConfig.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_DejaVuService.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_DejaVuProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\X2Ability_TNBDejaVu.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\X2EventListener_TNBDejaVu.uc" />
+    <Content Include="Content\UILibrary_TNB.upk" />
     <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBMCM.uc" />
     <Content Include="ModPreview.jpg" />
     <Content Include="ContentOptions.json" />

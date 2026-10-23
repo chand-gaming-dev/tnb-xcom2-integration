@@ -7,6 +7,13 @@ var TNB_LoopbackClient Probe;
 var transient array<string> PromptedCampaigns;
 var transient int PromptGeneration;
 
+static function bool AbilityTagExpandHandler(string InString, out string OutString)
+{
+    if (InString != "TNBDejaVuPercent") return false;
+    OutString = string(class'X2ExperienceConfig'.default.bUseFullXpSystem ? 0 : Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100));
+    return true;
+}
+
 static function bool DisplayQueuedDynamicPopup(DynamicPropertySet PropertySet)
 {
     return class'TNB_CommanderRewardPresentation'.static.DisplayQueuedPopup(PropertySet);

@@ -189,6 +189,7 @@ static function bool Commit(int UnitID, string UnitToken, CharacterSnapshot Snap
     Link.Snapshot = Snapshot; Link.Effects = Effects; Link.MappingRevision = class'TNB_MappingConfig'.default.MappingRevision;
     Link.bEffectsCommitted = true;
     Unit.AddComponentObject(Link);
+    class'TNB_DejaVuService'.static.GrantAtLink(Unit);
     if (class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'RecoveryDuration', 'Wound') != 0)
         class'TNB_StrategyMappingService'.static.RefreshSoldierRecovery(Change, UnitID);
     Intent = XComGameState_TNBLinkIntent(Change.ModifyStateObject(class'XComGameState_TNBLinkIntent', Intent.ObjectID));
@@ -207,6 +208,7 @@ static function AddAbilities(out array<SoldierClassAbilityType> Earned, XComGame
     local XComGameState_TNBSoldierLink Link;
     local TNB_Types.ResolvedEffect Effect;
     local SoldierClassAbilityType Ability;
+    class'TNB_DejaVuService'.static.AddLinkedAbility(Earned, Unit);
     Link = class'XComGameState_TNBSoldierLink'.static.ForUnit(Unit);
     if (Link == none) return;
     foreach Link.Effects(Effect)
@@ -226,6 +228,8 @@ static function string Report(XComGameState_TNBSoldierLink Link)
     local int Total;
     Body = "Linked character: " $ class'TNB_Types'.static.EscapeUI(Link.Snapshot.CharacterName) $ "\nSnapshot: " $ class'TNB_Types'.static.EscapeUI(Link.Snapshot.SnapshotID) $ " (v" $ Link.Snapshot.SnapshotVersion $ ")\n";
     Body $= class'TNB_MappingResolver'.static.Report(Link.Effects, true);
+    if (class'TNB_DejaVuService'.static.Value(XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(Link.UnitRef.ObjectID)), 'TNB_DV_LinkGrant') == 1)
+        Body $= "\nLocal linking bonus: Deja Vu - " $ Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100) $ "% additional future promotion XP (configurable in MCM).";
     foreach Link.Effects(Effect)
         if (Effect.EffectKind == 'Stat' && Effect.Status == "applied" && Targets.Find(Effect.Target) == INDEX_NONE)
         {

@@ -21,9 +21,27 @@ if (-not (Test-Path -LiteralPath (Join-Path $SdkPath 'XComGame\Script\XComGame.u
 $builder._LoadContentOptions()
 $builder._CopyModToSdk()
 $builder._ConvertLocalization()
+# Make the authored UI-only package discoverable by offline commandlets. This
+# is the mod's own SDK content directory, never retail or base-game assets.
+$iconSource = Join-Path $projectPath 'TheNameBeneath\Content\UILibrary_TNB.upk'
+if (Test-Path -LiteralPath $iconSource) {
+    $iconSdkDirectory = Join-Path $SdkPath 'XComGame\Content\Mods\TheNameBeneath'
+    New-Item -ItemType Directory -Path $iconSdkDirectory -Force | Out-Null
+    Copy-Item -LiteralPath $iconSource -Destination (Join-Path $iconSdkDirectory 'UILibrary_TNB.upk') -Force
+}
 # Make reads Development/Src, not the staged mod's Src. Do not mirror/delete
 # base SDK sources or append global macros again for this incremental build.
-Copy-Item -Path (Join-Path $projectPath 'TheNameBeneath\Src\TheNameBeneath\Classes\*.uc') -Destination (Join-Path $SdkPath 'Development\Src\TheNameBeneath\Classes') -Force
+# Other local mod builds can remove our dependency sources/macros from Src.
+# Restore this mod and MCM API, without mirroring/deleting the shared SDK base.
+$sourceRoot = Join-Path $projectPath 'TheNameBeneath\Src'
+$globalsPath = Join-Path $SdkPath 'Development\Src\Core\Globals.uci'
+$macroMarker = '// Macros included from ' + (Join-Path $sourceRoot 'extra_globals.uci')
+if ((Get-Content -LiteralPath $globalsPath -Raw).Contains($macroMarker)) {
+    Copy-Item -Path (Join-Path $sourceRoot '*') -Destination (Join-Path $SdkPath 'Development\Src') -Recurse -Force
+} else {
+    $builder._ParseMacroFile($globalsPath)
+    $builder._CopySrcFolder($sourceRoot)
+}
 # Commandlets don't execute the game's DLC INI merge. Compile an SDK-only child
 # fixture mechanically from the exact source rows, then exercise the production
 # resolver against those rows. No player config and no test defaults in the mod.
