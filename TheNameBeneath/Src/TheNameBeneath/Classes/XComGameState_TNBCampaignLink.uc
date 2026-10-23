@@ -13,6 +13,29 @@ var bool bOneTimeEffectsCommitted;
 var array<string> ReservedCharacterIDs;
 var array<int> ReservedUnitIDs;
 
+struct IntelligenceGrant
+{
+    var name MappingKey;
+    var StateObjectReference UnitRef;
+    var string SoldierName;
+    var int BeforeTier;
+    var int AfterTier;
+};
+// Frozen association receipt. Viewing/reopening never chooses new recipients.
+var array<IntelligenceGrant> IntelligenceGrants;
+
+struct ResourceAdjustment
+{
+    var string Key;
+    var int RewardID;
+    var name Resource;
+    var int Original;
+    var int Adjustment;
+    var int BasisPoints;
+    var string Sources;
+};
+var array<ResourceAdjustment> RewardAdjustments;
+
 static function XComGameState_TNBCampaignLink Get(optional XComGameState Pending)
 {
     local XComGameState_TNBCampaignLink State;

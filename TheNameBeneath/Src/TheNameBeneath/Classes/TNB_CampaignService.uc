@@ -46,6 +46,7 @@ static function bool Associate(JourneyContext Journey, out string ErrorCode)
     local XComGameState_TNBCampaignLink Link;
     local XComGameState_HeadquartersXCom HQ;
     local XComGameState_HeadquartersAlien Alien;
+    local XComGameState_HeadquartersResistance Resistance;
     local XComGameState_Unit Staff;
     local XComGameState_MissionSite Site, ChosenSite;
     local array<TNB_Types.ResolvedEffect> Effects;
@@ -74,11 +75,28 @@ static function bool Associate(JourneyContext Journey, out string ErrorCode)
     for (Index = 0; Index < Effects.Length; Index++)
     {
         if (Effects[Index].Status != "resolved") continue;
-        if (Effects[Index].EffectKind == 'ResourcePercent') Effects[Index].Status = "active";
+        if (Effects[Index].EffectKind == 'ResourcePercent' || Effects[Index].EffectKind == 'CovertRisk' || Effects[Index].EffectKind == 'RecoveryDuration' || Effects[Index].EffectKind == 'ResearchSpeed') Effects[Index].Status = "active";
         else if (Effects[Index].EffectKind == 'SupplyDropItem')
         {
             Effects[Index].Status = (Link.FrozenScroungerItems.Length > 0) ? "active" : "skipped";
             if (Link.FrozenScroungerItems.Length == 0) Effects[Index].Note = "No configured common-item templates are installed.";
+        }
+        else if (Effects[Index].EffectKind == 'ContactOnce')
+        {
+            HQ.BonusCommCapacity += Effects[Index].Magnitude;
+            Effects[Index].AppliedMagnitude = Effects[Index].Magnitude;
+            Effects[Index].Status = "applied";
+        }
+        else if (Effects[Index].EffectKind == 'RosterIntelligenceOnce')
+            class'TNB_StrategyMappingService'.static.GrantRosterIntelligence(Change, HQ, Link, Effects[Index]);
+        else if (Effects[Index].EffectKind == 'CovertDurationOnce')
+        {
+            Resistance = XComGameState_HeadquartersResistance(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersResistance', true));
+            if (Resistance == none) { `XCOMHISTORY.CleanupPendingGameState(Change); ErrorCode = "resistance_hq_missing"; return false; }
+            Resistance = XComGameState_HeadquartersResistance(Change.ModifyStateObject(class'XComGameState_HeadquartersResistance', Resistance.ObjectID));
+            Resistance.AddCovertActionModifier(Change, 1.0 + float(Effects[Index].Magnitude) / 10000.0);
+            Effects[Index].AppliedMagnitude = Effects[Index].Magnitude;
+            Effects[Index].Status = "applied";
         }
         else if (Effects[Index].EffectKind == 'ResourceOnce')
         {
@@ -129,8 +147,11 @@ static function bool Associate(JourneyContext Journey, out string ErrorCode)
             if (Actual != Effects[Index].Magnitude) Effects[Index].Note = "Actual Avatar change: " $ Actual $ "; clamped to eligible progress/capacity. Not deferred or repeated.";
         }
     }
-    HQ.HandlePowerOrStaffingChange(Change);
     Link.Effects = Effects; Link.bOneTimeEffectsCommitted = true;
+    class'TNB_StrategyMappingService'.static.RefreshAssociationProjects(Change, HQ, Link);
+    // One existing association transaction, no UI timer or independent history write.
+    if (class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'CovertRisk', 'CovertActionRisk_Ambush') != 0 || class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'CovertRisk', 'CovertActionRisk_SoldierWounded') != 0 || class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'CovertRisk', 'CovertActionRisk_SoldierCaptured') != 0)
+        class'TNB_StrategyMappingService'.static.RefreshRiskCache(Change);
     `XCOMGAME.GameRuleset.SubmitGameState(Change);
     Link = class'XComGameState_TNBCampaignLink'.static.Get();
     if (Link == none || !Link.bOneTimeEffectsCommitted) { ErrorCode = "association_commit_failed"; return false; }

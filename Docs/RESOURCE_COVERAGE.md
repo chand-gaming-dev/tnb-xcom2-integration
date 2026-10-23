@@ -1,5 +1,20 @@
 # Commander resource coverage
 
+## Alpha mapping implementation (2026-10-22, pending gameplay acceptance)
+
+Character Inquisitive (+10% Intel) and Extravagant (-10% Supplies) now contribute
+only on supported mission/covert-action rewards when that linked soldier belongs
+to the retained launch/assignment roster and instance list. They never contribute
+to POI scans, monthly drops or unrelated gains. Add their percentages to eligible
+Commander percentages against the original positive reward; no compounding and
+no negative final award. Missing/unknown rosters are not guessed from the barracks.
+Actual adjustments and contributing sources are saved with the resource changes
+and shown by read-only reward text/preview wrappers. Native reward quantities
+remain original, and old saved awards/effect snapshots are not recalculated.
+See [implementation status and native acceptance gates](ALPHA_MAPPING_IMPLEMENTATION.md).
+
+## Previously accepted Commander behavior
+
 Updated: 2026-10-20, mod 0.8.4. Baseline: installed Highlander 1.31.3 / WOTC SDK 8917. Positive supply collection was tested in game: 86 base +4 Resourceful =90 (177 ->267). Broader source coverage and the new popups/monthly path still need actual-game acceptance. No blanket percentage is added to every HQ inventory change.
 
 | Origin | Initial behavior | Identity / exclusion |

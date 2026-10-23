@@ -177,6 +177,7 @@ static function bool Commit(int UnitID, string UnitToken, CharacterSnapshot Snap
             else if (class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(Effect.Target) == none) Effects[Index].Status = "missing_template";
             else { Effects[Index].Status = "available"; Abilities.AddItem(Effect.Target); }
         }
+        else if (Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'ParticipantResource') Effects[Index].Status = "active";
         else if (Effect.EffectKind == 'CombatIntelligence')
         {
             if (Unit.ComInt >= eComInt_Savant) Effects[Index].Status = "already_at_cap";
@@ -188,6 +189,8 @@ static function bool Commit(int UnitID, string UnitToken, CharacterSnapshot Snap
     Link.Snapshot = Snapshot; Link.Effects = Effects; Link.MappingRevision = class'TNB_MappingConfig'.default.MappingRevision;
     Link.bEffectsCommitted = true;
     Unit.AddComponentObject(Link);
+    if (class'TNB_StrategyMappingService'.static.ActiveTotal(Effects, 'RecoveryDuration', 'Wound') != 0)
+        class'TNB_StrategyMappingService'.static.RefreshSoldierRecovery(Change, UnitID);
     Intent = XComGameState_TNBLinkIntent(Change.ModifyStateObject(class'XComGameState_TNBLinkIntent', Intent.ObjectID));
     Intent.bCommitted = true;
     class'TNB_EventCaptureService'.static.LinkedBaseline(Change, Unit, Link);

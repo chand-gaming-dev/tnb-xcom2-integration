@@ -22,14 +22,14 @@ static function int BonusAmount(int Original, int BasisPoints)
     return (Original / 10000) * BasisPoints + ((Original % 10000) * BasisPoints) / 10000;
 }
 
-static function int ApplyResource(XComGameState Change, XComGameState_Item Item, string Key)
+static function int ApplyResource(XComGameState Change, XComGameState_Item Item, string Key, optional int ParticipantBasisPoints)
 {
     local XComGameState_TNBCampaignLink Link;
     local int Amount;
     if (Change == none || Item == none || Key == "" || Item.LastQuantityChange <= 0) return 0;
     Link = class'XComGameState_TNBCampaignLink'.static.Get(Change);
     if (Link == none || !Link.bOneTimeEffectsCommitted || Link.ResourceLedger.Find(Key) != INDEX_NONE) return 0;
-    Amount = BonusAmount(Item.LastQuantityChange, Link.ResourcePercent(Item.GetMyTemplateName()));
+    Amount = BonusAmount(Item.LastQuantityChange, Link.ResourcePercent(Item.GetMyTemplateName()) + ParticipantBasisPoints);
     if (Amount == 0) return 0;
     Link = XComGameState_TNBCampaignLink(Change.ModifyStateObject(class'XComGameState_TNBCampaignLink', Link.ObjectID));
     Link.ResourceLedger.AddItem(Key);
@@ -151,6 +151,10 @@ static function InstallRewardHooks()
         if (Template == none || Template.GiveRewardFn == none) continue;
         Hook = new class'TNB_ResourceRewardHook';
         Hook.Original = Template.GiveRewardFn;
+        Hook.OriginalText = Template.GetRewardStringFn;
+        Hook.OriginalPreview = Template.GetRewardPreviewStringFn;
         Template.GiveRewardFn = Hook.Give;
+        Template.GetRewardStringFn = Hook.RewardText;
+        Template.GetRewardPreviewStringFn = Hook.PreviewText;
     }
 }

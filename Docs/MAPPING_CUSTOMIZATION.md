@@ -29,19 +29,26 @@ Effect kinds:
 | Character | Stat | `eStat_HP`, `eStat_Will`, `eStat_Offense`, `eStat_Defense`, `eStat_CritChance`, `eStat_Hacking`, `eStat_SightRadius`, `eStat_Mobility`, `eStat_Dodge`; signed integer delta |
 | Character | Ability | Runtime ability-template name, WeaponSlot and optional UtilityCategory; no extra mod dependency is created |
 | Character | CombatIntelligence | Magnitude 1; tier increase capped at Savant, no retroactive AP |
+| Character | ParticipantResource | Supplies/Intel mission/covert rewards for this linked participant only; basis points, so 1000 = +10%, -1000 = -10% |
+| Character/Commander | RecoveryDuration | `Wound` (either context), `Will` (Commander); signed duration basis points. -1000 = 10% shorter, +2000 = 20% longer. Add durations, then use reciprocal work rate |
+| Commander | CovertRisk | Existing `CovertActionRisk_Ambush`, `CovertActionRisk_SoldierWounded`, `CovertActionRisk_SoldierCaptured`; signed **percentage points**, so 5 = +5 pp, not 500 |
+| Commander | ResearchSpeed | `Science`; speed basis points, 1000 = +10%; native Science Score progress scope |
+| Commander | ContactOnce | +1 to +10 contact capacity at association; normal contact costs/research remain |
+| Commander | RosterIntelligenceOnce | Number of distinct random eligible barracks recipients (default 2), +1 tier each, no retroactive AP/backfill |
+| Commander | CovertDurationOnce | Negative duration basis points (default -1000): register native 0.90 duration multiplier once |
 | Commander | ResourcePercent | Supplies/Intel; integer basis points, so 500 means 5% |
 | Commander | ResourceOnce | Supplies/Intel; signed integer quantity |
 | Commander | StaffOnce | Engineer/Scientist; integer quantity 1-10 |
 | Commander | AvatarOnce | Signed pip delta, limited to eligible progress/capacity; no deferred award |
 | Commander | SupplyDropItem | Magnitude 1; monthly rollover, including zero-income months |
 
-Unknown/missing mappings, invalid rows, disabled effects, missing ability templates and already-present abilities are reported separately. A missing optional ability's frozen template name is retained; it can be supplied by the earned-ability hook if that template is installed again. The report records **link-time results**, not a promise that a removed ability mod is still present. LowProfile, SingleReloadMrC, GrazingFire, FieldSurgeon and LoneWolf are optional template targets; installed-mod compatibility still needs tactical testing. Conspicuous has no approved numerical detection value and is intentionally unmapped. Earned/acquired identity markers have no default mechanical effect.
+Unknown/missing mappings, invalid rows, disabled effects, missing ability templates and already-present abilities are reported separately. A missing optional ability's frozen template name is retained; it can be supplied by the earned-ability hook if that template is installed again. The report records **link-time results**, not a promise that a removed ability mod is still present. Optional ability compatibility still needs tactical testing. See [the implementation checkpoint](ALPHA_MAPPING_IMPLEMENTATION.md) for approved acquired-Trait mappings and both Conspicuous mappings that remain blocked, not excluded. The alpha mapping set is not complete or accepted for release.
 
 ## Ability provenance comments
 
 Every `EffectKind=Ability` mapping must have adjacent INI comments identifying the exact internal template, whether it is core or optional, and (for an optional provider) the mod name, Workshop ID and direct Workshop link. Preserve the same comments when sharing an override. Display names alone are not template identifiers. These links document provenance; they are not new required dependencies or instructions to install an entire overhaul for one perk. Other packs may supply compatible templates, but their exact names and behavior must be checked.
 
-| Identity Skill | Template / current status | Source |
+| Identity Trait/Skill | Template / current status | Source |
 |---|---|---|
 | Evasive Maneuvers | `LightningReflexes` | Core XCOM 2/WOTC; `X2Ability_AdvancedWarfareCenter`; no ability mod needed |
 | Cover Discipline | `LowProfile` | Long War perk pack; verified in installed [Long War of the Chosen, 2663990965](https://steamcommunity.com/sharedfiles/filedetails/?id=2663990965) |
@@ -49,6 +56,10 @@ Every `EffectKind=Ability` mapping must have adjacent INI comments identifying t
 | Leading Shots | `GrazingFire` | Verified in installed [Long War of the Chosen, 2663990965](https://steamcommunity.com/sharedfiles/filedetails/?id=2663990965) perk pack |
 | Field Surgery | `FieldSurgeon` | Verified in installed [Long War of the Chosen, 2663990965](https://steamcommunity.com/sharedfiles/filedetails/?id=2663990965) perk pack |
 | Independent Operator | `LoneWolf` | Verified in installed [Long War of the Chosen, 2663990965](https://steamcommunity.com/sharedfiles/filedetails/?id=2663990965) perk pack |
+| Resourceful (Character) | `FullKit` | Verified installed [LWOTC, 2663990965](https://steamcommunity.com/sharedfiles/filedetails/?id=2663990965); qualifying utility grenades/Battle Scanners, not all consumables; stock-WOTC provider qualification remains open |
+| Scientifically Minded (Character) | `F_QuickPatch` | [Extended Perk Pack, 1546482849](https://steamcommunity.com/sharedfiles/filedetails/?id=1546482849); normal charges and initial action affordability apply |
+| Battle-Scarred (Character) | `MZUnshakableWill` | [Mitzruti's Perk Pack, 1561030099](https://steamcommunity.com/sharedfiles/filedetails/?id=1561030099); not universal mental immunity |
+| Tactician (Character) | `ShadowOps_AbsolutelyCritical` | [Shadow Ops Perk Pack, 1519841231](https://steamcommunity.com/sharedfiles/filedetails/?id=1519841231); crit-capable attacks against flanked/uncovered targets |
 
 Source check (2026-10-19): the installed LWOTC `LW_PerkPack_Integrated` registers `LowProfile`, `GrazingFire` and `LoneWolf` in `X2Ability_PerkPackAbilitySet.uc`, and `FieldSurgeon` in `X2Ability_PerkPackAbilitySet2.uc`. The base SDK includes an `X2Effect_LowProfile` effect and a distinct `ChosenLowProfile` ability, but does not register the mapped soldier `LowProfile` template. Do not label that mapped template as core merely because the underlying effect/name also occurs in the SDK. The standalone [WOTC LW2 Classes and Perks](https://steamcommunity.com/sharedfiles/filedetails/?id=1335226018) is a broader class/perk port, not an additional requirement for an existing LWOTC setup; evaluate provider compatibility before installing anything.
 
