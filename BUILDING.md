@@ -73,6 +73,20 @@ commit it. Enable the resulting mod and its declared dependencies in your launch
 Do not rebuild or replace packages while XCOM is running. Companion-only changes
 do not require a game package rebuild. Neither build requires a custom DLL.
 
+### Offline mapping checks (no retail deployment)
+
+With an already-prepared Highlander SDK, run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Test-ModMappings.ps1 -All
+```
+
+This compiles into SDK staging and runs the ten offline commandlets, without the
+normal build script's retail install step. The mapping test fixture is generated
+from source INI rows because commandlets do not run the game's DLC config merge.
+Do not publish/install the test-staged package. These checks are not native
+gameplay acceptance. See [mapping implementation and gates](Docs/ALPHA_MAPPING_IMPLEMENTATION.md).
+
 ## Artwork and publishing
 
 The checked-in icon and preview are sufficient for builds. Optional regeneration

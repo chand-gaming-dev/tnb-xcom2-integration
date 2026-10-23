@@ -71,6 +71,7 @@ static event OnPreMission(XComGameState StartGameState, XComGameState_MissionSit
 {
     InvalidateReminderCallbacks();
     class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.2", StartGameState);
+    class'TNB_DetectionMappingService'.static.PrepareLaunch(StartGameState);
     class'TNB_EventCaptureService'.static.CarryToStartState(StartGameState);
     class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_CARRIED", StartGameState);
     class'TNB_EventCaptureService'.static.PrepareMission(StartGameState, MissionState);
@@ -90,6 +91,7 @@ static event ModifyTacticalTransferStartState(XComGameState TransferStartState)
     local XComGameState_TNBEventLedger Ledger;
     local int Index;
     class'TNB_ReportingSafety'.static.Trace("TACTICAL_TRANSFER_BEGIN", TransferStartState);
+    class'TNB_DetectionMappingService'.static.PrepareLaunch(TransferStartState);
     class'TNB_EventCaptureService'.static.CarryToStartState(TransferStartState);
     Ledger = class'XComGameState_TNBEventLedger'.static.Edit(TransferStartState);
     if (Ledger == none) return;
@@ -105,6 +107,7 @@ static event OnPostTemplatesCreated()
     if (class'TNB_EffectPresentation'.static.RunChecks()) `log("Read-only effect presentation checks passed. Automatic Avenger prompt disabled (MCM-only diagnostic build).",, 'TheNameBeneath');
     else `log("WARNING: effect presentation checks failed.",, 'TheNameBeneath');
     class'TNB_CommanderBonusService'.static.InstallRewardHooks();
+    class'TNB_RecruitCostService'.static.Install();
 }
 
 static function ModifyEarnedSoldierAbilities(out array<SoldierClassAbilityType> EarnedAbilities, XComGameState_Unit UnitState)

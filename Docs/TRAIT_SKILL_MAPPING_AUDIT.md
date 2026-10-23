@@ -160,6 +160,26 @@ ten becomes twelve rather than eleven. Native distance/grid rounding still appli
 - No gameplay configuration, code, canonical catalog, dependencies, saves or
   release output changed. Gameplay and full mod-list compatibility remain pending.
 
+## Approved implementation clarification: Character Conspicuous (2026-10-22)
+
+The Product Owner accepted **+20% baseline enemy detection distance at tactical
+initialization, with native stacking afterward**, as sufficient for alpha.
+The mission's initial stat delta stays fixed; later stealth changes can make its
+relative percentage larger or smaller. It is not an exact 20% multiplier under
+every combination, and is not a fixed one-tile penalty.
+
+For a five-tile native detection radius, the initial penalty adds one tile (five
+to six). If a later stealth effect reduces the unpenalized distance to 2.5, that
+same penalty can produce 3.5: still one extra tile, now 40% farther. With a ten-
+tile starting radius, the initial penalty is two tiles, not one. Native distance
+rounding still applies.
+
+This accepted stacking contract supersedes a strict post-stealth +20% guarantee
+in the earlier direction. Keep the personal-only scope, no custom ability/new
+dependency, frozen link/snapshot policy and native gameplay acceptance gate.
+No Commander Conspicuous decision or canonical catalog change is approved here.
+The frozen Portal `1.0.0-alpha.1` reference package is not revised in this mod change.
+
 ## Approved review decision: Character Engineering-Minded (2026-10-22)
 
 The Product Owner approved **Character Engineering-Minded -> +10 Hacking** and
@@ -545,6 +565,19 @@ expensive. Approved design only; implementation and gameplay acceptance are pend
   CSV audit rows. Character Conspicuous retains its separately approved personal
   concealment-exposure effect. No gameplay configuration, code, canonical catalog,
   dependencies, saves or release output changed.
+
+### Approved implementation scope: Commander Conspicuous (2026-10-22)
+
+After native pricing-path analysis, the Product Owner approved using the existing
+recruit-price scalar, registered once at future association, with preserved Midnight
+Raids activation/deactivation delegates to retain the +25% through native resets.
+Normal recruitment discounts and shared UI/affordability/payment pricing remain.
+No timer, extra history submission, hidden payment, core class override or new
+dependency. Existing frozen links remain unchanged. Arbitrary other-mod scalar
+overwrites/replacement recruitment systems cannot be guaranteed; this compatibility
+boundary is accepted, not an instruction to override those mods continually.
+Native gameplay acceptance remains required. This clarifies implementation scope,
+not the approved amount or canonical catalog; the frozen Portal package is untouched.
 
 ## Approved review decision: Commander Poor Stamina (2026-10-22)
 
