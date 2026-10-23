@@ -4,11 +4,11 @@ Branch: `feature/alpha-trait-skill-mappings`, created from XCOM `origin/main`
 `d2441003a0d37648992cf0eb8e63f3eed6c4faec` on 2026-10-22.
 Authority: approval addenda in [the mapping audit](TRAIT_SKILL_MAPPING_AUDIT.md),
 not its superseded original tables/CSV proposals or the old gameplay defaults.
-Mapping revision: `tnb-alpha-2026-10-22-r3`.
+Mapping revision: `tnb-alpha-2026-10-22-r4`.
 
 **Incomplete implementation, not a release or native gameplay acceptance.**
-46 default rows cover 46 of the 48 applicable mapping pairs. Both Conspicuous
-mappings remain blocked below. Commander Battle-Scarred remains N/A for its
+47 default rows cover 47 of the 48 applicable mapping pairs. Commander Conspicuous
+remains blocked below. Commander Battle-Scarred remains N/A for its
 approved acquisition-path reason. No catalog/backend/Production changes, new
 dependency installation, save migration, retail install, release or merge.
 
@@ -17,6 +17,7 @@ dependency installation, save migration, retail install, release or merge.
 | Group | Changes |
 | --- | --- |
 | Soldier stats/abilities | Reckless -5 Dodge; Overconfident -10 Defense; Engineering-Minded +10 Hacking; Pioneer +5 Will; exact `FullKit`, `F_QuickPatch`, `MZUnshakableWill`, `ShadowOps_AbsolutelyCritical` targets. Other retained stats/intelligence and six Skills unchanged. |
+| Character detection | Conspicuous +20% baseline enemy detection distance at tactical initialization. Freeze the initial per-mission stat delta; later stealth effects stack natively and can change the relative percentage. Saved guards prevent duplicate application on reload; fresh launch/transfer preparation reverses only our old delta. |
 | Covert risks | Observant -5 pp ambush; Unperceptive +5 pp ambush; Reckless +5 pp wound; Unlucky +5 pp capture. Native eligible risk queries/cache refresh, protections and final chance limits; no absent risks created. |
 | Recovery | Commander Strong-Willed -10% fatigue duration, Poor Stamina +10%, Hardy -10% wound duration; Character Secretive +20% personal wound duration. Add durations, then convert to reciprocal work rate. No tactical damage change. |
 | One-time association | Pioneer +1 contact capacity; Quick Learner two distinct random eligible barracks soldiers +1 Combat Intelligence tier, with saved names/before/after receipts, Savant cap, no retroactive AP/backfill; Tactician native 0.90 covert duration multiplier once. Existing staff/resource/Avatar grants retained. |
@@ -29,25 +30,32 @@ Implementation follow-up decisions approved by the Product Owner:
 - Secretive +20% and Commander Hardy -10% **add to +10% wound duration**, not
   multiplicative +8%. Opposing Commander fatigue durations cancel.
 - Analytical follows the native research scope above.
+- Character Conspicuous uses the initialization penalty with native later-stealth
+  stacking; a constant 20% multiplier after other effects is not required for alpha.
 
 Query callbacks never create/submit history states. Refreshes/grants use the
 existing association/link transaction. A temporary science listener supplies the
 pending frozen modifier only during synchronous first-association project refresh,
 then unregisters before commit; no timer, actor or persistent singleton is added.
 
-## Discrepancies: product decisions required
+## Character Conspicuous: accepted alpha stacking contract
 
-### Character Conspicuous: exact +20% detection distance
-
-The audited initialization conversion is correct at application:
+The approved initialization conversion is:
 `Mnew = 1 - 1.20 * (1 - Mcurrent)`. But baking that delta into the base stat does
 not preserve the ratio after later stealth-stat changes. Example: M=0 becomes
 -0.20; a later +0.50 stealth modifier makes M=0.30. Detection is then 0.70 instead
-of 0.50: **40% farther, not 20%**. A synthetic counterexample check records this.
+of 0.50: **40% farther, not 20%**. The Product Owner accepted that native stacking
+behavior. With a five-tile native radius, both examples add one tile; a ten-tile
+radius instead adds two at initialization. Do not promise a fixed tile penalty.
 
-The experimental adapter and tactical callbacks were removed. No approximate
-penalty, Big Stompy Boots, custom ability or ally benefit is enabled. Decide the
-acceptable stacking contract or technical scope; do not silently substitute.
+The personal adapter is enabled for future frozen links containing the Trait.
+It uses only native pending launch/transfer/begin-tactical transactions; no timer,
+extra history submission, custom ability, Big Stompy Boots or ally bonus. Unit
+markers survive tactical BeginTactical cleanup; a fresh launch/transfer reverses
+only our previous delta before native initialization. Existing frozen links stay
+unchanged. Reinforcement/transfer/stealth UI behavior remains a gameplay gate.
+
+## Remaining discrepancy: product decision required
 
 ### Commander Conspicuous: +25% standard recruit Supplies cost
 
@@ -59,7 +67,7 @@ other bonuses. UI-only text or a second hidden payment is not the approved effec
 
 No scalar overwrite, history timer, class override, hidden surcharge, changed
 delivery time or candidate count is enabled. Decide technical scope or explicitly
-defer it. Both absent rows are **pending implementation**, not approved exclusions.
+defer it. This absent row is **pending implementation**, not an approved exclusion.
 The public `1.0.0-alpha.1` reference package/catalog were not edited; coordinate
 any reference revision separately before publication.
 
@@ -101,7 +109,11 @@ future-version rejection, active-only aggregation, opposing risks, reciprocal an
 combined duration math, recipient uniqueness/cap, research query scope, retained
 roster/latest attempt, barracks/late-link/wrong-Journey/POI exclusions, additive
 two-soldier/Commander rewards, zero floor, actual receipt text/escaping and the
-Conspicuous counterexample. No live API events were submitted.
+accepted Conspicuous stacking, pure application guard and own-delta reversal
+arithmetic. Standalone editor commandlets lack a campaign history needed by native
+soldier stat operations; those operations, saved markers and actual tactical
+reload/transfer ordering must be tested in game, not claimed by offline probes.
+No live API events were submitted.
 
 These are synthetic/source-policy checks, not proof of native association/save
 transactions, RNG selection, project timing, provider mechanics or UI layout.
@@ -109,8 +121,8 @@ transactions, RNG selection, project timing, provider mechanics or UI layout.
 ## Native acceptance gate: not yet run
 
 Use fresh Journeys/updated snapshots and separate pre-association saves; preserve
-old linked saves to confirm their old effects stay unchanged. Resolve both
-Conspicuous discrepancies before declaring the complete mapping set accepted.
+old linked saves to confirm their old effects stay unchanged. Resolve Commander
+Conspicuous before declaring the complete mapping set accepted.
 
 1. Existing/new/negated covert risks, opposing modifiers and displayed chances;
    Tactician active remaining time, unstarted/new actions, orders and bond bonuses.
@@ -128,6 +140,11 @@ Conspicuous discrepancies before declaring the complete mapping set accepted.
    absent/restored optional providers, no duplicate grants and safe transitions.
 7. Monthly/Scrounger, invitation dismiss/link flow, Armory status/details,
    reporting, two-character attribution and saved-game compatibility regressions.
+8. Character Conspicuous on two linked soldiers, fresh missions, tactical save
+   reloads and direct transfers: no accumulated penalty; own/ally sight unchanged.
+   Compare warnings and reveals, initial versus later stealth effects, and any
+   relevant delayed/reinforcement soldiers. Accept native stacking, not exact 20%
+   after all effects. No native lifecycle acceptance has been claimed by probes.
 
 Native acceptance remains required before merge/publishing. Automated success
 does not authorize a retail install, automatic merge or release.

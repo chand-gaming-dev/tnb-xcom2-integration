@@ -31,6 +31,7 @@ static function bool ValidRow(TNB_MappingConfig.MappingRow Row)
         if (Row.EffectKind == 'CombatIntelligence') return Row.Magnitude == 1;
         if (Row.EffectKind == 'RecoveryDuration') return Row.Target == 'Wound' && Row.Magnitude >= -9900 && Row.Magnitude <= 100000;
         if (Row.EffectKind == 'ParticipantResource') return (Row.Target == 'Supplies' || Row.Target == 'Intel') && Row.Magnitude >= -10000 && Row.Magnitude <= 100000;
+        if (Row.EffectKind == 'DetectionRange') return Row.Target == 'Personal' && Row.Magnitude >= -9900 && Row.Magnitude <= 100000;
     }
     else
     {
@@ -138,6 +139,7 @@ static function string Describe(ResolvedEffect Effect)
     if (Effect.EffectKind == 'ResourcePercent') return ((Effect.Magnitude > 0) ? "+" : "") $ string(float(Effect.Magnitude) / 100.0) $ "% " $ string(Effect.Target) $ " on qualifying gains";
     if (Effect.EffectKind == 'ParticipantResource') return ((Effect.Magnitude > 0) ? "+" : "") $ string(float(Effect.Magnitude) / 100.0) $ "% " $ string(Effect.Target) $ " rewards from missions/covert actions this soldier participates in";
     if (Effect.EffectKind == 'SupplyDropItem') return "1 random common item at each monthly rollover (even with no income)";
+    if (Effect.EffectKind == 'DetectionRange') return "Increased enemy detection range (" $ class'TNB_EffectPresentation'.static.Percentage(Effect.Magnitude) $ " at initialization; native stealth stacking)";
     if (Effect.EffectKind == 'CovertRisk') return Amount $ " percentage points: " $ string(Effect.Target) $ " (eligible covert risks only)";
     if (Effect.EffectKind == 'RecoveryDuration') return ((Effect.Magnitude > 0) ? "+" : "") $ string(float(Effect.Magnitude) / 100.0) $ "% " $ string(Effect.Target) $ " recovery duration";
     if (Effect.EffectKind == 'CombatIntelligence') return "+1 Combat Intelligence tier (maximum Savant)";

@@ -32,8 +32,8 @@ static function bool CatalogCoverage(array<TNB_MappingConfig.MappingRow> Rows)
     if (Effects.Length != 26) return false;
     foreach Effects(Effect)
         if (Effect.Status == "resolved") Resolved++;
-        else if (Effect.Status != "unmapped" || Effect.SourceID != "trait.conspicuous") return false;
-    if (Resolved != 25) return false;
+        else return false;
+    if (Resolved != 26) return false;
     Skills.Length = 0; Resolved = 0;
     ParseStringIntoArray("quartermaster,counterintelligence,scrounger", IDs, ",", true);
     foreach IDs(ID)
@@ -45,7 +45,21 @@ static function bool CatalogCoverage(array<TNB_MappingConfig.MappingRow> Rows)
     foreach Effects(Effect)
         if (Effect.Status == "resolved") Resolved++;
         else if (Effect.Status != "unmapped" || (Effect.SourceID != "trait.conspicuous" && Effect.SourceID != "trait.battle-scarred")) return false;
-    return Resolved == 21 && Rows.Length == 46;
+    return Resolved == 21 && Rows.Length == 47;
+}
+
+static function bool DetectionChecks()
+{
+    local float Delta, Modified;
+    // Pure policy only. Native unit stats require a running campaign history;
+    // standalone editor commandlets cannot establish real reload/transfer safety.
+    if (!class'TNB_DetectionMappingService'.static.ShouldApply(false, 2000) || class'TNB_DetectionMappingService'.static.ShouldApply(true, 2000) || class'TNB_DetectionMappingService'.static.ShouldApply(false, 0)) return false;
+    Delta = class'TNB_DetectionMappingService'.static.DetectionDelta(0.0, 2000);
+    if (Abs(Delta + 0.20) > 0.0001) return false;
+    Modified = 0.50 + Delta;
+    if (Abs(Modified - 0.30) > 0.0001 || Abs((Modified - Delta) - 0.50) > 0.0001) return false;
+    if (Abs(class'TNB_DetectionMappingService'.static.DetectionModifier(0.50, 2000) - 0.40) > 0.0001 || Abs(class'TNB_DetectionMappingService'.static.DetectionModifier(1.0, 2000) - 1.0) > 0.0001) return false;
+    return true;
 }
 
 event int Main(string Params)
@@ -76,7 +90,7 @@ event int Main(string Params)
     Shipped = Fixture.default.SourceRows;
     if (Shipped.Length < 25) return 23;
     if (!CatalogCoverage(Shipped)) return 34;
-    `log("TNB_MAPPING_CATALOG_COVERAGE_PASS: 25 Character and 21 Commander mappings; only both blocked Conspicuous entries and acquisition-inapplicable Commander Battle-Scarred remain unmatched.");
+    `log("TNB_MAPPING_CATALOG_COVERAGE_PASS: 26 Character and 21 Commander mappings; only blocked Commander Conspicuous and acquisition-inapplicable Commander Battle-Scarred remain unmatched.");
     if (!class'TNB_PolicyTests'.static.Run()) return 1;
     Effect.EffectKind = 'CovertRisk'; Effect.Target = 'CovertActionRisk_Ambush'; Effect.Magnitude = -5; Effect.Status = "active";
     Effects.AddItem(Effect);
@@ -159,10 +173,12 @@ event int Main(string Params)
     `log("TNB_MAPPING_REWARDS_PASS: retained latest-attempt roster, no barracks/POI/late-link/wrong-Journey contribution, additive two-soldier/Commander percentages, zero rewards, zero-floor losses and escaped actual reward receipt text.");
     // Counterexample to the audited initialization-only detection approach:
     // base M=0 -> -0.20, then a later +0.50 stealth modifier -> M=0.30.
-    // Relative detection becomes 0.70/0.50=1.40, NOT the approved 1.20.
-    // Leave the mapping unimplemented rather than ship that approximation.
+    // Relative detection becomes 0.70/0.50=1.40. The Product Owner accepted
+    // this native stacking contract; don't claim a fixed 20% after other perks.
     if (Abs((1.0 - (-0.20 + 0.50)) / (1.0 - 0.50) - 1.40) > 0.0001) return 33;
-    `log("TNB_MAPPING_CONSPICUOUS_DISCREPANCY_CONFIRMED: initialization-only penalty can become 40%, not approved 20%, after a later additive stealth change. No such runtime mapping is enabled.");
+    if (Abs(5.0 * (1.0 - class'TNB_DetectionMappingService'.static.DetectionModifier(0.0, 2000)) - 6.0) > 0.0001 || Abs(10.0 * (1.0 - class'TNB_DetectionMappingService'.static.DetectionModifier(0.0, 2000)) - 12.0) > 0.0001) return 37;
+    if (!DetectionChecks()) return 38;
+    `log("TNB_MAPPING_DETECTION_PASS: initial 20% scaling, not fixed tiles; accepted later-stealth stacking, pure application guard and own-delta reversal arithmetic. Native stat/marker, reload/transfer and campaign lifecycle acceptance is still required.");
     `log("TNB_MAPPING_ALL_CHECKS_PASSED");
     return 0;
 }

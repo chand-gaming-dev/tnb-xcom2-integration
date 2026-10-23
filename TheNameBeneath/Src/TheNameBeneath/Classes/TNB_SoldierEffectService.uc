@@ -177,7 +177,7 @@ static function bool Commit(int UnitID, string UnitToken, CharacterSnapshot Snap
             else if (class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(Effect.Target) == none) Effects[Index].Status = "missing_template";
             else { Effects[Index].Status = "available"; Abilities.AddItem(Effect.Target); }
         }
-        else if (Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'ParticipantResource') Effects[Index].Status = "active";
+        else if (Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'ParticipantResource' || Effect.EffectKind == 'DetectionRange') Effects[Index].Status = "active";
         else if (Effect.EffectKind == 'CombatIntelligence')
         {
             if (Unit.ComInt >= eComInt_Savant) Effects[Index].Status = "already_at_cap";

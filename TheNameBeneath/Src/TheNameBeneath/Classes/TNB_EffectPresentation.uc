@@ -51,6 +51,7 @@ static function string Summary(ResolvedEffect Effect)
     if (Effect.EffectKind == 'Ability') return AbilityName(Effect.Target);
     if (Effect.EffectKind == 'ResourcePercent') return Percentage(Effect.Magnitude) @ string(Effect.Target);
     if (Effect.EffectKind == 'SupplyDropItem') return "1 item / monthly rollover";
+    if (Effect.EffectKind == 'DetectionRange') return "Increased enemy detection range (" $ Percentage(Effect.Magnitude) $ " baseline)";
     if (Effect.EffectKind == 'RecoveryDuration') return Percentage(Effect.Magnitude) @ (Effect.Target == 'Will' ? "fatigue recovery duration" : "wound recovery duration");
     if (Effect.EffectKind == 'ResearchSpeed') return Percentage(Effect.Magnitude) @ "science-based research speed";
     if (Effect.EffectKind == 'CovertDurationOnce') return Percentage(Effect.Magnitude) @ "covert-action duration";
@@ -122,6 +123,7 @@ static function string TimingText(name EffectKind, bool Committed)
 {
     switch (EffectKind)
     {
+        case 'DetectionRange': return "Personal penalty set at tactical initialization. Other stealth effects stack normally, so the relative percentage afterward can vary. Not a fixed tile penalty; no ally bonus or sight-radius change.";
         case 'StaffOnce':
         case 'ResourceOnce':
         case 'AvatarOnce': return Committed ? "One-time reward: already processed at campaign connection; viewing never repeats it." : "One-time reward: processed when you confirm campaign connection.";
@@ -192,6 +194,7 @@ static function string EffectImage(ResolvedEffect Effect)
     if (Effect.EffectKind == 'CombatIntelligence') return class'UIUtilities_Image'.const.EventQueue_Science;
     if (Effect.EffectKind == 'RosterIntelligenceOnce') return class'UIUtilities_Image'.const.EventQueue_Science;
     if (Effect.EffectKind == 'ResearchSpeed') return class'UIUtilities_Image'.const.EventQueue_Science;
+    if (Effect.EffectKind == 'DetectionRange') return StatImage('eStat_SightRadius');
     if (Effect.EffectKind == 'RecoveryDuration') return StatImage(Effect.Target == 'Will' ? 'eStat_Will' : 'eStat_HP');
     if (Effect.EffectKind == 'CovertRisk' || Effect.EffectKind == 'CovertDurationOnce' || Effect.EffectKind == 'ContactOnce') return StatImage('eStat_SightRadius');
     if (Effect.EffectKind == 'ResourcePercent' || Effect.EffectKind == 'ResourceOnce' || Effect.EffectKind == 'ParticipantResource')
@@ -221,7 +224,7 @@ static function string TimingBadge(name Kind)
 {
     if (IsOneTime(Kind)) return "ONE-TIME";
     if (Kind == 'SupplyDropItem') return "MONTHLY";
-    if (Kind == 'ResourcePercent' || Kind == 'RecoveryDuration' || Kind == 'CovertRisk' || Kind == 'ResearchSpeed' || Kind == 'ParticipantResource') return "ONGOING";
+    if (Kind == 'ResourcePercent' || Kind == 'RecoveryDuration' || Kind == 'CovertRisk' || Kind == 'ResearchSpeed' || Kind == 'ParticipantResource' || Kind == 'DetectionRange') return "ONGOING";
     return "SAVED";
 }
 
@@ -232,7 +235,7 @@ static function EUIState EffectColor(ResolvedEffect Effect)
     if (Effect.Status == "active" || Effect.Status == "applied")
     {
         Amount = Effect.Status == "active" ? Effect.Magnitude : Effect.AppliedMagnitude;
-        if (Effect.EffectKind == 'AvatarOnce' || Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'CovertRisk' || Effect.EffectKind == 'CovertDurationOnce') Amount = -Amount;
+        if (Effect.EffectKind == 'AvatarOnce' || Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'CovertRisk' || Effect.EffectKind == 'CovertDurationOnce' || Effect.EffectKind == 'DetectionRange') Amount = -Amount;
         if (Amount < 0) return eUIState_Bad;
         return Amount > 0 ? eUIState_Good : eUIState_Normal;
     }
@@ -250,7 +253,7 @@ static function string SoldierDetails(ResolvedEffect Effect, XComGameState_Unit 
         if (Effect.Magnitude != Effect.AppliedMagnitude) Body $= " Configured: " $ EscapeUI(Summary(Effect)) $ ".";
     }
     if (Effect.EffectKind == 'Ability') Body $= "\n" $ AbilityDetails(Effect, Unit);
-    if (Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'ParticipantResource') Body $= "\n" $ EscapeUI(TimingText(Effect.EffectKind, true));
+    if (Effect.EffectKind == 'RecoveryDuration' || Effect.EffectKind == 'ParticipantResource' || Effect.EffectKind == 'DetectionRange') Body $= "\n" $ EscapeUI(TimingText(Effect.EffectKind, true));
     if (Effect.Note != "" && Effect.EffectKind != 'Ability') Body $= "\n" $ EscapeUI(Effect.Note);
     while (InStr(Body, "\n\n") != INDEX_NONE) Body = Repl(Body, "\n\n", "\n");
     return Body;

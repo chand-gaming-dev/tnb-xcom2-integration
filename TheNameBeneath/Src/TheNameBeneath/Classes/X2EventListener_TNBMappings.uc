@@ -14,7 +14,18 @@ static function array<X2DataTemplate> CreateTemplates()
     Template.AddCHEvent('WoundRecoveryTimeModifier', RecoveryModifier, ELD_Immediate);
     Template.AddCHEvent('OverrideScienceScore', ScienceModifier, ELD_Immediate, 0);
     Templates.AddItem(Template);
+    `CREATE_X2TEMPLATE(class'CHEventListenerTemplate', Template, 'TNB_TacticalMappings');
+    Template.RegisterInTactical = true;
+    Template.AddCHEvent('OnTacticalBeginPlay', DetectionModifier, ELD_Immediate);
+    Templates.AddItem(Template);
     return Templates;
+}
+
+static function EventListenerReturn DetectionModifier(Object EventData, Object EventSource, XComGameState GameState, Name EventID, Object CallbackData)
+{
+    if (GameState != none && X2TacticalGameRuleset(EventData) != none)
+        class'TNB_DetectionMappingService'.static.BeginTactical(GameState);
+    return ELR_NoInterrupt;
 }
 
 static function EventListenerReturn ScienceModifier(Object EventData, Object EventSource, XComGameState GameState, Name EventID, Object CallbackData)

@@ -29,6 +29,7 @@ Effect kinds:
 | Character | Stat | `eStat_HP`, `eStat_Will`, `eStat_Offense`, `eStat_Defense`, `eStat_CritChance`, `eStat_Hacking`, `eStat_SightRadius`, `eStat_Mobility`, `eStat_Dodge`; signed integer delta |
 | Character | Ability | Runtime ability-template name, WeaponSlot and optional UtilityCategory; no extra mod dependency is created |
 | Character | CombatIntelligence | Magnitude 1; tier increase capped at Savant, no retroactive AP |
+| Character | DetectionRange | `Personal`; signed initial detection-range basis points, default 2000 = +20%. The resulting per-mission stat delta stacks natively afterward; not a fixed tile count or guaranteed post-stealth percentage |
 | Character | ParticipantResource | Supplies/Intel mission/covert rewards for this linked participant only; basis points, so 1000 = +10%, -1000 = -10% |
 | Character/Commander | RecoveryDuration | `Wound` (either context), `Will` (Commander); signed duration basis points. -1000 = 10% shorter, +2000 = 20% longer. Add durations, then use reciprocal work rate |
 | Commander | CovertRisk | Existing `CovertActionRisk_Ambush`, `CovertActionRisk_SoldierWounded`, `CovertActionRisk_SoldierCaptured`; signed **percentage points**, so 5 = +5 pp, not 500 |
@@ -42,7 +43,7 @@ Effect kinds:
 | Commander | AvatarOnce | Signed pip delta, limited to eligible progress/capacity; no deferred award |
 | Commander | SupplyDropItem | Magnitude 1; monthly rollover, including zero-income months |
 
-Unknown/missing mappings, invalid rows, disabled effects, missing ability templates and already-present abilities are reported separately. A missing optional ability's frozen template name is retained; it can be supplied by the earned-ability hook if that template is installed again. The report records **link-time results**, not a promise that a removed ability mod is still present. Optional ability compatibility still needs tactical testing. See [the implementation checkpoint](ALPHA_MAPPING_IMPLEMENTATION.md) for approved acquired-Trait mappings and both Conspicuous mappings that remain blocked, not excluded. The alpha mapping set is not complete or accepted for release.
+Unknown/missing mappings, invalid rows, disabled effects, missing ability templates and already-present abilities are reported separately. A missing optional ability's frozen template name is retained; it can be supplied by the earned-ability hook if that template is installed again. The report records **link-time results**, not a promise that a removed ability mod is still present. Optional ability compatibility still needs tactical testing. See [the implementation checkpoint](ALPHA_MAPPING_IMPLEMENTATION.md) for approved acquired-Trait mappings, Character Conspicuous's accepted native stacking, and Commander Conspicuous which remains blocked, not excluded. The alpha mapping set is not complete or accepted for release.
 
 ## Ability provenance comments
 
