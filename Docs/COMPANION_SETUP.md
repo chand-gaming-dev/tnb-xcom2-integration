@@ -23,8 +23,9 @@ Mod 0.9.1 and later restore a read-only invitation on the quiet Avenger for an u
 campaign when the companion has a configured Upcoming/Started Journey. Review
 Journey opens commander preview/confirmation directly; no MCM navigation or MCM
 save dialog is involved. Not now defers this campaign for the play session. MCM
-remains a fallback and contains the saved reminder opt-out. This controlled retry
-still needs actual-game reload/transition acceptance; see AVENGER_INVITATION_TESTING.md.
+remains a fallback and contains the saved reminder opt-out. The Product Owner
+confirmed the focused reload/transition acceptance; see ALPHA_ACCEPTANCE_SUMMARY.md
+for current outcomes and AVENGER_INVITATION_TESTING.md for detailed procedures.
 
 The companion project/executable is now TheNameBeneathCompanion. The official
 product name is The Name Beneath; existing API identifiers, environment keys,

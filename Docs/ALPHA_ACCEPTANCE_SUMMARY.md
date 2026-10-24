@@ -21,21 +21,22 @@ coverage of every configurable mapping or mod combination.
 - A failed mission with one linked soldier injured, one linked soldier dead,
   one unlinked soldier injured and one unlinked soldier dead reported the correct
   linked-character and commander facts in the production portal.
-- Deja Vu completed-link display, save/reload and the earlier MCM settings behavior.
-  The final slider-only simplification still needs the focused check below.
+- Deja Vu completed-link display, save/reload and MCM settings behavior, including
+  the final mod 0.9.5 slider-only check confirmed by the Product Owner on 2026-10-24.
 
-## Final pre-package check
+## Final pre-package check - passed
 
 Mod 0.9.5 replaces the Deja Vu grant checkbox with the single XP-percentage slider.
-Check 0% and a positive rate on an existing holder, plus one completed new link:
+The Product Owner confirmed the focused test works correctly: 0% and a positive
+rate on an existing holder, plus one completed new link:
 no unlink/removal or lost earned credit; 0% clearly disabled; a positive rate shown
 correctly; no selectable bonus row among roster identities. The passive is granted
 on new links even at 0%; only future bonus XP is disabled. No retroactive XP award.
 
-After the Product Owner confirms that test, merge/push the feature to main before
-packaging from the approved main commit. Do not merge, package or publish before
-the confirmation. Workshop upload and downloadable companion release remain
-separate delivery steps, not evidence of gameplay testing.
+On 2026-10-24 the Product Owner authorized merging/pushing the feature to main,
+packaging the companion as a GitHub release, and deleting the feature branch after
+verifying main. Packaging must use the approved main commit. Workshop upload stays
+with the Product Owner; downloadable companion publication does not publish the mod.
 
 ## Explicit alpha limitations / wider-test coverage
 
@@ -50,7 +51,7 @@ separate delivery steps, not evidence of gameplay testing.
 - Player overrides are intentionally open-ended. Passing tests does not certify
   every value, arbitrary third-party implementation or mod loadout.
 
-The Product Owner accepts proceeding toward a limited alpha after the final
+The Product Owner has accepted proceeding with a limited alpha after the final
 Deja Vu check; this is not a claim that every supported path has been exercised.
 
 ## Mod 0.9.5 automated verification / local test installation

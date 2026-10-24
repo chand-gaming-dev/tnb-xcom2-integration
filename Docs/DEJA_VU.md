@@ -1,7 +1,10 @@
 # Deja Vu - local linking passive
 
-Feature branch: `feature/deja-vu-linking-perk`. Native acceptance is required
-before merge/release. No backend, catalog or companion changes are required.
+The Product Owner confirmed the focused native acceptance, including the final
+slider-only control, on 2026-10-24 and approved merge/release. Broader numerical XP
+and third-party edge coverage remains as described in the
+[alpha acceptance summary](ALPHA_ACCEPTANCE_SUMMARY.md). The passive requires no
+backend or canonical catalog changes.
 
 ## Player behavior
 
@@ -89,7 +92,7 @@ folder. Never save modified SDK/base-game packages.
 
 ## Native acceptance checklist
 
-1. On a pre-link save, check MCM defaults (automatic enabled, 5%). Link one soldier;
+1. On a pre-link save, check the MCM percentage default (5%). Link one soldier;
    inspect the local bonus card/icon and link report. Reload: no second grant.
 2. Set the slider to 0%: existing holders retain the passive and earned credit,
    but future bonus accrual stops. A new link also receives the passive with an

@@ -91,7 +91,8 @@ With an already-prepared Highlander SDK, run:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Test-ModMappings.ps1 -All
 ```
 
-This compiles into SDK staging and runs the ten offline commandlets, without the
+This compiles into SDK staging and runs all available offline commandlets (currently
+twelve), without the
 normal build script's retail install step. The mapping test fixture is generated
 from source INI rows because commandlets do not run the game's DLC config merge.
 Do not publish/install the test-staged package. These checks are not native
