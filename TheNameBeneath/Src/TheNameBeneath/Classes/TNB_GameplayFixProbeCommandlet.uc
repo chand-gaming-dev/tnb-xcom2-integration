@@ -11,6 +11,14 @@ event int Main(string Params)
     local JsonObject Report, Facts;
     local array<string> Instances;
     local string PromotionKey, LegacyKey, SavedCapture, OccurrenceA, OccurrenceB;
+    local array<string> ParamParts, ZoneParts;
+    local string VerifiedZone;
+    local PendingReport Recovery, Unchanged;
+    ParseStringIntoArray(Params, ParamParts, "TNBClockZone=", false);
+    if (ParamParts.Length < 2) return 34;
+    ParseStringIntoArray(ParamParts[1], ZoneParts, "|", false);
+    if (ZoneParts.Length == 0 || ZoneParts[0] == "") return 35;
+    VerifiedZone = ZoneParts[0];
     if (!class'TNB_ReportingSafety'.static.RunChecks()) return 1;
     if (!class'TNB_PromotionCaptureService'.static.ValidTransition(0, 1) || !class'TNB_PromotionCaptureService'.static.ValidTransition(2, 4)) return 2;
     if (class'TNB_PromotionCaptureService'.static.ValidTransition(1, 1) || class'TNB_PromotionCaptureService'.static.ValidTransition(2, 1) || class'TNB_PromotionCaptureService'.static.ValidTransition(-1, 1)) return 3;
@@ -35,6 +43,7 @@ event int Main(string Params)
         class'TNB_PromotionCaptureService'.static.NormalizeOccurrenceID("00000000-0000-0000-0000-000000000000") != "" ||
         class'TNB_PromotionCaptureService'.static.NormalizeOccurrenceID("not-an-occurrence") != "") return 23;
     PromotionLedger = new class'XComGameState_TNBEventLedger';
+    PromotionLedger.ClockZone = VerifiedZone;
     PromotionOutbox = new class'XComGameState_TNBEventOutbox';
     Previous = RankUp; Previous.Rank = 0;
     PromotionLedger.Soldiers.AddItem(Previous);
@@ -50,8 +59,30 @@ event int Main(string Params)
     // even a DIFFERENT proposed GUID cannot manufacture another occurrence.
     if (class'TNB_PromotionCaptureService'.static.Store(PromotionLedger, PromotionOutbox, RankUp, 0, OccurrenceB) || PromotionOutbox.Reports.Length != 2) return 26;
     `log("TNB_NATIVE_PROMOTION_OCCURRENCE=" $ PromotionOutbox.Reports[1].CaptureJSON);
+    Report = class'JsonObject'.static.DecodeJson(PromotionOutbox.Reports[1].CaptureJSON);
+    if (Report.GetStringValue("clock_zone") != VerifiedZone) return 36;
+    // Simulate the exact old Store omission, with its original occurrence/time/facts.
+    Recovery.Key = PromotionKey; Recovery.State = "held";
+    Recovery.CaptureJSON = class'TNB_EventFactory'.static.ASCIIJson(class'TNB_PromotionCaptureService'.static.Capture(RankUp, 0, OccurrenceA));
+    Unchanged = Recovery;
+    if (class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovery, "", "event_invalid") || Recovery.CaptureJSON != Unchanged.CaptureJSON) return 37;
+    if (class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovery, VerifiedZone, "event_replay_conflict") || Recovery.State != "held") return 38;
+    Recovery.EventID = "already-handed-off";
+    if (class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovery, VerifiedZone, "event_invalid")) return 39;
+    Recovery = Unchanged;
+    if (!class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovery, VerifiedZone, "event_clock_unverified")) return 40;
+    Report = class'JsonObject'.static.DecodeJson(Recovery.CaptureJSON);
+    if (Recovery.Key != PromotionKey || Recovery.State != "captured" || Recovery.EventID != "" || Report.GetStringValue("captured_local") != RankUp.CapturedLocal || Report.GetStringValue("clock_zone") != VerifiedZone || Report.GetObject("facts").GetStringValue("from_rank") != "0" || Report.GetObject("facts").GetStringValue("to_rank") != "1") return 41;
+    SavedCapture = Recovery.CaptureJSON;
+    if (class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovery, VerifiedZone) || Recovery.CaptureJSON != SavedCapture) return 42;
+    `log("TNB_NATIVE_PROMOTION_RECOVERED=" $ Recovery.CaptureJSON);
+    Recovery = Unchanged;
+    Report = class'JsonObject'.static.DecodeJson(Recovery.CaptureJSON); Report.SetStringValue("event_type", "threadline.character.injured");
+    Recovery.CaptureJSON = class'TNB_EventFactory'.static.ASCIIJson(Report);
+    if (class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovery, VerifiedZone, "event_invalid")) return 43;
     // Simulate independent saved-record branches from a pre-promotion baseline.
     RewoundLedger = new class'XComGameState_TNBEventLedger';
+    RewoundLedger.ClockZone = VerifiedZone;
     RewoundOutbox = new class'XComGameState_TNBEventOutbox';
     RewoundLedger.Soldiers.AddItem(Previous);
     if (!class'TNB_PromotionCaptureService'.static.Store(RewoundLedger, RewoundOutbox, RankUp, 0, OccurrenceB) || RewoundOutbox.Reports[0].Key == PromotionKey) return 27;

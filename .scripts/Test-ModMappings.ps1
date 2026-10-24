@@ -66,7 +66,10 @@ $builder._RunMakeMod()
 $builder._CopyScriptPackages()
 foreach ($probeName in $Probes) {
     if ($probeName -notmatch '^TNB_[A-Za-z]+ProbeCommandlet$') { throw "Invalid offline probe name: $probeName" }
-    $probeProcess = Start-Process -FilePath $builder.commandletHostPath -ArgumentList "run TheNameBeneath.$probeName -nopause -unattended" -WorkingDirectory (Split-Path $builder.commandletHostPath) -WindowStyle Hidden -Wait -PassThru
+    # Native promotion fixtures include the actual verified host zone, not a zone
+    # silently supplied later by the C# consumer. The delimiter bounds Params parsing.
+    $probeArguments = "run TheNameBeneath.$probeName `"TNBClockZone=$([TimeZoneInfo]::Local.Id)|`" -nopause -unattended"
+    $probeProcess = Start-Process -FilePath $builder.commandletHostPath -ArgumentList $probeArguments -WorkingDirectory (Split-Path $builder.commandletHostPath) -WindowStyle Hidden -Wait -PassThru
     $probeLog = Get-Content -LiteralPath (Join-Path $SdkPath 'XComGame\Logs\Launch.log') -Raw
     if ($probeProcess.ExitCode -ne 0 -or $probeLog -match 'Failed to find a commandlet|Crash Detected|Critical:|ScriptWarning:|Script Error:' -or $probeLog -notmatch ('Executing Class TheNameBeneath\.' + [regex]::Escape($probeName)) -or $probeLog -notmatch 'TNB_.*(PASS|CHECKS_PASSED)') {
         throw "$probeName did not pass. Inspect SDK XComGame\Logs\Launch.log (exit $($probeProcess.ExitCode))."

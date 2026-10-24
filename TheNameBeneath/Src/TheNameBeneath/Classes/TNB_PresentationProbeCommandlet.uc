@@ -11,6 +11,17 @@ event int Main(string Params)
     local string Body, Path;
     local array<string> Icons;
     local int Index;
+    local XComGameState_TNBCampaignLink Commander;
+    local XComGameState_TNBCampaignLink.IntelligenceGrant Grant;
+    Commander = new class'XComGameState_TNBCampaignLink';
+    if (class'TNB_StrategyMappingService'.static.IntelligenceReceiptText(Commander) != "") return 33;
+    Grant.SoldierName = "<Chand> & Test"; Grant.BeforeTier = 0; Grant.AfterTier = 1;
+    Commander.IntelligenceGrants.AddItem(Grant);
+    Grant.SoldierName = "Second Soldier"; Grant.BeforeTier = 3; Grant.AfterTier = 4;
+    Commander.IntelligenceGrants.AddItem(Grant);
+    Body = class'TNB_StrategyMappingService'.static.IntelligenceReceiptText(Commander);
+    if (InStr(Body, "&lt;Chand&gt; &amp; Test") == INDEX_NONE || InStr(Body, "Second Soldier") == INDEX_NONE || InStr(Body, class'TNB_StrategyMappingService'.static.IntelligenceTierLabel(0) $ " -> " $ class'TNB_StrategyMappingService'.static.IntelligenceTierLabel(1)) == INDEX_NONE) return 34;
+    if (Body != class'TNB_StrategyMappingService'.static.IntelligenceReceiptText(Commander) || Commander.IntelligenceGrants.Length != 2 || Commander.IntelligenceGrants[0].BeforeTier != 0) return 35;
     if (!class'TNB_EffectPresentation'.static.RunChecks()) return 1;
     if (class'TNB_EffectPresentation'.static.CurrentAbilityLabel("missing_template", true) != "Granted by saved link - currently installed") return 30;
     if (class'TNB_EffectPresentation'.static.CurrentAbilityLabel("already_present", true) != "Already owned - currently installed") return 31;

@@ -52,6 +52,10 @@ event int Main(string Params)
     if (AbilityTemplate == none || AbilityTemplate.DataName != 'TNB_DejaVu' || AbilityTemplate.bCrossClassEligible || AbilityTemplate.IconImage != "img:///UILibrary_TNB.TNB_DejaVu") return 12;
     Icon = Texture2D(DynamicLoadObject("UILibrary_TNB.TNB_DejaVu", class'Texture2D', true));
     if (Icon == none || Icon.SizeX != 512 || Icon.SizeY != 512) return 13;
+    if (class'TNB_DejaVuService'.static.LinkingPreview(false, 5, false, false) != "" || class'TNB_DejaVuService'.static.LinkingPreview(false, 100, true, true) != "") return 15;
+    if (InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 5, false, false), "+5% XCOM promotion XP") == INDEX_NONE || InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 17, false, false), "+17%") == INDEX_NONE) return 16;
+    if (InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 0, false, false), "+0%") == INDEX_NONE || InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 5, true, false), "Inactive") == INDEX_NONE) return 17;
+    if (InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 5, false, true), "not grant a second copy") == INDEX_NONE) return 18;
     `log("TNB_DEJA_VU_CHECKS_PASSED: fractional bank, rates, zero, assist conversion, personal values, non-stacking grants, read-only repeat queries");
     return 0;
 }

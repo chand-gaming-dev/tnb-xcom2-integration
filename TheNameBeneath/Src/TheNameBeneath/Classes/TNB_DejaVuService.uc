@@ -80,6 +80,21 @@ static function string Description()
     return "You can't quite shake the feeling you've been here before.\n\nGain " $ Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100) $ "% additional promotion credit from personal kills, assists and ordinary covert-action XP. Fractions accumulate. No extra Ability Points or online XP; guaranteed promotion rewards are not multiplied.";
 }
 
+static function string LinkingPreview(bool AutomaticGrant, int Percent, bool FullXpSystem, bool AlreadyOwned)
+{
+    local string Body;
+    if (!AutomaticGrant) return "";
+    Body = "Local linking bonus: Deja Vu\nYou can't quite shake the feeling you've been here before.\n";
+    if (AlreadyOwned) Body $= "Already owned; linking will not grant a second copy.\n";
+    if (FullXpSystem) return Body $ "Inactive with this overhaul's replacement full-XP system.";
+    return Body $ "+" $ Clamp(Percent, 0, 100) $ "% XCOM promotion XP from personal kills, assists and ordinary covert actions; fractions accumulate. No extra Ability Points or online XP. Configurable in MCM.";
+}
+
+static function string LinkPreviewFor(XComGameState_Unit Unit)
+{
+    return LinkingPreview(class'TNB_DejaVuConfig'.default.bAutomaticLinkGrant, class'TNB_DejaVuConfig'.default.BonusPercent, class'X2ExperienceConfig'.default.bUseFullXpSystem, Owns(Unit));
+}
+
 static function string CreditText(XComGameState_Unit Unit)
 {
     local int Fraction;

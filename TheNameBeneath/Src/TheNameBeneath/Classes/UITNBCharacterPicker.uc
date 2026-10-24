@@ -171,6 +171,12 @@ function RosterComplete(JsonObject Data, string ErrorCode)
         Rows[Rows.Length - 1].CharacterID = ID; Rows[Rows.Length - 1].RosterID = Entry.GetStringValue("roster_entry_id"); Rows[Rows.Length - 1].CharacterName = CharacterName;
     }
     if (Items.ObjectArray.Length == 0) AddRow('None', EmptyText, "", true);
+    Description = class'TNB_DejaVuService'.static.LinkPreviewFor(CurrentUnit());
+    if (Description != "")
+    {
+        AddRow('Details', "Local linking bonus: Deja Vu", Description);
+        arrItems[arrItems.Length - 1].Image = class'TNB_EffectPresentation'.static.AbilityImage('TNB_DejaVu');
+    }
     NextCursor = Data.GetStringValue("next_cursor");
     if (NextCursor != "" && (NextCursor == Cursor || PreviousCursors.Find(NextCursor) != INDEX_NONE)) { Fail("roster_cursor_cycle"); return; }
     if (PreviousCursors.Length > 0) AddRow('Previous', PreviousText, "");
@@ -216,6 +222,7 @@ simulated function string GetButtonString(int ItemIndex)
 simulated function OnPurchaseClicked(UIList ContainerList, int ItemIndex)
 {
     local TDialogueBoxData Dialog;
+    local string LocalBonus;
     if (!StillOpen() || bAwaitingConfirmation || !CanAffordItem(ItemIndex)) return;
     iSelectedItem = ItemIndex;
     switch (Rows[ItemIndex].Action)
@@ -228,6 +235,8 @@ simulated function OnPurchaseClicked(UIList ContainerList, int ItemIndex)
         case 'Resume':
             Dialog.strTitle = LinkTitle;
             Dialog.strText = class'TNB_Types'.static.EscapeUI(CurrentUnit().GetFullName()) $ " paired with " $ class'TNB_Types'.static.EscapeUI(SelectedCharacter.CharacterName) $ "\nCharacter ID: " $ class'TNB_Types'.static.EscapeUI(SelectedCharacter.CharacterID) $ "\n\n" $ LinkWarning;
+            LocalBonus = class'TNB_DejaVuService'.static.LinkPreviewFor(CurrentUnit());
+            if (LocalBonus != "") Dialog.strText $= "\n\n" $ LocalBonus;
             Dialog.fnCallback = LinkConfirmed;
             break;
         default: return;
