@@ -56,6 +56,14 @@ event int Main(string Params)
     if (InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 5, false, false), "+5% XCOM promotion XP") == INDEX_NONE || InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 17, false, false), "+17%") == INDEX_NONE) return 16;
     if (InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 0, false, false), "+0%") == INDEX_NONE || InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 5, true, false), "Inactive") == INDEX_NONE) return 17;
     if (InStr(class'TNB_DejaVuService'.static.LinkingPreview(true, 5, false, true), "not grant a second copy") == INDEX_NONE) return 18;
+    if (class'TNB_DejaVuService'.static.LinkingResult(false, 5, false) != "" || class'TNB_DejaVuService'.static.LinkingResult(false, 100, true) != "") return 19;
+    if (class'TNB_DejaVuService'.static.LinkingResult(true, 5, false) != "Deja Vu granted: +5% XCOM promotion XP" || InStr(class'TNB_DejaVuService'.static.LinkingResult(true, 17, false), "+17%") == INDEX_NONE) return 20;
+    if (InStr(class'TNB_DejaVuService'.static.LinkingResult(true, 0, false), "+0%") == INDEX_NONE || InStr(class'TNB_DejaVuService'.static.LinkingResult(true, 5, true), "inactive") == INDEX_NONE) return 21;
+    Unit = new class'XComGameState_Unit';
+    if (class'TNB_DejaVuService'.static.LinkResultFor(Unit) != "") return 22;
+    Unit.SetUnitFloatValue('TNB_DV_LinkGrant', 1, eCleanup_Never);
+    // This plain saved grant must be displayable before any native ability query.
+    if (class'TNB_DejaVuService'.static.LinkResultFor(Unit) == "") return 23;
     `log("TNB_DEJA_VU_CHECKS_PASSED: fractional bank, rates, zero, assist conversion, personal values, non-stacking grants, read-only repeat queries");
     return 0;
 }

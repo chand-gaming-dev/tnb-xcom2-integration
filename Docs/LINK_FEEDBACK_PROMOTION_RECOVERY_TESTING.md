@@ -1,4 +1,4 @@
-# Promotion recovery and linking feedback - mod 0.9.3 / companion 0.10.4
+# Promotion recovery and linking feedback - mod 0.9.4 / companion 0.10.4
 
 Native acceptance remains required. This feature branch combines the Deja Vu
 passive, public Production companion default, and the following focused fixes.
@@ -47,15 +47,23 @@ the immediate dialog. Verify that the listed two soldiers match the saved benefi
 
 ## Deja Vu before soldier linking
 
-Only when MCM -> Linking bonuses -> automatic grant is enabled, the character
-picker includes a Deja Vu information row/icon and the final confirmation explains
-the local bonus and configured percentage. With automatic grant disabled, neither
-preview is displayed and a new link gets no grant. Existing holders retain their
-ability and profile card. An already-owned grant cannot stack; replacement full-XP
-overhauls show the existing inactive-scope warning rather than promising a bonus.
+The character picker lists identities only, not the local bonus as another choice.
+Only when MCM -> Linking bonuses -> automatic grant is enabled, the final
+confirmation explains the local bonus and configured percentage. After a completed
+link, the Traits & Abilities result shows **Deja Vu granted: +5% XCOM promotion XP**
+(using the current configured percentage), its icon card and detailed description.
+The bonus card is selected initially after a fresh link. A committed grant receipt
+is sufficient for presentation; the screen does not need to wait for a native
+ability query refresh. This is a presentation change, not a new grant/XP mechanism.
+
+With automatic grant disabled, a new link gets no grant or grant result. Existing
+holders retain their ability, receipt and profile card even if automatic grant is
+later disabled. An already-owned grant cannot stack; replacement full-XP overhauls
+show the existing inactive-scope warning rather than promising an XP bonus.
 
 Check enabled and disabled states on an unlinked soldier; canceling a confirmation
-must apply nothing. Configured 0% is described as 0%, not silently changed to 5%.
+must apply nothing. Verify the result only after completing the link, not merely
+selecting a roster character. Configured 0% is described as 0%, not changed to 5%.
 Reopening existing links is not a retroactive Deja Vu grant.
 
 ## Automated coverage
@@ -78,6 +86,25 @@ retry of the original capture. A forced clean gameplay build passed the focused
 promotion, Deja Vu and presentation probes; the mapping probe's expected missing-
 fixture result confirmed test defaults are absent from the gameplay package.
 
-Clean mod script SHA-256:
+Original mod 0.9.3 clean script SHA-256 (prior to the outcome-screen follow-up):
 `143B6AA04BACB5DE82A81D1F3F60394A418435247578E09390338A8FF9DC21C7`.
 Private probe logs and installation backups remain ignored under `Artifacts/`.
+
+Product Owner acceptance on 2026-10-24: loading the saved post-promotion game
+delivered the retained promotion event to the production portal; the two Quick
+Learner intelligence recipients were verified. The revised Deja Vu outcome
+presentation still requires a completed-link native check. An incomplete link is
+not evidence of a missing ability grant, and no grant/XP logic was changed for it.
+
+The 2026-10-24 outcome-screen follow-up passed all 12 SDK probes. The clean 0.9.4
+package additionally passed focused promotion, Deja Vu and presentation probes;
+the expected missing-fixture check confirmed test defaults are absent. Compilation
+reported zero errors/warnings. New tests cover committed/no-grant result text,
+custom/zero percentages, the inactive full-XP warning and immediate presentation
+from a plain saved grant without a native ability query. Companion code, mapping
+rows, passive grants and XP calculations are unchanged by this follow-up.
+
+Mod 0.9.4 script SHA-256:
+`F8526CB753104A7A09DF07114CEE0900F080B65040F021882D944F7E8C21D83E`.
+Prior installed files are backed up under ignored
+`Artifacts/InstallBackups/DejaVuOutcome-20261024`.

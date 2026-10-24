@@ -1,4 +1,9 @@
-The Name Beneath - mod 0.9.3 / XCom 2 companion 0.10.4
+The Name Beneath - mod 0.9.4 / XCom 2 companion 0.10.4
+
+Deja Vu no longer appears as a choice in the character picker. A completed link
+shows its saved grant and configured XP percentage on the Traits & Abilities
+result, selecting its help card initially. Disabled automatic granting adds no
+bonus to a new link; existing grants remain. No grant or XP calculations changed.
 
 Promotion reports now retain their verified reporting time zone. A loaded save can
 recover the known missing-zone promotion reports without replaying a mission or

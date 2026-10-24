@@ -28,7 +28,8 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     local XComGameState_TNBCampaignLink Campaign;
     local TNB_Types.ResolvedEffect Effect, Other;
     local array<name> Totals;
-    local int Total, Index;
+    local int Total, Index, FirstSelected;
+    local string LocalBonusResult;
     local UIText Label;
     local UIIcon Icon;
     local UIListItem_TNBEffect Card;
@@ -51,12 +52,16 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     Label.SetPosition(95, 244); Label.SetSize(1715, 30);
     Index = 0;
     DisplayEffects = Link.Effects;
-    if (class'TNB_DejaVuService'.static.Owns(Unit))
+    LocalBonusResult = class'TNB_DejaVuService'.static.LinkResultFor(Unit);
+    // A committed local grant is itself a saved receipt. Do not require the
+    // native ability query to have refreshed before showing that link outcome.
+    if (LocalBonusResult != "" || class'TNB_DejaVuService'.static.Owns(Unit))
     {
         Effect.MappingKey = 'TNB_DejaVu'; Effect.SourceKind = 'Bonus';
         Effect.SourceName = "Deja Vu"; Effect.SourceID = ""; Effect.SourceVersion = 0;
         Effect.EffectKind = 'Ability'; Effect.Target = 'TNB_DejaVu'; Effect.Status = "available";
         DisplayEffects.AddItem(Effect);
+        if (Notice != "") FirstSelected = DisplayEffects.Length - 1;
     }
     foreach Link.Effects(Effect)
         if (Effect.EffectKind == 'Stat' && Effect.Status == "applied" && Totals.Find(Effect.Target) == INDEX_NONE)
@@ -89,10 +94,15 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
         Card = UIListItem_TNBEffect(EffectList.CreateItem(class'UIListItem_TNBEffect'));
         Card.InitEffect(Effect);
     }
-    if (DisplayEffects.Length > 0) { EffectList.SetSelectedIndex(0); Selected(EffectList, 0); }
+    if (DisplayEffects.Length > 0) { EffectList.SetSelectedIndex(FirstSelected); Selected(EffectList, FirstSelected); }
     else DetailText.SetText("This identity link has no configured gameplay effects. The normal class tree is unchanged.");
     MappingButton = Spawn(class'UIButton', self).InitButton('MappingDetails', "Mapping details", MappingClicked);
-    MappingButton.SetPosition(1005, 933); MappingButton.SetWidth(250); MappingButton.SetDisabled(Link.Effects.Length == 0);
+    MappingButton.SetPosition(1005, 933); MappingButton.SetWidth(250); MappingButton.SetDisabled(FirstSelected >= Link.Effects.Length);
+    if (LocalBonusResult != "")
+    {
+        Label = Spawn(class'UIText', self).InitText('LocalLinkOutcome'); Label.SetPosition(1005, 902); Label.SetSize(790, 28);
+        Label.SetHTMLText(class'UIUtilities_Text'.static.GetColoredText(class'UIUtilities_Text'.static.GetSizedText(LocalBonusResult, 20), class'X2ExperienceConfig'.default.bUseFullXpSystem ? eUIState_Warning : eUIState_Good));
+    }
     Label = Spawn(class'UIText', self).InitText('Notice'); Label.SetPosition(95, 912); Label.SetSize(825, 76);
     Label.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText(Notice != "" ? class'TNB_Types'.static.EscapeUI(Notice) : "Read-only mappings. Select a card for help; Page Up/Down or right stick scrolls details.\nGreen: bonus / red: penalty / amber: unavailable, disabled or unmapped. No class-tree changes.", 18));
     Back = Spawn(class'UIButton', self).InitButton('Back', class'UIUtilities_Text'.default.m_strGenericBack, BackClicked);

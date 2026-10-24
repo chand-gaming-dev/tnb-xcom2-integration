@@ -171,12 +171,6 @@ function RosterComplete(JsonObject Data, string ErrorCode)
         Rows[Rows.Length - 1].CharacterID = ID; Rows[Rows.Length - 1].RosterID = Entry.GetStringValue("roster_entry_id"); Rows[Rows.Length - 1].CharacterName = CharacterName;
     }
     if (Items.ObjectArray.Length == 0) AddRow('None', EmptyText, "", true);
-    Description = class'TNB_DejaVuService'.static.LinkPreviewFor(CurrentUnit());
-    if (Description != "")
-    {
-        AddRow('Details', "Local linking bonus: Deja Vu", Description);
-        arrItems[arrItems.Length - 1].Image = class'TNB_EffectPresentation'.static.AbilityImage('TNB_DejaVu');
-    }
     NextCursor = Data.GetStringValue("next_cursor");
     if (NextCursor != "" && (NextCursor == Cursor || PreviousCursors.Find(NextCursor) != INDEX_NONE)) { Fail("roster_cursor_cycle"); return; }
     if (PreviousCursors.Length > 0) AddRow('Previous', PreviousText, "");

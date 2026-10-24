@@ -42,7 +42,7 @@ event PostBeginPlay()
     ObservedHistory = `XCOMHISTORY;
     if (ObservedHistory != none) ObservedHistory.RegisterOnNewGameStateDelegate(OnCommittedState);
     bHistoryDirty = true;
-    class'TNB_ReportingSafety'.static.Trace("PUMP_START build=0.9.3");
+    class'TNB_ReportingSafety'.static.Trace("PUMP_START build=0.9.4");
     SetTimer(1.0, true, 'Work');
 }
 

@@ -95,6 +95,20 @@ static function string LinkPreviewFor(XComGameState_Unit Unit)
     return LinkingPreview(class'TNB_DejaVuConfig'.default.bAutomaticLinkGrant, class'TNB_DejaVuConfig'.default.BonusPercent, class'X2ExperienceConfig'.default.bUseFullXpSystem, Owns(Unit));
 }
 
+// Result text is based on the committed link receipt, not today's auto-grant
+// checkbox. Turning that checkbox off cannot erase an earlier soldier's grant.
+static function string LinkingResult(bool Granted, int Percent, bool FullXpSystem)
+{
+    if (!Granted) return "";
+    if (FullXpSystem) return "Deja Vu granted - XP bonus inactive for this overhaul";
+    return "Deja Vu granted: +" $ Clamp(Percent, 0, 100) $ "% XCOM promotion XP";
+}
+
+static function string LinkResultFor(XComGameState_Unit Unit)
+{
+    return LinkingResult(Value(Unit, 'TNB_DV_LinkGrant') == 1, class'TNB_DejaVuConfig'.default.BonusPercent, class'X2ExperienceConfig'.default.bUseFullXpSystem);
+}
+
 static function string CreditText(XComGameState_Unit Unit)
 {
     local int Fraction;

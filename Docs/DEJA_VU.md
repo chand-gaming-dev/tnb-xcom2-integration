@@ -24,6 +24,12 @@ MCM -> The Name Beneath -> Linking bonuses:
 
 The perk and progress need no companion/network connection after linking.
 
+The character picker lists only roster identities. The final link confirmation
+mentions the bonus when automatic granting is enabled; the completed-link Traits
+& Abilities result then displays the grant, configured percentage and icon card.
+Its saved grant receipt drives this presentation immediately, without waiting for
+a native ability query refresh. A cancelled/incomplete link has no grant result.
+
 ## External mod use
 
 Ability template: `TNB_DejaVu`; provider: The Name Beneath. Explicit grants through
