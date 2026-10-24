@@ -9,9 +9,10 @@ internal sealed class BridgeError(string code, int httpStatus = 0, TimeSpan? ret
 
 internal sealed record Configuration(Uri Api, int Port, string DataDirectory, string? ProtectionToken, string? DevelopmentCredential)
 {
-    internal const string DefaultApi = "https://411118fe-d137-412d-a4ae-8990609684d8-00-2xyc418vgc8ol.worf.replit.dev/";
-    internal static Configuration Load(string[] args)
+    internal const string DefaultApi = "https://thenamebeneath.com/";
+    internal static Configuration Load(string[] args, Func<string, string?>? environment = null)
     {
+        environment ??= Environment.GetEnvironmentVariable;
         string? Option(string name)
         {
             int i = Array.IndexOf(args, name);
@@ -36,16 +37,20 @@ internal sealed record Configuration(Uri Api, int Port, string DataDirectory, st
                 values[key] = value;
             }
         }
-        string? Setting(string key) => Environment.GetEnvironmentVariable(key) is { Length: > 0 } env ? env : values.GetValueOrDefault(key);
-        var api = new Uri(Option("--api") ?? Setting("THREADLINE_DEV_API_BASE_URL") ?? DefaultApi);
+        string? Setting(string key) => environment(key) is { Length: > 0 } env ? env : values.GetValueOrDefault(key);
+        // Normal launch always selects Production, even in a shell with stale dev settings.
+        // Alternate origins require an explicit CLI option or development configuration.
+        string? explicitApi = Option("--api");
+        var api = new Uri(explicitApi ?? (developmentFile != null ? Setting("THREADLINE_DEV_API_BASE_URL") : null) ?? DefaultApi);
         if ((api.Scheme != "https" && !(api.Scheme == "http" && api.IsLoopback)) || api.UserInfo.Length != 0 || api.Query.Length != 0 || api.Fragment.Length != 0 || api.AbsolutePath != "/")
             throw new BridgeError("invalid_api_origin");
         int port = int.Parse(Option("--port") ?? "27129", System.Globalization.CultureInfo.InvariantCulture);
         if (port is < 1024 or > 65535) throw new BridgeError("invalid_port");
         // Persisted location is a compatibility identifier, not public branding.
         string data = Option("--data") ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Threadline", "TheNameBeneath");
-        string? protection = Setting("REPLIT_DEV_EXTERNAL_ACCESS_TOKEN");
-        if (protection != null && !api.Host.EndsWith(".replit.dev", StringComparison.OrdinalIgnoreCase)) throw new BridgeError("protection_origin_mismatch");
+        // Never send a development bypass token to the public API or any other origin.
+        string? protection = api.Host.EndsWith(".replit.dev", StringComparison.OrdinalIgnoreCase) && (explicitApi != null || developmentFile != null)
+            ? Setting("REPLIT_DEV_EXTERNAL_ACCESS_TOKEN") : null;
         // The existing Vanguard credential is loaded only with an explicit development-file option.
         return new(api, port, Path.GetFullPath(data), protection, developmentFile == null ? null : Setting("THREADLINE_JOURNEY_CREDENTIAL"));
     }

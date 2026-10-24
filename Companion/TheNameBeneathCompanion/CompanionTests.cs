@@ -35,6 +35,7 @@ internal static class CompanionTests
         string data = Path.Combine(Path.GetTempPath(), "TNB-Tests-" + Guid.NewGuid().ToString("N"));
         try
         {
+            await ConfigurationTests.Run(data);
             var config = new Configuration(new Uri("https://example.invalid/"), 0, data, "test-protection", null);
             var vault = new MemoryVault();
             var handler = new FakeHandler();

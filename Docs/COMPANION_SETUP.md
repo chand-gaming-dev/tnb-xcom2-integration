@@ -1,16 +1,23 @@
 # Companion, campaign Journey and Armory integration
 
 Public-source setup: use [BUILDING.md](../BUILDING.md) for portable build/start
-commands. The startup helper now accepts `-DevelopmentConfig` and otherwise reads
-the ignored `.env.local` beside the solution; it no longer assumes the author's
-private backend checkout. Dated notes below describe earlier development builds.
+commands. Normal launch uses **https://thenamebeneath.com/** with no Replit access
+key, `.env.local` or URL entry. The optional `-Development` helper switch reads
+an explicit `-DevelopmentConfig` or the ignored `.env.local` beside the solution.
+Dated notes below describe earlier development builds.
 
-**Current companion 0.10.3 / mod 0.9.2:** the desktop title is
+**Current companion 0.10.4 / mod 0.9.2:** the desktop title is
 The Name Beneath - XCom 2 Companion <version>. Separate Journey, Gameplay reporting
 and Character Pools tabs organize setup, delivery counts/diagnostics and pool import.
 Existing credentials and delivery journals are retained. New capture/freedom and
 bond formed/developed events use the backend factual types; legacy milestone reports
 remain unchanged. See CAPTIVITY_RELATIONSHIPS_UX_TESTING.md.
+
+Production uses its own endpoint-scoped credential, cached Journey, link receipts
+and event journal. Development data is preserved, not migrated or replayed against
+Production. Paste a credential from the production portal and validate/save it.
+For public-service acceptance, use a new campaign or an unlinked save with the
+production Journey; a development-linked save is not automatically reassociated.
 
 Mod 0.9.1 and later restore a read-only invitation on the quiet Avenger for an unlinked
 campaign when the companion has a configured Upcoming/Started Journey. Review
@@ -68,24 +75,28 @@ Companion 0.4.1 / protocol 2 / Armory feature 2. The experimental local build in
 
 ## Start the desktop app locally
 
-Open PowerShell in your integration checkout. Copy `.env.example` to the ignored
-`.env.local` and configure your authorized development origin privately, then run:
+Open PowerShell in your integration checkout and run:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Start-Companion.ps1 -Development
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Start-Companion.ps1
 ```
 
 The companion opens a Windows desktop window. Minimize it while playing. Closing it stops the listener and cancels pending requests; the stored credential is retained. ExecutionPolicy Bypass applies only to the new PowerShell process, not the machine policy. No Windows service is installed.
 
-The Development switch reads `.env.local` by default, or the private file supplied
+Alternatively open `Artifacts\Companion\TheNameBeneathCompanion.exe` directly.
+Both select the public API with no access key or configuration file. Normal launch
+ignores old development environment variables.
+
+For optional development testing, `-Development` reads `.env.local` by default, or the private file supplied
 with `-DevelopmentConfig`. Only THREADLINE_DEV_API_BASE_URL,
 REPLIT_DEV_EXTERNAL_ACCESS_TOKEN, and THREADLINE_JOURNEY_CREDENTIAL are recognized;
-process environment values take precedence. The Replit protection token stays in
-the companion. The Journey credential from that file is used only by
+process environment values take precedence only in this explicit development mode.
+The Replit protection token is used only for an explicitly selected `.replit.dev`
+origin, never the public API. The Journey credential from that file is used only by
 --check-development-connection or --check-development-journey, not automatically
 stored or placed in the desktop field. Never commit the private configuration.
 
-For an unprotected endpoint, the published EXE can be opened directly. It accepts --api https://your-api-origin/ and --port 27129. Change CompanionPort in XComTheNameBeneath.ini if the port changes. Never pass a Journey credential as a command-line argument. The default origin is the development Replit URL supplied by the user, so use the Development startup command for that protected server.
+The EXE accepts --api https://your-api-origin/ for an explicit alternate origin and --port 27129. Change CompanionPort in XComTheNameBeneath.ini if the port changes. Never pass a Journey credential as a command-line argument.
 
 Read-only live validation without opening a window, starting a listener, or storing a real credential:
 

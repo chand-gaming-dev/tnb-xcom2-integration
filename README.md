@@ -3,7 +3,7 @@
 An unofficial XCOM 2: War of the Chosen mod and Windows companion connecting a
 campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
-**Alpha:** mod **0.9.2**, companion **0.10.3**. This is a source snapshot of an
+**Alpha:** mod **0.9.2**, companion **0.10.4**. This is a source snapshot of an
 actively tested integration, not a finished Workshop release. Back up campaign
 saves; start a new campaign for acceptance testing. Not every mapping or gameplay
 event has completed in-game acceptance.
@@ -31,9 +31,9 @@ See [mapping customization](Docs/MAPPING_CUSTOMIZATION.md).
   development baseline and declared minimum **1.31.3**.
 - [Mod Config Menu](https://steamcommunity.com/sharedfiles/filedetails/?id=667104300).
 - The mod enabled in your mod launcher and the companion running alongside XCOM.
-- A Journey credential for The Name Beneath and a reachable compatible backend.
-  The private backend is not included. The current default API is a temporary
-  development origin, not a promised public service endpoint.
+- A Journey credential issued by [The Name Beneath](https://thenamebeneath.com).
+  The companion uses `https://thenamebeneath.com/` by default. No Replit access key,
+  API URL entry or development configuration is required for normal use.
 
 No external DLL is installed in the game's Binaries directory. The self-contained
 companion includes its runtime. Closing it does not close XCOM; online features
@@ -47,9 +47,12 @@ be attached to [GitHub Releases](https://github.com/chand-gaming-dev/tnb-xcom2-i
 and linked here. Players will not need to build it or install the .NET SDK/runtime.
 See the [release checklist](Docs/RELEASE_CHECKLIST.md); no release is published yet.
 
-1. Build/install the mod and companion, then launch the companion for the intended
-   API origin. Paste the Journey credential into its masked field and validate/save.
+1. Build/install the mod and companion, then launch the companion normally.
+   Paste the production Journey credential into its masked field and validate/save.
    It is stored in Windows Credential Manager, never in mod configuration.
+   Development credentials, cached Journeys and queued reports stay separate and
+   are not migrated to Production. Use a production Journey with an unlinked save
+   or new campaign when testing the public service.
 2. In an unlinked campaign, wait for a quiet Avenger screen and choose **Review
    Journey** in the automatic invitation. Review and explicitly confirm commander
    effects; **Not now** applies nothing and dismisses it for this play session.
