@@ -229,7 +229,7 @@ static function string Report(XComGameState_TNBSoldierLink Link)
     Body = "Linked character: " $ class'TNB_Types'.static.EscapeUI(Link.Snapshot.CharacterName) $ "\nSnapshot: " $ class'TNB_Types'.static.EscapeUI(Link.Snapshot.SnapshotID) $ " (v" $ Link.Snapshot.SnapshotVersion $ ")\n";
     Body $= class'TNB_MappingResolver'.static.Report(Link.Effects, true);
     if (class'TNB_DejaVuService'.static.Value(XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(Link.UnitRef.ObjectID)), 'TNB_DV_LinkGrant') == 1)
-        Body $= "\nLocal linking bonus: Deja Vu - " $ Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100) $ "% additional future promotion XP (configurable in MCM).";
+        Body $= "\n" $ class'TNB_DejaVuService'.static.LinkResultFor(XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(Link.UnitRef.ObjectID))) $ " (configurable in MCM).";
     foreach Link.Effects(Effect)
         if (Effect.EffectKind == 'Stat' && Effect.Status == "applied" && Targets.Find(Effect.Target) == INDEX_NONE)
         {

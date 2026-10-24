@@ -101,7 +101,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     if (LocalBonusResult != "")
     {
         Label = Spawn(class'UIText', self).InitText('LocalLinkOutcome'); Label.SetPosition(1005, 902); Label.SetSize(790, 28);
-        Label.SetHTMLText(class'UIUtilities_Text'.static.GetColoredText(class'UIUtilities_Text'.static.GetSizedText(LocalBonusResult, 20), class'X2ExperienceConfig'.default.bUseFullXpSystem ? eUIState_Warning : eUIState_Good));
+        Label.SetHTMLText(class'UIUtilities_Text'.static.GetColoredText(class'UIUtilities_Text'.static.GetSizedText(LocalBonusResult, 20), (class'X2ExperienceConfig'.default.bUseFullXpSystem || class'TNB_DejaVuConfig'.default.BonusPercent <= 0) ? eUIState_Warning : eUIState_Good));
     }
     Label = Spawn(class'UIText', self).InitText('Notice'); Label.SetPosition(95, 912); Label.SetSize(825, 76);
     Label.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText(Notice != "" ? class'TNB_Types'.static.EscapeUI(Notice) : "Read-only mappings. Select a card for help; Page Up/Down or right stick scrolls details.\nGreen: bonus / red: penalty / amber: unavailable, disabled or unmapped. No class-tree changes.", 18));
@@ -122,7 +122,7 @@ simulated function Selected(UIList ContainerList, int ItemIndex)
     if (Effect.MappingKey == 'TNB_DejaVu')
     {
         DetailIcon.LoadIcon(class'TNB_EffectPresentation'.static.AbilityImage('TNB_DejaVu'));
-        DetailIcon.SetBGColorState(eUIState_Good);
+        DetailIcon.SetBGColorState((class'X2ExperienceConfig'.default.bUseFullXpSystem || class'TNB_DejaVuConfig'.default.BonusPercent <= 0) ? eUIState_Warning : eUIState_Good);
         DetailHeading.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText("Deja Vu\nLocal XCOM bonus", 24));
         DetailText.SetHTMLText(class'UIUtilities_Text'.static.AddFontInfo(class'TNB_DejaVuService'.static.Description() $ "\n\nBanked bonus promotion credit: " $ class'TNB_DejaVuService'.static.CreditText(Unit) $ " (whole credits applied: " $ class'TNB_DejaVuService'.static.Value(Unit, 'TNB_DV_Whole') $ "). Percentage settings affect future earnings only. This is not a canonical trait or skill.", bIsIn3D, false, , 20));
         if (DetailText.Scrollbar != none) DetailText.Scrollbar.SetThumbAtPercent(0.0);

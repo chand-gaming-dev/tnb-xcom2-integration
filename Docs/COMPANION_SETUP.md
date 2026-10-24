@@ -6,7 +6,7 @@ key, `.env.local` or URL entry. The optional `-Development` helper switch reads
 an explicit `-DevelopmentConfig` or the ignored `.env.local` beside the solution.
 Dated notes below describe earlier development builds.
 
-**Current companion 0.10.4 / mod 0.9.4:** the desktop title is
+**Current companion 0.10.4 / mod 0.9.5:** the desktop title is
 The Name Beneath - XCom 2 Companion <version>. Separate Journey, Gameplay reporting
 and Character Pools tabs organize setup, delivery counts/diagnostics and pool import.
 Existing credentials and delivery journals are retained. New capture/freedom and

@@ -5,7 +5,7 @@ before merge/release. No backend, catalog or companion changes are required.
 
 ## Player behavior
 
-New soldier links automatically grant **Deja Vu** by default:
+New soldier links automatically grant **Deja Vu**:
 "You can't quite shake the feeling you've been here before."
 
 The passive banks 5% additional XCOM promotion credit from new personal kills,
@@ -17,15 +17,17 @@ trait/skill or an effect in the immutable snapshot mapping table.
 
 MCM -> The Name Beneath -> Linking bonuses:
 
-- Automatic grant: affects **future links** only. No retroactive grants to existing
-  linked saves and no removal from already granted soldiers.
-- Promotion XP percentage: 0-100, default 5. A new rate applies to subsequent
-  earnings only. Zero stops accrual without removing earned bonus credit.
+- One setting: **Promotion XP percentage**, 0-100, default 5. A new rate applies
+  to subsequent earnings for all holders, not just future links.
+- **0% disables future bonus XP** without removing the passive, links or earned
+  credit. New links still receive the passive, explicitly shown as XP disabled.
+- The former automatic-grant checkbox is removed; its legacy INI key is accepted
+  but ignored. Existing links without a grant are not retroactively backfilled.
 
 The perk and progress need no companion/network connection after linking.
 
 The character picker lists only roster identities. The final link confirmation
-mentions the bonus when automatic granting is enabled; the completed-link Traits
+mentions the XP benefit when the percentage is above zero; the completed-link Traits
 & Abilities result then displays the grant, configured percentage and icon card.
 Its saved grant receipt drives this presentation immediately, without waiting for
 a native ability query refresh. A cancelled/incomplete link has no grant result.
@@ -89,8 +91,10 @@ folder. Never save modified SDK/base-game packages.
 
 1. On a pre-link save, check MCM defaults (automatic enabled, 5%). Link one soldier;
    inspect the local bonus card/icon and link report. Reload: no second grant.
-2. Link a second soldier with automatic grant disabled. They receive normal mapped
-   effects but not Deja Vu. Re-enable it: the earlier soldier is not backfilled.
+2. Set the slider to 0%: existing holders retain the passive and earned credit,
+   but future bonus accrual stops. A new link also receives the passive with an
+   explicit disabled-XP result, not an advertised active benefit. Raise the rate:
+   subsequent qualifying earnings use it; no old XP is multiplied retrospectively.
 3. Deploy a holder and non-holder. Check direct kills, assist conversion and class
    thresholds; only the holder banks bonus credit. At 5%, twenty ordinary promotion
    credits produce one bonus credit. Display and actual promotion eligibility agree.

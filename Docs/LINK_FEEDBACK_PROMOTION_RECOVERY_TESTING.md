@@ -1,4 +1,4 @@
-# Promotion recovery and linking feedback - mod 0.9.4 / companion 0.10.4
+# Promotion recovery and linking feedback - mod 0.9.5 / companion 0.10.4
 
 Native acceptance remains required. This feature branch combines the Deja Vu
 passive, public Production companion default, and the following focused fixes.
@@ -48,7 +48,7 @@ the immediate dialog. Verify that the listed two soldiers match the saved benefi
 ## Deja Vu before soldier linking
 
 The character picker lists identities only, not the local bonus as another choice.
-Only when MCM -> Linking bonuses -> automatic grant is enabled, the final
+Only when MCM -> Linking bonuses -> bonus XP percentage is above zero, the final
 confirmation explains the local bonus and configured percentage. After a completed
 link, the Traits & Abilities result shows **Deja Vu granted: +5% XCOM promotion XP**
 (using the current configured percentage), its icon card and detailed description.
@@ -56,12 +56,14 @@ The bonus card is selected initially after a fresh link. A committed grant recei
 is sufficient for presentation; the screen does not need to wait for a native
 ability query refresh. This is a presentation change, not a new grant/XP mechanism.
 
-With automatic grant disabled, a new link gets no grant or grant result. Existing
-holders retain their ability, receipt and profile card even if automatic grant is
-later disabled. An already-owned grant cannot stack; replacement full-XP overhauls
-show the existing inactive-scope warning rather than promising an XP bonus.
+The single MCM percentage slider controls future bonus earnings for all holders.
+At 0%, new links still receive the passive, explicitly labelled **bonus XP disabled
+(0%)**; existing holders retain their ability, receipt and previously earned credit.
+The old automatic-grant checkbox is removed and its legacy INI key is ignored.
+An already-owned grant cannot stack; replacement full-XP overhauls show the existing
+inactive-scope warning rather than promising an XP bonus.
 
-Check enabled and disabled states on an unlinked soldier; canceling a confirmation
+Check positive and zero-percent states on an unlinked soldier; canceling a confirmation
 must apply nothing. Verify the result only after completing the link, not merely
 selecting a roster character. Configured 0% is described as 0%, not changed to 5%.
 Reopening existing links is not a retroactive Deja Vu grant.
@@ -71,7 +73,7 @@ Reopening existing links is not a retroactive Deja Vu grant.
 SDK probes exercise production Store JSON with a host-zone fixture, narrow recovery,
 no changes to original identity/time/facts, repeated recovery, conflicts, already
 handed-off reports, unrelated types, Quick Learner frozen/escaped recipient text,
-and enabled/disabled/custom-percentage Deja Vu previews. The companion's native
+and zero/custom-percentage Deja Vu previews. The companion's native
 promotion fixture consumer now requires the emitted zone instead of inserting it.
 Its queue checks reject the old omission and prove recovery is an exact retry.
 

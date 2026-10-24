@@ -1,9 +1,14 @@
-The Name Beneath - mod 0.9.4 / XCom 2 companion 0.10.4
+The Name Beneath - mod 0.9.5 / XCom 2 companion 0.10.4
+
+Deja Vu has one MCM setting: its bonus XP percentage (default 5%). Set it to 0%
+to stop future bonus XP for all holders, without removing links, the passive or
+earned credit. New links receive the passive even at 0%, clearly marked disabled.
+The old automatic-grant checkbox is removed; its legacy INI setting is ignored.
 
 Deja Vu no longer appears as a choice in the character picker. A completed link
 shows its saved grant and configured XP percentage on the Traits & Abilities
-result, selecting its help card initially. Disabled automatic granting adds no
-bonus to a new link; existing grants remain. No grant or XP calculations changed.
+result, selecting its help card initially. Existing grants remain. The result
+screen does not grant the ability again or recalculate previous XP.
 
 Promotion reports now retain their verified reporting time zone. A loaded save can
 recover the known missing-zone promotion reports without replaying a mission or

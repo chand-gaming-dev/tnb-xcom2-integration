@@ -61,7 +61,7 @@ static function Award(XComGameState Pending, XComGameState_Unit Unit, float Cred
 
 static function GrantAtLink(XComGameState_Unit Unit)
 {
-    if (Unit != none && class'TNB_DejaVuConfig'.default.bAutomaticLinkGrant)
+    if (Unit != none)
         Unit.SetUnitFloatValue('TNB_DV_LinkGrant', 1, eCleanup_Never);
 }
 
@@ -77,13 +77,15 @@ static function string Description()
 {
     if (class'X2ExperienceConfig'.default.bUseFullXpSystem)
         return "You can't quite shake the feeling you've been here before.\n\nInactive: this overhaul uses a replacement full-XP system. Deja Vu supports WOTC kill-credit promotion progression.";
+    if (class'TNB_DejaVuConfig'.default.BonusPercent <= 0)
+        return "You can't quite shake the feeling you've been here before.\n\nBonus XP disabled (0%). Increase the percentage in MCM to enable future bonus XP. This passive, your link and previously earned bonus credit are retained. No extra Ability Points or online XP.";
     return "You can't quite shake the feeling you've been here before.\n\nGain " $ Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100) $ "% additional promotion credit from personal kills, assists and ordinary covert-action XP. Fractions accumulate. No extra Ability Points or online XP; guaranteed promotion rewards are not multiplied.";
 }
 
-static function string LinkingPreview(bool AutomaticGrant, int Percent, bool FullXpSystem, bool AlreadyOwned)
+static function string LinkingPreview(int Percent, bool FullXpSystem, bool AlreadyOwned)
 {
     local string Body;
-    if (!AutomaticGrant) return "";
+    if (Percent <= 0) return "";
     Body = "Local linking bonus: Deja Vu\nYou can't quite shake the feeling you've been here before.\n";
     if (AlreadyOwned) Body $= "Already owned; linking will not grant a second copy.\n";
     if (FullXpSystem) return Body $ "Inactive with this overhaul's replacement full-XP system.";
@@ -92,15 +94,17 @@ static function string LinkingPreview(bool AutomaticGrant, int Percent, bool Ful
 
 static function string LinkPreviewFor(XComGameState_Unit Unit)
 {
-    return LinkingPreview(class'TNB_DejaVuConfig'.default.bAutomaticLinkGrant, class'TNB_DejaVuConfig'.default.BonusPercent, class'X2ExperienceConfig'.default.bUseFullXpSystem, Owns(Unit));
+    if (class'TNB_DejaVuConfig'.default.BonusPercent <= 0) return "";
+    return LinkingPreview(class'TNB_DejaVuConfig'.default.BonusPercent, class'X2ExperienceConfig'.default.bUseFullXpSystem, Owns(Unit));
 }
 
-// Result text is based on the committed link receipt, not today's auto-grant
-// checkbox. Turning that checkbox off cannot erase an earlier soldier's grant.
+// Result text is based on the committed link receipt and the current XP rate.
+// Zero stops future accrual; it never unlinks a soldier or erases earned credit.
 static function string LinkingResult(bool Granted, int Percent, bool FullXpSystem)
 {
     if (!Granted) return "";
     if (FullXpSystem) return "Deja Vu granted - XP bonus inactive for this overhaul";
+    if (Percent <= 0) return "Deja Vu - bonus XP disabled (0%)";
     return "Deja Vu granted: +" $ Clamp(Percent, 0, 100) $ "% XCOM promotion XP";
 }
 
