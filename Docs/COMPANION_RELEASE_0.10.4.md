@@ -8,7 +8,9 @@ Release tag: `companion-v0.10.4-alpha.1`.
 Download **TheNameBeneathCompanion.exe** from this release's Assets and double-click
 it. No PowerShell command, source build, .NET SDK/runtime installation or external
 game DLL is required. GitHub's automatic source archives are not the player app.
-The matching XCOM Workshop mod upload is a separate step and is not bundled here.
+Install the matching [[WOTC] The Name Beneath mod from Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674)
+and enable its required dependencies. The mod is not bundled with the companion;
+do not enable both a local development copy and the Workshop copy together.
 
 The companion connects to **https://thenamebeneath.com/** by default. Paste your
 Journey credential into the masked field and select **Validate and save**; it is

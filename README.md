@@ -5,7 +5,8 @@ campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
 **Alpha:** mod **0.9.5**, companion **0.10.4**. The companion is distributed through
 [GitHub Releases](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1);
-the Workshop mod upload is pending. Back up campaign saves; a new
+the mod is listed as [[WOTC] The Name Beneath on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674).
+Back up campaign saves; a new
 campaign is recommended for alpha testing. See the [current acceptance
 summary](Docs/ALPHA_ACCEPTANCE_SUMMARY.md) for confirmed gameplay tests and remaining
 limitations; automated tests do not establish in-game compatibility.
@@ -49,12 +50,14 @@ profile; other compatible mapped effects can still apply.
 
 ## Installation and first connection
 
-Download the ready-to-run Windows x64
+Subscribe to [[WOTC] The Name Beneath on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674)
+and enable the mod and its required dependencies in your mod launcher.
+Download the separate ready-to-run Windows x64
 [TheNameBeneathCompanion.exe](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/download/companion-v0.10.4-alpha.1/TheNameBeneathCompanion.exe).
 The [companion alpha release](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1)
-also includes checksums and license notices. The matching Workshop mod upload is
-still pending; its link will be added here after publication. Until then, mod testers
-need the locally installed build; developers can use [BUILDING.md](BUILDING.md).
+also includes checksums and license notices. Use only one copy of the mod: do not
+enable the local development build and Workshop copy together. Developers can use
+[BUILDING.md](BUILDING.md) for source builds.
 GitHub's automatic source-code ZIP is not the player download.
 
 Run the companion by double-clicking the EXE: no PowerShell command,

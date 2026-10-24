@@ -1,5 +1,9 @@
 # Companion, campaign Journey and Armory integration
 
+Players: subscribe to [[WOTC] The Name Beneath on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674)
+and download the standalone EXE from the [companion alpha release](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1).
+Enable the mod and required dependencies; use only one local/Workshop copy at a time.
+
 Public-source setup: use [BUILDING.md](../BUILDING.md) for portable build/start
 commands. Normal launch uses **https://thenamebeneath.com/** with no Replit access
 key, `.env.local` or URL entry. The optional `-Development` helper switch reads

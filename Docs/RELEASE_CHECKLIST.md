@@ -3,8 +3,9 @@
 Status: [companion 0.10.4 alpha published](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1)
 on 2026-10-24 after the final Deja Vu test passed. Built from verified `main`
 commit `c1af096922776d4b5905e946d82ab173a0ee6348`; matching mod version 0.9.5.
-Workshop publication remains a separate Product Owner step. This checklist does
-not mark wider gameplay coverage or independent clean-machine testing complete.
+The Product Owner uploaded [[WOTC] The Name Beneath to Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674);
+the listing was accessible on 2026-10-24. Fresh Workshop installation, wider
+gameplay coverage and independent clean-machine testing are not marked complete.
 
 - [x] Complete the agreed focused gameplay acceptance and mapping review; obtain
   approval to publish the limited companion alpha. Wider test limitations remain
@@ -34,7 +35,7 @@ not mark wider gameplay coverage or independent clean-machine testing complete.
 - [x] Link the companion download prominently from the README and player setup
   instructions. Explain that no source build, .NET SDK/runtime installation or
   external DLL is required; the companion runs separately alongside XCOM.
-- [ ] Provide the matching mod installation route and clearly list Highlander,
+- [x] Provide the matching mod installation route and clearly list Highlander,
   MCM and any optional mapped ability providers, with links and supported versions.
 - [x] Download the release assets and verify their published checksums. All seven
   assets matched; the downloaded EXE passed its isolated connection self-test.
