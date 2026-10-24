@@ -10,6 +10,8 @@ var UIText DetailHeading;
 var UITextContainer DetailText;
 var string Notice;
 var int SelectedEffect;
+var array<TNB_Types.ResolvedEffect> DisplayEffects;
+var UIButton MappingButton;
 
 static function Open(UIArmory_MainMenu Parent, StateObjectReference Soldier, optional string Message)
 {
@@ -26,12 +28,12 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     local XComGameState_TNBCampaignLink Campaign;
     local TNB_Types.ResolvedEffect Effect, Other;
     local array<name> Totals;
-    local int Total, Index;
+    local int Total, Index, FirstSelected;
+    local string LocalBonusResult;
     local UIText Label;
     local UIIcon Icon;
     local UIListItem_TNBEffect Card;
     local UIButton Back;
-    local UIButton MappingButton;
     super.InitScreen(InitController, InitMovie, InitName);
     Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
     Link = class'XComGameState_TNBSoldierLink'.static.ForUnit(Unit);
@@ -49,6 +51,18 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     Label = Spawn(class'UIText', self).InitText('TotalsCaption', "COMMITTED ATTRIBUTE BONUSES (NET DELTAS, NOT CURRENT STATS)");
     Label.SetPosition(95, 244); Label.SetSize(1715, 30);
     Index = 0;
+    DisplayEffects = Link.Effects;
+    LocalBonusResult = class'TNB_DejaVuService'.static.LinkResultFor(Unit);
+    // A committed local grant is itself a saved receipt. Do not require the
+    // native ability query to have refreshed before showing that link outcome.
+    if (LocalBonusResult != "" || class'TNB_DejaVuService'.static.Owns(Unit))
+    {
+        Effect.MappingKey = 'TNB_DejaVu'; Effect.SourceKind = 'Bonus';
+        Effect.SourceName = "Deja Vu"; Effect.SourceID = ""; Effect.SourceVersion = 0;
+        Effect.EffectKind = 'Ability'; Effect.Target = 'TNB_DejaVu'; Effect.Status = "available";
+        DisplayEffects.AddItem(Effect);
+        if (Notice != "") FirstSelected = DisplayEffects.Length - 1;
+    }
     foreach Link.Effects(Effect)
         if (Effect.EffectKind == 'Stat' && Effect.Status == "applied" && Totals.Find(Effect.Target) == INDEX_NONE)
         {
@@ -75,15 +89,20 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     EffectList.bSelectFirstAvailable = false;
     EffectList.InitList('Effects', 95, 373, 840, 525);
     EffectList.OnSelectionChanged = Selected; EffectList.OnItemClicked = Selected;
-    foreach Link.Effects(Effect)
+    foreach DisplayEffects(Effect)
     {
         Card = UIListItem_TNBEffect(EffectList.CreateItem(class'UIListItem_TNBEffect'));
         Card.InitEffect(Effect);
     }
-    if (Link.Effects.Length > 0) { EffectList.SetSelectedIndex(0); Selected(EffectList, 0); }
+    if (DisplayEffects.Length > 0) { EffectList.SetSelectedIndex(FirstSelected); Selected(EffectList, FirstSelected); }
     else DetailText.SetText("This identity link has no configured gameplay effects. The normal class tree is unchanged.");
     MappingButton = Spawn(class'UIButton', self).InitButton('MappingDetails', "Mapping details", MappingClicked);
-    MappingButton.SetPosition(1005, 933); MappingButton.SetWidth(250); MappingButton.SetDisabled(Link.Effects.Length == 0);
+    MappingButton.SetPosition(1005, 933); MappingButton.SetWidth(250); MappingButton.SetDisabled(FirstSelected >= Link.Effects.Length);
+    if (LocalBonusResult != "")
+    {
+        Label = Spawn(class'UIText', self).InitText('LocalLinkOutcome'); Label.SetPosition(1005, 902); Label.SetSize(790, 28);
+        Label.SetHTMLText(class'UIUtilities_Text'.static.GetColoredText(class'UIUtilities_Text'.static.GetSizedText(LocalBonusResult, 20), (class'X2ExperienceConfig'.default.bUseFullXpSystem || class'TNB_DejaVuConfig'.default.BonusPercent <= 0) ? eUIState_Warning : eUIState_Good));
+    }
     Label = Spawn(class'UIText', self).InitText('Notice'); Label.SetPosition(95, 912); Label.SetSize(825, 76);
     Label.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText(Notice != "" ? class'TNB_Types'.static.EscapeUI(Notice) : "Read-only mappings. Select a card for help; Page Up/Down or right stick scrolls details.\nGreen: bonus / red: penalty / amber: unavailable, disabled or unmapped. No class-tree changes.", 18));
     Back = Spawn(class'UIButton', self).InitButton('Back', class'UIUtilities_Text'.default.m_strGenericBack, BackClicked);
@@ -95,10 +114,20 @@ simulated function Selected(UIList ContainerList, int ItemIndex)
 {
     local TNB_Types.ResolvedEffect Effect;
     local XComGameState_Unit Unit;
-    if (Link == none || ItemIndex < 0 || ItemIndex >= Link.Effects.Length) return;
+    if (Link == none || ItemIndex < 0 || ItemIndex >= DisplayEffects.Length) return;
     SelectedEffect = ItemIndex;
-    Effect = Link.Effects[ItemIndex];
+    Effect = DisplayEffects[ItemIndex];
     Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
+    if (MappingButton != none) MappingButton.SetDisabled(ItemIndex >= Link.Effects.Length);
+    if (Effect.MappingKey == 'TNB_DejaVu')
+    {
+        DetailIcon.LoadIcon(class'TNB_EffectPresentation'.static.AbilityImage('TNB_DejaVu'));
+        DetailIcon.SetBGColorState((class'X2ExperienceConfig'.default.bUseFullXpSystem || class'TNB_DejaVuConfig'.default.BonusPercent <= 0) ? eUIState_Warning : eUIState_Good);
+        DetailHeading.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText("Deja Vu\nLocal XCOM bonus", 24));
+        DetailText.SetHTMLText(class'UIUtilities_Text'.static.AddFontInfo(class'TNB_DejaVuService'.static.Description() $ "\n\nBanked bonus promotion credit: " $ class'TNB_DejaVuService'.static.CreditText(Unit) $ " (whole credits applied: " $ class'TNB_DejaVuService'.static.Value(Unit, 'TNB_DV_Whole') $ "). Percentage settings affect future earnings only. This is not a canonical trait or skill.", bIsIn3D, false, , 20));
+        if (DetailText.Scrollbar != none) DetailText.Scrollbar.SetThumbAtPercent(0.0);
+        return;
+    }
     DetailIcon.LoadIcon(class'TNB_EffectPresentation'.static.EffectImage(Effect));
     DetailIcon.SetBGColorState(class'TNB_EffectPresentation'.static.SoldierColor(Effect));
     DetailHeading.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText(class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.SingleLine(Effect.SourceName)) $ "\n" $ class'TNB_Types'.static.EscapeUI(class'TNB_EffectPresentation'.static.CommittedSummary(Effect)), 24));

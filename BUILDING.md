@@ -20,13 +20,21 @@ Run them outside an active game/companion session. Native cross-language event
 fixtures and real gameplay acceptance are additional checks, not covered by this
 script alone. No personal `.bin` fixtures are needed for the synthetic pool tests.
 
-Start an unprotected deployment explicitly:
+Start normally against the public Production service (`https://thenamebeneath.com/`):
 
 ```powershell
-.\Artifacts\Companion\TheNameBeneathCompanion.exe --api https://your-api-origin.example/
+.\Artifacts\Companion\TheNameBeneathCompanion.exe
 ```
 
-For a protected development origin, copy `.env.example` to the ignored `.env.local`,
+The startup helper also defaults to Production with no switches:
+`powershell.exe -NoProfile -File .\.scripts\Start-Companion.ps1`.
+No Replit access key or `.env.local` is needed. Paste a credential issued by the
+production portal into the app. Development credentials/context/journals are
+endpoint-scoped and are not copied to Production. Existing development-linked
+campaign saves are not automatically reassociated with a production Journey.
+
+For an alternate deployment use `--api https://your-api-origin.example/` explicitly.
+For an optional protected development origin, copy `.env.example` to the ignored `.env.local`,
 set its API origin/protection token privately, then run:
 
 ```powershell
@@ -43,7 +51,9 @@ Paste the Journey credential in the companion, not the command line. Developer
 checks can optionally read `THREADLINE_JOURNEY_CREDENTIAL` from the private file;
 this does not automatically import it into the app's vault. `-Development -CheckOnly`
 performs the existing read-only connection check, with no listener or credential
-installation. Development protection tokens are only supported for Replit origins.
+installation. Development protection tokens are only supported for explicitly
+selected Replit origins. Normal launch ignores development environment variables;
+with `--dev-config`, process environment values take precedence over the file.
 
 Keep the default loopback port 27129 unless you also change `CompanionPort` in
 the mod's configuration. The listener binds only to localhost. Do not expose it
@@ -81,7 +91,8 @@ With an already-prepared Highlander SDK, run:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Test-ModMappings.ps1 -All
 ```
 
-This compiles into SDK staging and runs the ten offline commandlets, without the
+This compiles into SDK staging and runs all available offline commandlets (currently
+twelve), without the
 normal build script's retail install step. The mapping test fixture is generated
 from source INI rows because commandlets do not run the game's DLC config merge.
 Do not publish/install the test-staged package. These checks are not native

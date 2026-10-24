@@ -52,6 +52,10 @@ function BuildPage(MCM_API_Instance API, int GameMode)
     Group.AddLabel('AutomaticReminders', class'TNB_AvengerJourneyPrompt'.default.bEnableAutomaticInvitations ? "Automatic invitation: enabled on the idle Avenger" : RemindersDisabledText, CampaignHelp);
     if (bCampaignMode) ReminderCampaignID = class'TNB_CampaignService'.static.CampaignID();
     Group.AddCheckbox('SuppressReminder', SuppressText, SuppressHelp, bCampaignMode && class'XComGameState_TNBPromptPreference'.static.IsSuppressed(), ReminderSaved).SetEditable(bCampaignMode);
+    Group = Page.AddGroup('LinkingBonuses', "Linking bonuses");
+    if (class'X2ExperienceConfig'.default.bUseFullXpSystem)
+        Group.AddLabel('DejaVuUnsupported', "Deja Vu inactive: this overhaul uses the full-XP system", "The local bonus supports WOTC kill-credit progression, not a replacement full-XP economy.");
+    Group.AddSlider('DejaVuPercent', "Deja Vu bonus promotion XP (%)", "Default 5%. Set to 0% to disable future bonus XP for all holders. Changes affect future earnings only; links, the passive and previously earned credit are retained. No Ability Points or online XP.", 0, 100, 1, Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100), DejaVuPercentSaved);
     Group = Page.AddGroup('Reporting', "Gameplay reporting");
     ReportingLabel = Group.AddLabel('ReportingState', "Reading saved capture state...", "Captured in this save, durably queued in the companion, and accepted online are separate stages. Remote history and handed-off reports do not rewind with a save. No client-authored XP is reported.");
     ReportingQueueLabel = Group.AddLabel('ReportingQueue', "Companion queue: not checked", "Queue counts are scoped to the loaded campaign/Journey, not another campaign's reports.");
@@ -67,6 +71,11 @@ function BuildPage(MCM_API_Instance API, int GameMode)
 }
 
 function ReportingRefreshClicked(MCM_API_Setting Setting) { StartReporting("events_status"); }
+function DejaVuPercentSaved(MCM_API_Setting Setting, float Percent)
+{
+    class'TNB_DejaVuConfig'.default.BonusPercent = Clamp(Round(Percent), 0, 100);
+    class'TNB_DejaVuConfig'.static.StaticSaveConfig();
+}
 function ReportingRetryClicked(MCM_API_Setting Setting) { StartReporting("events_retry"); }
 
 private function StartReporting(string Operation)

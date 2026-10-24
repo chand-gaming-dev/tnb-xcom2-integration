@@ -42,7 +42,7 @@ event PostBeginPlay()
     ObservedHistory = `XCOMHISTORY;
     if (ObservedHistory != none) ObservedHistory.RegisterOnNewGameStateDelegate(OnCommittedState);
     bHistoryDirty = true;
-    class'TNB_ReportingSafety'.static.Trace("PUMP_START build=0.9.2");
+    class'TNB_ReportingSafety'.static.Trace("PUMP_START build=0.9.5");
     SetTimer(1.0, true, 'Work');
 }
 
@@ -182,6 +182,7 @@ function Work()
     DrainObservations();
     if (bReplyPending) AdoptReply();
     if (bReplyPending) return; // Keep the reply and replay key if a submission was refused.
+    if (Request == none) RecoverPromotionClockZones();
     if (Request != none || WorldInfo.TimeSeconds < NextAttempt) return;
     NextAttempt = WorldInfo.TimeSeconds + 1.0;
     if (!bReady)
@@ -220,6 +221,38 @@ function Work()
     Args.SetObject("capture", class'JsonObject'.static.DecodeJson(Outbox.Reports[Index].CaptureJSON));
     Request = Spawn(class'TNB_LoopbackClient');
     if (Request != none) Request.BeginRequest("events_enqueue", EnqueueReply, Args);
+}
+
+private function RecoverPromotionClockZones()
+{
+    local XComGameState_TNBEventLedger Ledger;
+    local XComGameState_TNBEventOutbox Outbox;
+    local XComGameState Pending;
+    local TNB_EventTypes.PendingReport Recovered;
+    local int Index, Count;
+    local bool bHeldRemains;
+    Ledger = class'XComGameState_TNBEventLedger'.static.Get();
+    Outbox = class'XComGameState_TNBEventOutbox'.static.Get();
+    if (Ledger == none || Outbox == none || Ledger.ClockZone == "" || InStr(Ledger.Diagnostic, "event_clock_zone_changed") != INDEX_NONE) return;
+    for (Index = 0; Index < Outbox.Reports.Length; Index++)
+    {
+        Recovered = Outbox.Reports[Index];
+        if (!class'TNB_PromotionCaptureService'.static.RecoverClockZone(Recovered, Ledger.ClockZone, Outbox.Diagnostic)) continue;
+        if (Pending == none)
+        {
+            Pending = CreateReportingChange("The Name Beneath: recover missing promotion clock metadata", 'promotion_clock_recovery');
+            if (Pending == none) return;
+            Outbox = class'XComGameState_TNBEventOutbox'.static.Edit(Pending);
+        }
+        Outbox.Reports[Index] = Recovered;
+        Count++;
+    }
+    if (Pending == none) return;
+    for (Index = 0; Index < Outbox.Reports.Length; Index++)
+        if (Outbox.Reports[Index].State == "held") bHeldRemains = true;
+    if (!bHeldRemains && (Outbox.Diagnostic == "event_invalid" || Outbox.Diagnostic == "event_clock_unverified")) Outbox.Diagnostic = "";
+    class'TNB_ReportingSafety'.static.Trace("PROMOTION_CLOCK_RECOVERY count=" $ Count $ " original_ids_and_times_retained", Pending);
+    SubmitReportingChange(Pending, 'promotion_clock_recovery');
 }
 
 function CapabilityReply(JsonObject Result, string ErrorCode)

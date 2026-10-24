@@ -4,6 +4,7 @@ $ErrorActionPreference = 'Stop'
 $solutionDirectory = Split-Path $PSScriptRoot -Parent
 $executable = Join-Path $solutionDirectory 'Artifacts\Companion\TheNameBeneathCompanion.exe'
 if (-not (Test-Path -LiteralPath $executable)) { throw 'Build the companion first with .scripts\Build-Companion.ps1.' }
+# No switches: public Production API, no private configuration or Replit access key.
 $launchArguments = @()
 if ($Development) {
     # Use an explicit private file or the ignored local example copy. Never print it.

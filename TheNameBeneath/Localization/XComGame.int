@@ -1,3 +1,8 @@
+[TNB_DejaVu X2AbilityTemplate]
+LocFriendlyName="Deja Vu"
+LocLongDescription="You can't quite shake the feeling you've been here before.<br/><br/>Gain <Ability:TNBDejaVuPercent/>% additional promotion credit from personal kills, assists and ordinary covert-action XP. Fractions accumulate. At 0%, bonus XP is disabled; previously earned credit is retained. No extra Ability Points or online XP. Guaranteed promotion rewards are not multiplied."
+LocHelpText="Gain <Ability:TNBDejaVuPercent/>% additional promotion credit from new qualifying earnings."
+
 ; Example ability template localization.
 ;
 ; [HoloTargeting X2AbilityTemplate]

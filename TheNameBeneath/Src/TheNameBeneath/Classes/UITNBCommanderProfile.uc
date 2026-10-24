@@ -67,11 +67,16 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
     Label = Spawn(class'UIText', self).InitText('Notice'); Label.SetPosition(95, 912); Label.SetSize(825, 76);
     Label.SetHTMLText(class'UIUtilities_Text'.static.GetSizedText("Read-only saved effects. Viewing never repeats rewards or changes mappings.\nSelect a card; Page Up/Down or right stick scrolls its details.", 18));
     Button = Spawn(class'UIButton', self).InitButton('MappingDetails', "Mapping details", MappingClicked);
-    Button.SetPosition(1005, 933); Button.SetWidth(250); Button.SetDisabled(Link.Effects.Length == 0);
+    Button.SetPosition(1005, 933); Button.SetWidth(200); Button.SetDisabled(Link.Effects.Length == 0);
+    if (Link.IntelligenceGrants.Length > 0)
+    {
+        Button = Spawn(class'UIButton', self).InitButton('IntelligenceRecipients', "Quick Learner", IntelligenceClicked);
+        Button.SetPosition(1220, 933); Button.SetWidth(220);
+    }
     Button = Spawn(class'UIButton', self).InitButton('JourneyDetails', "Journey details", JourneyClicked);
-    Button.SetPosition(1280, 933); Button.SetWidth(250);
+    Button.SetPosition(1455, 933); Button.SetWidth(175);
     Button = Spawn(class'UIButton', self).InitButton('Back', class'UIUtilities_Text'.default.m_strGenericBack, BackClicked);
-    Button.SetPosition(1635, 933); Button.SetWidth(160);
+    Button.SetPosition(1645, 933); Button.SetWidth(150);
     Navigator.SetSelected(EffectList);
 }
 
@@ -103,6 +108,12 @@ simulated function JourneyClicked(UIButton Button)
 {
     if (!StillOpen()) return;
     Message("Campaign Journey", "Journey: " $ class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.DisplayTitle(class'XComGameState_TNBJourneyLabel'.static.Title(Link))) $ "\nCommander: " $ class'TNB_Types'.static.EscapeUI(Link.Journey.CommanderName) $ "\nGame: " $ class'TNB_Types'.static.EscapeUI(Link.Journey.GameName) $ "\nJourney ID: " $ class'TNB_Types'.static.EscapeUI(Link.Journey.JourneyID) $ "\nMapping revision: " $ class'TNB_Types'.static.EscapeUI(Link.MappingRevision) $ "\n\nThis association belongs to the loaded save. Remote Journey history does not rewind when loading an older save. Refreshing a title changes no saved bonuses.");
+}
+
+simulated function IntelligenceClicked(UIButton Button)
+{
+    if (!StillOpen()) return;
+    Message("Quick Learner - saved recipients", class'TNB_StrategyMappingService'.static.IntelligenceReceiptText(Link));
 }
 
 simulated function RefreshClicked(UIButton Button)

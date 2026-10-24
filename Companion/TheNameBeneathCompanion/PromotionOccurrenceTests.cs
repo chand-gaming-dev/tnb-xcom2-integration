@@ -51,7 +51,7 @@ internal static class PromotionOccurrenceTests
             foreach (string line in File.ReadLines(nativeLog).Where(l => l.Contains(marker, StringComparison.Ordinal)))
             {
                 var capture = JsonNode.Parse(line[(line.IndexOf(marker, StringComparison.Ordinal) + marker.Length)..])!.AsObject();
-                capture["clock_zone"] = TimeZoneInfo.Local.Id;
+                Check(capture["clock_zone"]?.GetValue<string>() == TimeZoneInfo.Local.Id, "native_capture_includes_verified_clock_zone");
                 var args = Args("unused"); args["capture"] = capture;
                 samples.Add(args);
             }
@@ -80,6 +80,20 @@ internal static class PromotionOccurrenceTests
             Check(queue.Enqueue(args).ToJsonString() == handoff.ToJsonString(), "restart_retry_stable");
         }
         Check(queue.Status(CompanionTests.JourneyId)["queued"]!.GetValue<int>() == 3, "all_new_occurrences_retained");
+        var missingZone = Args("unit:17:" + EventTests.Instance + ":rank:0:1:occurrence:MISSING_ZONE_TEST");
+        missingZone["capture"]!.AsObject().Remove("clock_zone");
+        try { queue.Enqueue(missingZone); throw new Exception("Missing clock zone accepted"); }
+        catch (BridgeError error) { Check(error.Code == "event_clock_unverified", "missing_zone_rejected_before_handoff"); }
+        if (nativeLog != null)
+        {
+            const string marker = "TNB_NATIVE_PROMOTION_RECOVERED=";
+            string line = File.ReadLines(nativeLog).Single(l => l.Contains(marker, StringComparison.Ordinal));
+            var recovered = Args("unused");
+            recovered["capture"] = JsonNode.Parse(line[(line.IndexOf(marker, StringComparison.Ordinal) + marker.Length)..])!.AsObject();
+            Check(recovered["capture"]!.ToJsonString() == samples[0]["capture"]!.ToJsonString(), "recovery_changes_only_missing_zone");
+            Check(queue.Enqueue(recovered)["event_id"]!.GetValue<string>() == EventContractValidator.Build(samples[0], out _)["event_id"]!.GetValue<string>() &&
+                queue.Status(CompanionTests.JourneyId)["queued"]!.GetValue<int>() == 3, "recovered_original_is_exact_retry_not_new_occurrence");
+        }
         foreach (var args in samples)
         {
             var record = queue.Next(CompanionTests.JourneyId, DateTimeOffset.UtcNow)!;

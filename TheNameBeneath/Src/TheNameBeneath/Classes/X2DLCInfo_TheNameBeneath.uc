@@ -7,6 +7,13 @@ var TNB_LoopbackClient Probe;
 var transient array<string> PromptedCampaigns;
 var transient int PromptGeneration;
 
+static function bool AbilityTagExpandHandler(string InString, out string OutString)
+{
+    if (InString != "TNBDejaVuPercent") return false;
+    OutString = string(class'X2ExperienceConfig'.default.bUseFullXpSystem ? 0 : Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100));
+    return true;
+}
+
 static function bool DisplayQueuedDynamicPopup(DynamicPropertySet PropertySet)
 {
     return class'TNB_CommanderRewardPresentation'.static.DisplayQueuedPopup(PropertySet);
@@ -53,7 +60,7 @@ static function MarkReminderOffered(string CampaignID)
 
 static event OnLoadedSavedGameToStrategy()
 {
-    class'TNB_ReportingSafety'.static.Trace("LOAD_STRATEGY build=0.9.2");
+    class'TNB_ReportingSafety'.static.Trace("LOAD_STRATEGY build=0.9.5");
     // Primitive epoch only: invalidate stale answers without creating/caching
     // prompt actors in a load callback. Facility-grid focus owns scheduling.
     InvalidateReminderCallbacks();
@@ -63,14 +70,14 @@ static event OnLoadedSavedGameToStrategy()
 static event OnLoadedSavedGameToTactical()
 {
     InvalidateReminderCallbacks();
-    class'TNB_ReportingSafety'.static.Trace("LOAD_TACTICAL build=0.9.2");
+    class'TNB_ReportingSafety'.static.Trace("LOAD_TACTICAL build=0.9.5");
     class'TNB_EventPump'.static.Ensure();
 }
 
 static event OnPreMission(XComGameState StartGameState, XComGameState_MissionSite MissionState)
 {
     InvalidateReminderCallbacks();
-    class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.2", StartGameState);
+    class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_BEGIN build=0.9.5", StartGameState);
     class'TNB_DetectionMappingService'.static.PrepareLaunch(StartGameState);
     class'TNB_EventCaptureService'.static.CarryToStartState(StartGameState);
     class'TNB_ReportingSafety'.static.Trace("PRE_MISSION_CARRIED", StartGameState);

@@ -216,6 +216,7 @@ simulated function string GetButtonString(int ItemIndex)
 simulated function OnPurchaseClicked(UIList ContainerList, int ItemIndex)
 {
     local TDialogueBoxData Dialog;
+    local string LocalBonus;
     if (!StillOpen() || bAwaitingConfirmation || !CanAffordItem(ItemIndex)) return;
     iSelectedItem = ItemIndex;
     switch (Rows[ItemIndex].Action)
@@ -228,6 +229,8 @@ simulated function OnPurchaseClicked(UIList ContainerList, int ItemIndex)
         case 'Resume':
             Dialog.strTitle = LinkTitle;
             Dialog.strText = class'TNB_Types'.static.EscapeUI(CurrentUnit().GetFullName()) $ " paired with " $ class'TNB_Types'.static.EscapeUI(SelectedCharacter.CharacterName) $ "\nCharacter ID: " $ class'TNB_Types'.static.EscapeUI(SelectedCharacter.CharacterID) $ "\n\n" $ LinkWarning;
+            LocalBonus = class'TNB_DejaVuService'.static.LinkPreviewFor(CurrentUnit());
+            if (LocalBonus != "") Dialog.strText $= "\n\n" $ LocalBonus;
             Dialog.fnCallback = LinkConfirmed;
             break;
         default: return;

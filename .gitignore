@@ -45,6 +45,8 @@
 *.pdb
 *.u
 *.upk
+# Authored UI texture asset, not SDK/game content or compiled script distribution.
+!/TheNameBeneath/Content/UILibrary_TNB.upk
 *.umap
 *.tfc
 *.tmp

@@ -1,5 +1,12 @@
 # Feedback and next tests
 
+## Current acceptance checkpoint - 2026-10-24
+
+Use [ALPHA_ACCEPTANCE_SUMMARY.md](ALPHA_ACCEPTANCE_SUMMARY.md) for the current
+confirmed gameplay results, final Deja Vu slider check and explicitly deferred
+alpha coverage. The dated build/checklist notes below are historical where
+superseded; the approved catalog audit and mapping implementation are complete.
+
 ## Before official release
 
 - Publish the tested, self-contained Windows x64 `TheNameBeneathCompanion.exe`

@@ -75,11 +75,34 @@ static function bool Store(XComGameState_TNBEventLedger Ledger, XComGameState_TN
     FromRank = ObservedFromRank(FromRank, Ledger.Soldiers[Index].Rank);
     Report = Capture(Current, FromRank, OccurrenceID);
     if (Report == none) return false;
+    Report.SetStringValue("clock_zone", Ledger.ClockZone);
     EventKey = Report.GetStringValue("key");
     if (Ledger.SeenKeys.Find(EventKey) != INDEX_NONE || !Outbox.Add(EventKey, Report))
     { Ledger.Diagnostic = Outbox.Diagnostic; return false; }
     Ledger.SeenKeys.AddItem(EventKey);
     Ledger.Soldiers[Index].Rank = Current.Rank;
+    return true;
+}
+
+// Repair only this known pre-handoff omission. Do not re-key reports, infer a new
+// occurrence time, retry conflicts, or touch anything already handed off online.
+static function bool RecoverClockZone(out PendingReport Saved, string VerifiedZone, optional string HoldReason)
+{
+    local JsonObject Report, Facts, Participants;
+    local string FromRank, ToRank;
+    if (VerifiedZone == "" || Saved.EventID != "" || (Saved.State != "held" && Saved.State != "captured")) return false;
+    if (Saved.State == "held" && HoldReason != "event_invalid" && HoldReason != "event_clock_unverified") return false;
+    Report = class'JsonObject'.static.DecodeJson(Saved.CaptureJSON);
+    if (Report == none || Report.GetStringValue("event_type") != "threadline.character.promoted" || Report.GetStringValue("key") != Saved.Key || Report.GetStringValue("clock_zone") != "") return false;
+    Facts = Report.GetObject("facts"); Participants = Report.GetObject("participants");
+    if (Facts == none || Participants == none || Participants.ValueArray.Length != 1 || Facts.GetStringValue("promotion_track") != "xcom2_soldier_rank") return false;
+    FromRank = Facts.GetStringValue("from_rank"); ToRank = Facts.GetStringValue("to_rank");
+    if (FromRank != string(int(FromRank)) || ToRank != string(int(ToRank)) || !ValidTransition(int(FromRank), int(ToRank))) return false;
+    // Retain the stored local time exactly; normal companion validation still applies.
+    if (Len(Report.GetStringValue("captured_local")) != 23) return false;
+    Report.SetStringValue("clock_zone", VerifiedZone);
+    Saved.CaptureJSON = class'TNB_EventFactory'.static.ASCIIJson(Report);
+    Saved.State = "captured";
     return true;
 }
 

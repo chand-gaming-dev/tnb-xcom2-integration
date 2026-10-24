@@ -9,7 +9,7 @@
     <DebugType>embedded</DebugType>
     <AssemblyName>TheNameBeneathCompanion</AssemblyName>
     <RootNamespace>TheNameBeneath.Companion</RootNamespace>
-    <Version>0.10.3</Version>
+    <Version>0.10.4</Version>
     <ApplicationIcon>Assets\Companion.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>

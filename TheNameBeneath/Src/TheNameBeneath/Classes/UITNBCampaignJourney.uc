@@ -237,9 +237,19 @@ function StartComplete(JsonObject Data, string ErrorCode)
 private function CommitAssociation()
 {
     local string ErrorCode;
+    local string Recipients;
+    local TDialogueBoxData Dialog;
     if (!StillOpen()) return;
     if (!class'TNB_CampaignService'.static.Associate(Journey, ErrorCode)) { Fail(ErrorCode); return; }
+    Recipients = class'TNB_StrategyMappingService'.static.IntelligenceReceiptText(class'XComGameState_TNBCampaignLink'.static.Get());
     ShowSaved();
+    if (Recipients != "" && `HQPRES != none)
+    {
+        Dialog.eType = eDialog_Normal; Dialog.strTitle = "Quick Learner - Combat Intelligence improved";
+        Dialog.strText = Recipients;
+        Dialog.strAccept = class'UIUtilities_Text'.default.m_strGenericOK;
+        `HQPRES.UIRaiseDialog(Dialog);
+    }
 }
 
 private function Fail(string ErrorCode)

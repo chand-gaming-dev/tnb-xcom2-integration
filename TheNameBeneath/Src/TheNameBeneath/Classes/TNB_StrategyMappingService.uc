@@ -116,6 +116,29 @@ static function int NextIntelligence(int Current)
     return Clamp(Current + 1, 0, int(Cap));
 }
 
+static function string IntelligenceTierLabel(int Tier)
+{
+    local ECombatIntelligence Cap;
+    Cap = eComInt_Savant;
+    if (Tier < 0 || Tier > int(Cap)) return "tier " $ Tier;
+    return class'X2StrategyGameRulesetDataStructures'.default.ComIntLabels[Tier];
+}
+
+// Frozen receipt only: names/tiers come from association, never a new roster roll.
+static function string IntelligenceReceiptText(XComGameState_TNBCampaignLink Link)
+{
+    local XComGameState_TNBCampaignLink.IntelligenceGrant Receipt;
+    local string Body;
+    if (Link == none) return "";
+    foreach Link.IntelligenceGrants(Receipt)
+    {
+        if (Body != "") Body $= "\n";
+        Body $= class'TNB_Types'.static.EscapeUI(Receipt.SoldierName) $ ": " $ class'TNB_Types'.static.EscapeUI(IntelligenceTierLabel(Receipt.BeforeTier)) $ " -> " $ class'TNB_Types'.static.EscapeUI(IntelligenceTierLabel(Receipt.AfterTier));
+    }
+    if (Body != "") Body = "Your commander's Quick Learner bonus improved these soldiers' Combat Intelligence:\n\n" $ Body $ "\n\nApplied once when this campaign was linked. These are the saved recipients; viewing this report does not repeat the bonus.";
+    return Body;
+}
+
 static function GrantRosterIntelligence(XComGameState Pending, XComGameState_HeadquartersXCom HQ, XComGameState_TNBCampaignLink Link, out ResolvedEffect Effect)
 {
     local StateObjectReference Ref;
