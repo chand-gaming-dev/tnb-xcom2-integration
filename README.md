@@ -6,7 +6,9 @@ campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 **Development update: mod 0.9.6** moves manual Journey linking and the saved
 commander-bonuses view to **Avenger > Command > The Name Beneath**, removing that
 action from MCM. Native acceptance is pending; this update is not yet merged or
-published. Companion 0.10.4 is unchanged. See [Command-menu testing](Docs/COMMAND_MENU_TESTING.md).
+published. MCM now starts with inline Companion/Refresh and Journey/Test rows,
+followed immediately by the Deja Vu percentage; detailed diagnostics are lower.
+Companion 0.10.4 is unchanged. See [Command-menu testing](Docs/COMMAND_MENU_TESTING.md).
 
 **Alpha:** mod **0.9.5**, companion **0.10.4**. The companion is distributed through
 [GitHub Releases](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1);

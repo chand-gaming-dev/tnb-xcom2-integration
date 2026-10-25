@@ -7,6 +7,12 @@ setup or commander screens; it retains connection/reporting status, reminder
 preferences and the Deja Vu percentage. The automatic Avenger invitation remains.
 No companion update, relink, mapping migration or repeated reward is required.
 
+MCM now starts with Companion status + Refresh and Journey status + Test on
+the same rows. The Deja Vu slider is immediately below them. Campaign preferences
+follow, with connection details and reporting diagnostics farther down. Status
+updates when opening or using Refresh/Test, without a new background poll.
+Refresh reads the companion cache; Test verifies the Journey credential online.
+
 Deja Vu has one MCM setting: its bonus XP percentage (default 5%). Set it to 0%
 to stop future bonus XP for all holders, without removing links, the passive or
 earned credit. New links receive the passive even at 0%, clearly marked disabled.

@@ -72,6 +72,7 @@
     <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBAvenger.uc" />
     <Content Include="Src\TheNameBeneath\Classes\UIScreenListener_TNBCommand.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_CommandMenuProbeCommandlet.uc" />
+    <Content Include="Src\TheNameBeneath\Classes\TNB_MCMProbeCommandlet.uc" />
     <Content Include="Src\TheNameBeneath\Classes\XComGameState_TNBPromptPreference.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_SoldierEffectService.uc" />
     <Content Include="Src\TheNameBeneath\Classes\TNB_CommanderBonusService.uc" />

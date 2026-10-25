@@ -14,6 +14,10 @@ merge or publish until the Product Owner confirms native acceptance.
 - MCM no longer links campaigns or opens commander profiles. It retains status,
   reporting controls, reminder preferences and the Deja Vu slider. Its visible help,
   the Armory's unlinked instructions and the invitation point to Command.
+- MCM's first two rows combine Companion status/Refresh and Journey status/Test.
+  The Deja Vu slider is the next setting group; campaign preferences follow.
+  Detailed connection metadata and reporting diagnostics are lower. The reporting
+  refresh row also displays its awaiting-handoff count instead of a duplicate label.
 - Automatic invitation, Armory linking, saved grants, mappings, event identities
   and the companion remain unchanged.
 
@@ -50,8 +54,13 @@ Keep backups and use a pre-link save and a linked save; no mission replay requir
    correct routing, exactly one menu entry, no crash or delayed Research/Engineering
    navigation. The automatic invitation and Not now should still work.
 5. MCM: no Journey linking/view button; current status and navigation hint visible.
-   Refresh/Test/reporting controls still work. Deja Vu/reminder settings still save
-   normally. Main-menu/tactical MCM must not expose a campaign-link action.
+   Companion and Journey status are inline with Refresh/Test, and the Deja Vu
+   percentage is visible near the top without scrolling past diagnostics. Refresh
+   updates local/cached status; Test performs online verification. Close/restart the
+   companion and Refresh to see unavailable/connected without reopening MCM. A
+   reachable companion with a rejected credential must not be shown as disconnected.
+   Reporting controls, the read-only stored-credential indicator, and Deja Vu/reminder
+   saves still work. Main-menu/tactical MCM must not expose a campaign-link action.
 
 No automatic merge, Workshop upload or companion re-publication follows these tests.
 
@@ -85,3 +94,39 @@ Installed mod script SHA-256:
 
 Native menu interaction, offline display, linked/unlinked reloads and MCM behavior
 remain pending Product Owner acceptance. No merge or publication has occurred.
+
+## Compact MCM follow-up - 2026-10-24
+
+The Product Owner gave positive feedback on the Command-menu placement and asked
+for a less cluttered MCM layout. The same 0.9.6 feature branch now provides:
+
+1. Connection: **Companion: Connected [Refresh]**, **Journey: Connected [Test]**.
+   Labels update in place when opened or explicitly refreshed/tested; no new timer.
+   Journey Connected means the companion's last reported verification, not a
+   continuous online heartbeat. The tooltip explains cached versus live testing.
+2. Deja Vu: the existing percentage slider, immediately below those two rows.
+3. Campaign: saved association, Command navigation hint and reminder preference.
+4. Connection details: last-observed identity/lifecycle, read-only credential
+   indicator and Journey ID.
+5. Gameplay reporting diagnostics: awaiting-handoff count alongside Refresh,
+   delivery/acceptance/clock/error details and Retry eligible reports.
+
+All 14 release-mode SDK probes passed; mod compilation had zero errors/warnings.
+The new `TNB_MCMProbeCommandlet` verifies independent local/online states, timeouts,
+protocol errors, missing/rejected credentials, unverified/unknown states and failed
+online tests. Static checks verified the exact two-row header, group ordering,
+slider priority and absence of duplicated status labels or MCM linking actions.
+The installed MCM provider's SetLabel implementation supports live button-row text.
+
+A clean release rebuild passed MCM, Command-menu, invitation, Deja Vu, presentation
+and gameplay-fix probes; the mapping probe again confirmed the SDK fixture absent.
+With XCOM closed as confirmed by the Product Owner, the local copy was updated and
+hash-verified. All 48 shipped mappings/five overrides remained byte-identical;
+companion, Workshop copy, uploader ID and saved data were unchanged. The earlier
+local build is recoverable from `Artifacts/InstallBackups/MCMCompact-20261024`.
+
+Current installed script SHA-256 (supersedes the prior test build above):
+`85E973C2CB8C76CD65FEC53CC5E8C600051AC0F0CCC7A7151A064119F0A0BDC9`.
+
+Native MCM layout/readability, live Refresh/Test updates and unchanged setting-save
+behavior still need Product Owner verification. No merge or publication.
