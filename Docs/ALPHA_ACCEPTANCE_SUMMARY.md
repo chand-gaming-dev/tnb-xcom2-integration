@@ -38,6 +38,16 @@ packaging the companion as a GitHub release, and deleting the feature branch aft
 verifying main. Packaging must use the approved main commit. Workshop upload stays
 with the Product Owner; downloadable companion publication does not publish the mod.
 
+## Mod 0.9.6 UI acceptance - 2026-10-25
+
+The Product Owner accepted the Command-menu Journey/commander-bonuses entry and
+the compact MCM layout, including the final removal of redundant campaign rows.
+They authorized merging/pushing to main, verifying the merge, deleting the feature
+branch and preparing the Workshop update for their upload. Companion 0.10.4 is
+unchanged. The exact accepted script hash and automated checks are recorded in
+[Command-menu testing](COMMAND_MENU_TESTING.md). No new mapping or event behavior
+was introduced; the wider-test limitations below remain.
+
 ## Explicit alpha limitations / wider-test coverage
 
 - Capture/rescue is implemented but not feasibly reproducible in this solo run.

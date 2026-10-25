@@ -1,5 +1,10 @@
 # Official release checklist
 
+**Mod 0.9.6 update:** native UI acceptance and merge/upload preparation authorized
+on 2026-10-25. See [Command-menu acceptance](COMMAND_MENU_TESTING.md) and
+[Workshop update notes](WORKSHOP_0_9_6.md). Workshop upload remains pending with the
+Product Owner; the existing companion 0.10.4 release and its assets are unchanged.
+
 Status: [companion 0.10.4 alpha published](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1)
 on 2026-10-24 after the final Deja Vu test passed. Built from verified `main`
 commit `c1af096922776d4b5905e946d82ab173a0ee6348`; matching mod version 0.9.5.

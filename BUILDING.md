@@ -92,11 +92,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\.scripts\Test-ModMappi
 ```
 
 This compiles into SDK staging and runs all available offline commandlets (currently
-twelve), without the
+fourteen), without the
 normal build script's retail install step. The mapping test fixture is generated
 from source INI rows because commandlets do not run the game's DLC config merge.
 Do not publish/install the test-staged package. These checks are not native
 gameplay acceptance. See [mapping implementation and gates](Docs/ALPHA_MAPPING_IMPLEMENTATION.md).
+
+If the SDK's precompiled base packages were built in debug mode, add
+`-DebugScripts` to match them. This helper does not rebuild or delete shared SDK
+base packages; a debug verification build is not a release-mode publication check.
 
 ## Artwork and publishing
 

@@ -1,21 +1,16 @@
-// Connection status plus campaign-only Journey setup. Secrets stay in the companion.
+// Status, diagnostics and settings only. Campaign linking lives under Command.
 class TNB_MCMController extends Object;
 
 var UIScreen ParentScreen;
 var TNB_LoopbackClient Request;
-var MCM_API_Label CompanionLabel;
-var MCM_API_Label ServiceLabel;
 var MCM_API_Label JourneyLabel;
 var MCM_API_Label JourneyIdentityLabel, JourneyCommanderLabel;
 var MCM_API_Checkbox StoredIndicator;
 var MCM_API_Button RefreshButton;
 var MCM_API_Button TestButton;
-var MCM_API_Button CampaignButton;
-var MCM_API_Label CampaignLabel;
 var string ReminderCampaignID;
 var bool bCampaignMode;
 var TNB_LoopbackClient ReportingRequest;
-var MCM_API_Label ReportingLabel;
 var MCM_API_Label ReportingQueueLabel, ReportingAcceptedLabel, ReportingClockLabel, ReportingDiagnosticLabel;
 var MCM_API_Button ReportingRefresh, ReportingRetry;
 
@@ -24,9 +19,9 @@ var localized string CompanionChecking, CompanionConnected, CompanionUnavailable
 var localized string ServiceChecking, ServiceVerified, ServiceUnverified, ServiceNotConfigured, ServiceUnableToVerify, ServiceInvalidCredential, ServiceScopeMissing, ServiceUnknown, ServiceHelp;
 var localized string JourneyUnavailable, CommanderPrefix, JourneyPrefix, JourneyUpcoming, JourneyStarted, JourneyFinished, JourneyUnknown, JourneyHelp;
 var localized string CredentialStored, CredentialChecking, CredentialUnavailable, CredentialHelp;
-var localized string RefreshTitle, RefreshText, RefreshHelp, TestTitle, TestText, TestHelp;
-var localized string CampaignGroup, CampaignDisconnected, CampaignConnected, CampaignUnavailable, CampaignHelp, ConnectCampaignText, SuppressText, SuppressHelp;
-var localized string ViewCommanderText, OpenCampaignText, RemindersDisabledText;
+var localized string RefreshText, RefreshHelp, TestText, TestHelp, LinkingBonusGroup, DetailsGroup;
+var localized string CampaignGroup, CampaignHelp, SuppressText, SuppressHelp;
+var localized string RemindersDisabledText;
 
 function BuildPage(MCM_API_Instance API, int GameMode)
 {
@@ -36,35 +31,32 @@ function BuildPage(MCM_API_Instance API, int GameMode)
     Page = API.NewSettingsPage(ModName);
     Page.SetPageTitle(PageTitle);
     Group = Page.AddGroup('Connection', ConnectionGroup);
-    CompanionLabel = Group.AddLabel('Companion', CompanionChecking, CompanionHelp);
-    ServiceLabel = Group.AddLabel('JourneyConnection', ServiceChecking, ServiceHelp);
-    JourneyLabel = Group.AddLabel('Journey', JourneyUnavailable, JourneyHelp);
-    JourneyCommanderLabel = Group.AddLabel('JourneyCommander', JourneyUnavailable, "Commander and last-observed Journey state. Test connection fetches fresh service metadata; Refresh reads the companion cache.");
-    JourneyIdentityLabel = Group.AddLabel('JourneyIdentity', JourneyUnavailable, "The title is a display label; Journey IDs remain the binding keys. Full names and saved commander bonuses are available under View Commander & Bonuses.");
-    StoredIndicator = Group.AddCheckbox('CredentialStored', CredentialChecking, CredentialHelp, false);
-    StoredIndicator.SetEditable(false);
-    RefreshButton = Group.AddButton('Refresh', RefreshTitle, RefreshHelp, RefreshText, RefreshClicked);
-    TestButton = Group.AddButton('Test', TestTitle, TestHelp, TestText, TestClicked);
-    bCampaignMode = GameMode == eGameMode_Strategy && class'UITNBCampaignJourney'.static.CanOpen(ParentScreen);
-    Group = Page.AddGroup('Campaign', CampaignGroup);
-    CampaignLabel = Group.AddLabel('CampaignState', CampaignUnavailable, CampaignHelp);
-    CampaignButton = Group.AddButton('CampaignJourney', ConnectCampaignText, CampaignHelp, OpenCampaignText, CampaignClicked);
-    Group.AddLabel('AutomaticReminders', class'TNB_AvengerJourneyPrompt'.default.bEnableAutomaticInvitations ? "Automatic invitation: enabled on the idle Avenger" : RemindersDisabledText, CampaignHelp);
-    if (bCampaignMode) ReminderCampaignID = class'TNB_CampaignService'.static.CampaignID();
-    Group.AddCheckbox('SuppressReminder', SuppressText, SuppressHelp, bCampaignMode && class'XComGameState_TNBPromptPreference'.static.IsSuppressed(), ReminderSaved).SetEditable(bCampaignMode);
-    Group = Page.AddGroup('LinkingBonuses', "Linking bonuses");
+    RefreshButton = Group.AddButton('Refresh', CompanionChecking, CompanionHelp $ " " $ RefreshHelp, RefreshText, RefreshClicked);
+    TestButton = Group.AddButton('Test', ServiceChecking, ServiceHelp $ " " $ TestHelp, TestText, TestClicked);
+    // Most-used setting stays immediately below the two live status/action rows.
+    Group = Page.AddGroup('LinkingBonuses', LinkingBonusGroup);
     if (class'X2ExperienceConfig'.default.bUseFullXpSystem)
         Group.AddLabel('DejaVuUnsupported', "Deja Vu inactive: this overhaul uses the full-XP system", "The local bonus supports WOTC kill-credit progression, not a replacement full-XP economy.");
     Group.AddSlider('DejaVuPercent', "Deja Vu bonus promotion XP (%)", "Default 5%. Set to 0% to disable future bonus XP for all holders. Changes affect future earnings only; links, the passive and previously earned credit are retained. No Ability Points or online XP.", 0, 100, 1, Clamp(class'TNB_DejaVuConfig'.default.BonusPercent, 0, 100), DejaVuPercentSaved);
-    Group = Page.AddGroup('Reporting', "Gameplay reporting");
-    ReportingLabel = Group.AddLabel('ReportingState', "Reading saved capture state...", "Captured in this save, durably queued in the companion, and accepted online are separate stages. Remote history and handed-off reports do not rewind with a save. No client-authored XP is reported.");
+    bCampaignMode = GameMode == eGameMode_Strategy && class'UITNBCampaignJourney'.static.CanOpen(ParentScreen);
+    Group = Page.AddGroup('Campaign', CampaignGroup);
+    if (!class'TNB_AvengerJourneyPrompt'.default.bEnableAutomaticInvitations)
+        Group.AddLabel('AutomaticReminders', RemindersDisabledText, CampaignHelp);
+    if (bCampaignMode) ReminderCampaignID = class'TNB_CampaignService'.static.CampaignID();
+    Group.AddCheckbox('SuppressReminder', SuppressText, SuppressHelp, bCampaignMode && class'XComGameState_TNBPromptPreference'.static.IsSuppressed(), ReminderSaved).SetEditable(bCampaignMode);
+    Group = Page.AddGroup('ConnectionDetails', DetailsGroup);
+    JourneyLabel = Group.AddLabel('Journey', JourneyUnavailable, JourneyHelp);
+    JourneyCommanderLabel = Group.AddLabel('JourneyCommander', JourneyUnavailable, "Companion's configured commander and last-observed Journey state. Test fetches fresh service metadata; Refresh reads the companion cache. View the loaded campaign association and saved bonuses under Avenger > Command > The Name Beneath.");
+    StoredIndicator = Group.AddCheckbox('CredentialStored', CredentialChecking, CredentialHelp, false);
+    StoredIndicator.SetEditable(false);
+    JourneyIdentityLabel = Group.AddLabel('JourneyIdentity', JourneyUnavailable, "The title is a display label; Journey IDs remain the binding keys. View full names and saved commander bonuses under Avenger > Command > The Name Beneath.");
+    Group = Page.AddGroup('Reporting', "Gameplay reporting diagnostics");
+    ReportingRefresh = Group.AddButton('ReportingRefresh', "Reports: reading saved capture state...", "Refresh reporting for this loaded campaign. Captured, queued and accepted are separate stages; online history does not rewind with a save. No client-authored XP is reported.", "Refresh", ReportingRefreshClicked);
     ReportingQueueLabel = Group.AddLabel('ReportingQueue', "Companion queue: not checked", "Queue counts are scoped to the loaded campaign/Journey, not another campaign's reports.");
     ReportingAcceptedLabel = Group.AddLabel('ReportingAccepted', "Online acceptance: not checked", "Only validated API receipts count as accepted. A receipt does not contain an XP award amount.");
     ReportingClockLabel = Group.AddLabel('ReportingClock', "Capture clock: not initialized", "The companion verifies the local timezone. Native history transitions wait for a verified committed-frame clock sample.");
     ReportingDiagnosticLabel = Group.AddLabel('ReportingDiagnostic', "Reporting diagnostics: none", "Keep held/corrupt/conflicting records for diagnosis. Do not delete journals or mint replacement event IDs.");
-    ReportingRefresh = Group.AddButton('ReportingRefresh', "Refresh reporting", "Read status for this loaded campaign and Journey.", "Refresh", ReportingRefreshClicked);
     ReportingRetry = Group.AddButton('ReportingRetry', "Retry eligible reports", "Retry network/credential/lifecycle-paused records after you resolve the cause. Conflicts and invalid reports remain held; this never starts/reopens a Journey.", "Retry eligible", ReportingRetryClicked);
-    UpdateCampaignControls();
     Page.ShowSettings();
     StartRequest("status");
     StartReporting("events_status");
@@ -89,7 +81,7 @@ private function StartReporting(string Operation)
     Campaign = class'XComGameState_TNBCampaignLink'.static.Get();
     if (Campaign == none)
     {
-        ReportingLabel.SetLabel("Associate this campaign with a Journey to enable future gameplay reporting.");
+        ReportingRefresh.SetLabel("Reports: no campaign Journey linked");
         ReportingQueueLabel.SetLabel("Companion queue: no loaded campaign association");
         ReportingAcceptedLabel.SetLabel("Online acceptance: no loaded campaign association");
         ReportingClockLabel.SetLabel("Capture clock: not initialized");
@@ -97,8 +89,8 @@ private function StartReporting(string Operation)
     }
     Outbox = class'XComGameState_TNBEventOutbox'.static.Get();
     Ledger = class'XComGameState_TNBEventLedger'.static.Get();
-    Text = "Captured in this save, not handed off: " $ (Outbox == none ? 0 : Outbox.Reports.Length);
-    ReportingLabel.SetLabel(class'TNB_Types'.static.EscapeUI(Text));
+    Text = "Reports awaiting companion: " $ (Outbox == none ? 0 : Outbox.Reports.Length);
+    ReportingRefresh.SetLabel(class'TNB_Types'.static.EscapeUI(Text));
     ReportingQueueLabel.SetLabel("Companion queue: checking...");
     if (Ledger != none) ReportingClockLabel.SetLabel("Capture clock zone: " $ (Ledger.ClockZone == "" ? "waiting for companion handshake" : Ledger.ClockZone));
     ReportingRefresh.SetEditable(false); ReportingRetry.SetEditable(false);
@@ -120,8 +112,8 @@ function ReportingComplete(JsonObject Result, string ErrorCode)
     if (ParentScreen == none) return;
     ReportingRefresh.SetEditable(true); ReportingRetry.SetEditable(true);
     Outbox = class'XComGameState_TNBEventOutbox'.static.Get();
-    Text = "Captured in this save, not handed off: " $ (Outbox == none ? 0 : Outbox.Reports.Length);
-    ReportingLabel.SetLabel(class'TNB_Types'.static.EscapeUI(Text));
+    Text = "Reports awaiting companion: " $ (Outbox == none ? 0 : Outbox.Reports.Length);
+    ReportingRefresh.SetLabel(class'TNB_Types'.static.EscapeUI(Text));
     Text = "";
     if (ErrorCode != "" || Result == none)
     {
@@ -131,7 +123,7 @@ function ReportingComplete(JsonObject Result, string ErrorCode)
     }
     else
     {
-        ReportingQueueLabel.SetLabel("Companion: " $ Result.GetIntValue("queued") $ " queued, " $ Result.GetIntValue("retrying") $ " retrying, " $ Result.GetIntValue("paused") $ " paused, " $ Result.GetIntValue("held") $ " held");
+        ReportingQueueLabel.SetLabel("Delivery queue: " $ Result.GetIntValue("queued") $ " queued, " $ Result.GetIntValue("retrying") $ " retrying, " $ Result.GetIntValue("paused") $ " paused, " $ Result.GetIntValue("held") $ " held");
         ReportingAcceptedLabel.SetLabel("Accepted online: " $ Result.GetIntValue("accepted") $ "; last: " $ (Result.GetStringValue("last_accepted_at") == "" ? "none" : Result.GetStringValue("last_accepted_at")));
         Text = Result.GetStringValue("last_error");
         if (Result.GetIntValue("endpoint_damaged_files") > 0 || Result.GetIntValue("endpoint_replay_conflicts") > 0)
@@ -161,38 +153,12 @@ function ReminderSaved(MCM_API_Setting Setting, bool Suppress)
     if (ReminderCampaignID == class'TNB_CampaignService'.static.CampaignID()) class'XComGameState_TNBPromptPreference'.static.SetSuppressed(Suppress);
 }
 
-function CampaignClicked(MCM_API_Setting Setting)
-{
-    if (!bCampaignMode) return;
-    class'UITNBCampaignJourney'.static.Open(ParentScreen);
-}
-
-private function UpdateCampaignControls()
-{
-    local XComGameState_TNBCampaignLink Link;
-    CampaignButton.SetEditable(bCampaignMode);
-    if (!bCampaignMode) { CampaignLabel.SetLabel(CampaignUnavailable); return; }
-    Link = class'XComGameState_TNBCampaignLink'.static.Get();
-    if (Link == none)
-    {
-        CampaignLabel.SetLabel(CampaignDisconnected);
-        CampaignButton.SetLabel(ConnectCampaignText);
-    }
-    else
-    {
-        CampaignLabel.SetLabel("Campaign Journey: " $ class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.Compact(class'TNB_Types'.static.DisplayTitle(class'XComGameState_TNBJourneyLabel'.static.Title(Link)), 64)));
-        CampaignButton.SetLabel(ViewCommanderText);
-    }
-    // The label is refreshed on page rebuild/Refresh/Test; the action always reads the loaded save.
-}
-
 private function StartRequest(string Operation)
 {
     if (Request != none || ParentScreen == none) return;
-    UpdateCampaignControls();
     SetBusy(true);
-    CompanionLabel.SetLabel(CompanionChecking);
-    ServiceLabel.SetLabel(ServiceChecking);
+    RefreshButton.SetLabel(CompanionChecking);
+    TestButton.SetLabel(ServiceChecking);
     StoredIndicator.SetLabel(CredentialChecking);
     Request = ParentScreen.Spawn(class'TNB_LoopbackClient');
     if (Request == none)
@@ -214,13 +180,11 @@ function Complete(JsonObject Result, string ErrorCode)
     Request = none;
     if (ParentScreen == none) return;
     SetBusy(false);
+    RefreshButton.SetLabel(CompanionStateText(Result != none, ErrorCode));
+    TestButton.SetLabel(JourneyConnectionText(Result, ErrorCode));
     if (Result == none)
     {
         // No companion response cannot establish vault or API state. Do not claim deletion.
-        if (ErrorCode == "companion_timeout") CompanionLabel.SetLabel(CompanionTimeout);
-        else if (ErrorCode == "companion_protocol_mismatch") CompanionLabel.SetLabel(CompanionIncompatible);
-        else CompanionLabel.SetLabel(CompanionUnavailable);
-        ServiceLabel.SetLabel(ServiceUnknown);
         JourneyLabel.SetLabel(JourneyUnavailable);
         JourneyCommanderLabel.SetLabel(JourneyUnavailable);
         JourneyIdentityLabel.SetLabel("Journey ID: unavailable");
@@ -228,22 +192,33 @@ function Complete(JsonObject Result, string ErrorCode)
         return;
     }
 
-    // A valid error response still proves that the companion is reachable.
-    CompanionLabel.SetLabel(CompanionConnected);
     StoredIndicator.SetLabel(CredentialStored);
     StoredIndicator.SetValue(Result.GetBoolValue("credential_stored"), true);
-    if (ErrorCode != "" && Result.GetStringValue("connection") == "connected")
-        ServiceLabel.SetLabel(ServiceUnableToVerify);
-    else ServiceLabel.SetLabel(ServiceStateText(Result.GetStringValue("connection")));
     if (Result.GetStringValue("journey_id") == "") JourneyLabel.SetLabel(JourneyUnavailable);
     else JourneyLabel.SetLabel("Journey (last observed): " $ class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.Compact(class'TNB_Types'.static.DisplayTitle(Result.GetStringValue("journey_title")), 64)));
     JourneyCommanderLabel.SetLabel(CommanderPrefix $ class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.Compact(Result.GetStringValue("commander_name"), 48)) $ " / " $ JourneyStateText(Result.GetStringValue("journey_status")));
     JourneyIdentityLabel.SetLabel("Journey ID: " $ class'TNB_Types'.static.EscapeUI(Result.GetStringValue("journey_id")));
     if (bCampaignMode) class'XComGameState_TNBJourneyLabel'.static.Observe(Result);
-    UpdateCampaignControls();
 }
 
-private function string ServiceStateText(string State)
+// Pure presentation helpers: a responsive companion can still have a rejected
+// Journey credential or failed online test. Never equate those two connections.
+function string CompanionStateText(bool HasResponse, string ErrorCode)
+{
+    if (HasResponse) return CompanionConnected;
+    if (ErrorCode == "companion_timeout") return CompanionTimeout;
+    if (ErrorCode == "companion_protocol_mismatch") return CompanionIncompatible;
+    return CompanionUnavailable;
+}
+
+function string JourneyConnectionText(JsonObject Result, string ErrorCode)
+{
+    if (Result == none) return ServiceUnknown;
+    if (ErrorCode != "" && Result.GetStringValue("connection") == "connected") return ServiceUnableToVerify;
+    return ServiceStateText(Result.GetStringValue("connection"));
+}
+
+function string ServiceStateText(string State)
 {
     switch (State)
     {
