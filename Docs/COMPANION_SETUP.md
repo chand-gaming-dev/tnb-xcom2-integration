@@ -1,6 +1,6 @@
 # Companion, campaign Journey and Armory integration
 
-**Mod 0.9.6 development update:** campaign Journey linking and saved commander
+**Mod 0.9.6 accepted update:** campaign Journey linking and saved commander
 bonuses are under **Avenger > Command > The Name Beneath**. MCM has status,
 reporting controls, reminder settings and the Deja Vu slider, but no linking/view
 button. The automatic invitation remains. Companion 0.10.4 and its release assets
@@ -8,7 +8,8 @@ are unchanged. MCM's first rows are Companion status with Refresh and Journey
 status with Test, then the Deja Vu slider. The status text updates on opening or
 explicit Refresh/Test, not a new background poll; Test performs online verification.
 Credential/identity details and reporting diagnostics are grouped below the main
-settings. Native acceptance is pending; see [Command-menu testing](COMMAND_MENU_TESTING.md).
+settings. The Product Owner confirmed native acceptance on 2026-10-25;
+the Workshop update is pending upload. See [Command-menu testing](COMMAND_MENU_TESTING.md).
 Published mod 0.9.5 retains its earlier MCM route; older notes below are historical.
 
 Players: subscribe to [[WOTC] The Name Beneath on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674)

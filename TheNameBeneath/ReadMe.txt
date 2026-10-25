@@ -39,6 +39,7 @@ or modded rank tracks remain subject to the backend's event-based XP fallback.
 No historical events/queues are re-keyed; no credential or companion update is needed.
 See Docs/PROMOTION_OCCURRENCE_TESTING.md for the focused acceptance checklist.
 
+Earlier invitation implementation notes (historical; manual fallback is now Command):
 Automatic Journey invitation is restored as a controlled test. On the quiet Avenger,
 Review Journey opens the existing commander preview/confirmation directly, without
 MCM. Not now makes no saved/remote changes and defers this campaign for the current

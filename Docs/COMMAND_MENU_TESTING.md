@@ -1,8 +1,9 @@
 # Command-menu Journey access - mod 0.9.6
 
-Branch: `feature/command-menu-journey`. Companion 0.10.4 is unchanged. This is a
-development update, not a new Workshop publication or companion release. Do not
-merge or publish until the Product Owner confirms native acceptance.
+Developed on `feature/command-menu-journey`. Companion 0.10.4 is unchanged.
+The Product Owner confirmed native acceptance and authorized merge/branch cleanup
+on 2026-10-25. Workshop upload remains with the Product Owner and is pending.
+The dated sections below retain the earlier testing/install chronology.
 
 ## Change
 
@@ -53,7 +54,7 @@ Keep backups and use a pre-link save and a linked save; no mission replay requir
 4. Reload linked and unlinked saves in the same session, then restart XCOM. Check
    correct routing, exactly one menu entry, no crash or delayed Research/Engineering
    navigation. The automatic invitation and Not now should still work.
-5. MCM: no Journey linking/view button; current status and navigation hint visible.
+5. MCM: no Journey linking/view button or duplicated campaign identity/navigation rows.
    Companion and Journey status are inline with Refresh/Test, and the Deja Vu
    percentage is visible near the top without scrolling past diagnostics. Refresh
    updates local/cached status; Test performs online verification. Close/restart the
@@ -105,7 +106,7 @@ for a less cluttered MCM layout. The same 0.9.6 feature branch now provides:
    Journey Connected means the companion's last reported verification, not a
    continuous online heartbeat. The tooltip explains cached versus live testing.
 2. Deja Vu: the existing percentage slider, immediately below those two rows.
-3. Campaign: saved association, Command navigation hint and reminder preference.
+3. Campaign: reminder preference (redundant identity/navigation rows removed in the follow-up below).
 4. Connection details: last-observed identity/lifecycle, read-only credential
    indicator and Journey ID.
 5. Gameplay reporting diagnostics: awaiting-handoff count alongside Refresh,
@@ -130,3 +131,32 @@ Current installed script SHA-256 (supersedes the prior test build above):
 
 Native MCM layout/readability, live Refresh/Test updates and unchanged setting-save
 behavior still need Product Owner verification. No merge or publication.
+
+## Remove redundant Campaign Journey rows - 2026-10-24
+
+After reviewing the compact layout in game, the Product Owner requested removal
+of the first two Campaign Journey rows: the loaded Journey title and Command-menu
+navigation hint. Campaign Journey now contains the existing reminder preference
+(and the configuration-disabled warning, when applicable). Journey name, commander,
+lifecycle, credential indicator and ID remain in the lower connection details.
+The Command menu remains the place to connect a campaign and view saved bonuses.
+No settings, links, gameplay mappings or companion behavior changed.
+
+The release-mode mod compiled with zero errors/warnings. All six focused probes
+(MCM, Command menu, invitation, Deja Vu, presentation and gameplay fixes) passed;
+the mapping probe confirmed no SDK-only test fixture in the gameplay package.
+Static checks confirmed removal of both rows and retention of the reminder,
+connection buttons, Deja Vu slider and lower identity details.
+
+With XCOM closed, the local development copy was updated and hash-verified.
+All 48 shipped mappings and five local overrides remained byte-identical, as did
+the uploader ID. The companion, Workshop copy and saved data were not changed.
+Previous installed files are backed up under ignored
+`Artifacts/InstallBackups/MCMReminder-20261024`.
+
+Current installed script SHA-256 (supersedes prior builds above):
+`C98044DCE714DBEB12DA1002F267ABC707A2F62BC23AEF468E79FDEEC39CAB28`.
+The Product Owner confirmed the final row removal in game on 2026-10-25, accepted
+the completed UI update and authorized pushing/merging to main, deleting the feature
+branch after verification, and preparing mod 0.9.6 for their Workshop upload.
+This does not claim additional gameplay coverage beyond the existing alpha tests.
