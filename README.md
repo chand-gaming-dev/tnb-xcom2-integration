@@ -3,6 +3,11 @@
 An unofficial XCOM 2: War of the Chosen mod and Windows companion connecting a
 campaign, its commander and selected soldiers to a Journey in The Name Beneath.
 
+**Development update: mod 0.9.6** moves manual Journey linking and the saved
+commander-bonuses view to **Avenger > Command > The Name Beneath**, removing that
+action from MCM. Native acceptance is pending; this update is not yet merged or
+published. Companion 0.10.4 is unchanged. See [Command-menu testing](Docs/COMMAND_MENU_TESTING.md).
+
 **Alpha:** mod **0.9.5**, companion **0.10.4**. The companion is distributed through
 [GitHub Releases](https://github.com/chand-gaming-dev/tnb-xcom2-integration/releases/tag/companion-v0.10.4-alpha.1);
 the mod is listed as [[WOTC] The Name Beneath on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3826279674).
@@ -76,11 +81,14 @@ checklist](Docs/RELEASE_CHECKLIST.md).
    invitation. Review and explicitly confirm commander effects. An Upcoming Journey
    can be started with your confirmation; a Finished Journey is not reopened
    automatically. **Not now** applies nothing and dismisses the invitation for this
-   play session. MCM > The Name Beneath > Campaign Journey is the manual fallback
+   play session. Avenger > Command > The Name Beneath is the manual fallback
    and lets you review saved commander bonuses afterward.
 3. Optionally link soldiers from the Armory. Commander-only play is supported.
    **Traits & Abilities** shows each linked soldier's effects and missing providers.
 4. Keep the companion running for linking and online reporting; save your campaign.
+
+The Command-menu route above applies to the development 0.9.6 update. Published
+mod 0.9.5 still uses MCM > The Name Beneath > Campaign Journey for manual access.
 
 Closing the companion does **not** close XCOM or remove saved links and bonuses.
 Gameplay reports can be captured in the campaign save while it is offline;

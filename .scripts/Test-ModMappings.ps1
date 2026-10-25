@@ -2,7 +2,8 @@ param(
     [string] $SdkPath = 'D:\Steam\steamapps\common\XCOM 2 War of the Chosen SDK',
     [string] $GamePath = 'D:\Steam\steamapps\common\XCOM 2\XCom2-WarOfTheChosen',
     [string[]] $Probes = @('TNB_MappingProbeCommandlet'),
-    [switch] $All
+    [switch] $All,
+    [switch] $DebugScripts
 )
 
 # Offline compile/probes only. Deliberately never calls InvokeBuild/_FinalCopy.
@@ -13,6 +14,7 @@ if ($All) {
 }
 . (Join-Path $PSScriptRoot 'X2ModBuildCommon\build_common.ps1')
 $builder = [BuildProject]::new('TheNameBeneath', $projectPath, $SdkPath, $GamePath)
+if ($DebugScripts) { $builder.EnableDebug() }
 $builder._ConfirmPaths()
 $builder._SetupUtils()
 $expectedStage = [IO.Path]::GetFullPath((Join-Path $SdkPath 'XComGame\Mods\TheNameBeneath'))

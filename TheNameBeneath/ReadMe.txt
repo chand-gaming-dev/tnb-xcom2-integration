@@ -1,4 +1,11 @@
-The Name Beneath - mod 0.9.5 / XCom 2 companion 0.10.4
+The Name Beneath - mod 0.9.6 / XCom 2 companion 0.10.4
+
+Use Avenger > Command > The Name Beneath to link an unlinked campaign or view
+the saved commander bonuses for a linked campaign, including offline. Linking
+still requires the existing explicit confirmation. MCM no longer opens Journey
+setup or commander screens; it retains connection/reporting status, reminder
+preferences and the Deja Vu percentage. The automatic Avenger invitation remains.
+No companion update, relink, mapping migration or repeated reward is required.
 
 Deja Vu has one MCM setting: its bonus XP percentage (default 5%). Set it to 0%
 to stop future bonus XP for all holders, without removing links, the passive or
@@ -14,8 +21,8 @@ Promotion reports now retain their verified reporting time zone. A loaded save c
 recover the known missing-zone promotion reports without replaying a mission or
 changing their original event identity/time/facts. Other held reports remain held.
 Quick Learner names its recipients after association and in the commander screen.
-Deja Vu is shown before soldier linking only when automatic granting is enabled
-in MCM. Normal companion launch uses https://thenamebeneath.com/ without a Replit key.
+Deja Vu's active bonus is shown before soldier linking when its percentage is
+above zero. Normal companion launch uses https://thenamebeneath.com/ without a Replit key.
 
 New rank increases get a saved occurrence ID rather than a rank-only event key.
 Replaying a real promotion from a pre-promotion save can therefore create another

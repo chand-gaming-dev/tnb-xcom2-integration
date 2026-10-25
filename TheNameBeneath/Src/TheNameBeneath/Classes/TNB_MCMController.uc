@@ -1,4 +1,4 @@
-// Connection status plus campaign-only Journey setup. Secrets stay in the companion.
+// Status, diagnostics and settings only. Campaign linking lives under Command.
 class TNB_MCMController extends Object;
 
 var UIScreen ParentScreen;
@@ -10,7 +10,6 @@ var MCM_API_Label JourneyIdentityLabel, JourneyCommanderLabel;
 var MCM_API_Checkbox StoredIndicator;
 var MCM_API_Button RefreshButton;
 var MCM_API_Button TestButton;
-var MCM_API_Button CampaignButton;
 var MCM_API_Label CampaignLabel;
 var string ReminderCampaignID;
 var bool bCampaignMode;
@@ -25,8 +24,8 @@ var localized string ServiceChecking, ServiceVerified, ServiceUnverified, Servic
 var localized string JourneyUnavailable, CommanderPrefix, JourneyPrefix, JourneyUpcoming, JourneyStarted, JourneyFinished, JourneyUnknown, JourneyHelp;
 var localized string CredentialStored, CredentialChecking, CredentialUnavailable, CredentialHelp;
 var localized string RefreshTitle, RefreshText, RefreshHelp, TestTitle, TestText, TestHelp;
-var localized string CampaignGroup, CampaignDisconnected, CampaignConnected, CampaignUnavailable, CampaignHelp, ConnectCampaignText, SuppressText, SuppressHelp;
-var localized string ViewCommanderText, OpenCampaignText, RemindersDisabledText;
+var localized string CampaignGroup, CampaignDisconnected, CampaignUnavailable, CampaignHelp, CommandMenuHint, SuppressText, SuppressHelp;
+var localized string RemindersDisabledText;
 
 function BuildPage(MCM_API_Instance API, int GameMode)
 {
@@ -40,7 +39,7 @@ function BuildPage(MCM_API_Instance API, int GameMode)
     ServiceLabel = Group.AddLabel('JourneyConnection', ServiceChecking, ServiceHelp);
     JourneyLabel = Group.AddLabel('Journey', JourneyUnavailable, JourneyHelp);
     JourneyCommanderLabel = Group.AddLabel('JourneyCommander', JourneyUnavailable, "Commander and last-observed Journey state. Test connection fetches fresh service metadata; Refresh reads the companion cache.");
-    JourneyIdentityLabel = Group.AddLabel('JourneyIdentity', JourneyUnavailable, "The title is a display label; Journey IDs remain the binding keys. Full names and saved commander bonuses are available under View Commander & Bonuses.");
+    JourneyIdentityLabel = Group.AddLabel('JourneyIdentity', JourneyUnavailable, "The title is a display label; Journey IDs remain the binding keys. View full names and saved commander bonuses under Avenger > Command > The Name Beneath.");
     StoredIndicator = Group.AddCheckbox('CredentialStored', CredentialChecking, CredentialHelp, false);
     StoredIndicator.SetEditable(false);
     RefreshButton = Group.AddButton('Refresh', RefreshTitle, RefreshHelp, RefreshText, RefreshClicked);
@@ -48,7 +47,7 @@ function BuildPage(MCM_API_Instance API, int GameMode)
     bCampaignMode = GameMode == eGameMode_Strategy && class'UITNBCampaignJourney'.static.CanOpen(ParentScreen);
     Group = Page.AddGroup('Campaign', CampaignGroup);
     CampaignLabel = Group.AddLabel('CampaignState', CampaignUnavailable, CampaignHelp);
-    CampaignButton = Group.AddButton('CampaignJourney', ConnectCampaignText, CampaignHelp, OpenCampaignText, CampaignClicked);
+    Group.AddLabel('CampaignNavigation', CommandMenuHint, CampaignHelp);
     Group.AddLabel('AutomaticReminders', class'TNB_AvengerJourneyPrompt'.default.bEnableAutomaticInvitations ? "Automatic invitation: enabled on the idle Avenger" : RemindersDisabledText, CampaignHelp);
     if (bCampaignMode) ReminderCampaignID = class'TNB_CampaignService'.static.CampaignID();
     Group.AddCheckbox('SuppressReminder', SuppressText, SuppressHelp, bCampaignMode && class'XComGameState_TNBPromptPreference'.static.IsSuppressed(), ReminderSaved).SetEditable(bCampaignMode);
@@ -64,7 +63,7 @@ function BuildPage(MCM_API_Instance API, int GameMode)
     ReportingDiagnosticLabel = Group.AddLabel('ReportingDiagnostic', "Reporting diagnostics: none", "Keep held/corrupt/conflicting records for diagnosis. Do not delete journals or mint replacement event IDs.");
     ReportingRefresh = Group.AddButton('ReportingRefresh', "Refresh reporting", "Read status for this loaded campaign and Journey.", "Refresh", ReportingRefreshClicked);
     ReportingRetry = Group.AddButton('ReportingRetry', "Retry eligible reports", "Retry network/credential/lifecycle-paused records after you resolve the cause. Conflicts and invalid reports remain held; this never starts/reopens a Journey.", "Retry eligible", ReportingRetryClicked);
-    UpdateCampaignControls();
+    UpdateCampaignStatus();
     Page.ShowSettings();
     StartRequest("status");
     StartReporting("events_status");
@@ -161,35 +160,26 @@ function ReminderSaved(MCM_API_Setting Setting, bool Suppress)
     if (ReminderCampaignID == class'TNB_CampaignService'.static.CampaignID()) class'XComGameState_TNBPromptPreference'.static.SetSuppressed(Suppress);
 }
 
-function CampaignClicked(MCM_API_Setting Setting)
-{
-    if (!bCampaignMode) return;
-    class'UITNBCampaignJourney'.static.Open(ParentScreen);
-}
-
-private function UpdateCampaignControls()
+private function UpdateCampaignStatus()
 {
     local XComGameState_TNBCampaignLink Link;
-    CampaignButton.SetEditable(bCampaignMode);
     if (!bCampaignMode) { CampaignLabel.SetLabel(CampaignUnavailable); return; }
     Link = class'XComGameState_TNBCampaignLink'.static.Get();
     if (Link == none)
     {
         CampaignLabel.SetLabel(CampaignDisconnected);
-        CampaignButton.SetLabel(ConnectCampaignText);
     }
     else
     {
         CampaignLabel.SetLabel("Campaign Journey: " $ class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.Compact(class'TNB_Types'.static.DisplayTitle(class'XComGameState_TNBJourneyLabel'.static.Title(Link)), 64)));
-        CampaignButton.SetLabel(ViewCommanderText);
     }
-    // The label is refreshed on page rebuild/Refresh/Test; the action always reads the loaded save.
+    // Read-only status, refreshed on page rebuild/Refresh/Test.
 }
 
 private function StartRequest(string Operation)
 {
     if (Request != none || ParentScreen == none) return;
-    UpdateCampaignControls();
+    UpdateCampaignStatus();
     SetBusy(true);
     CompanionLabel.SetLabel(CompanionChecking);
     ServiceLabel.SetLabel(ServiceChecking);
@@ -240,7 +230,7 @@ function Complete(JsonObject Result, string ErrorCode)
     JourneyCommanderLabel.SetLabel(CommanderPrefix $ class'TNB_Types'.static.EscapeUI(class'TNB_Types'.static.Compact(Result.GetStringValue("commander_name"), 48)) $ " / " $ JourneyStateText(Result.GetStringValue("journey_status")));
     JourneyIdentityLabel.SetLabel("Journey ID: " $ class'TNB_Types'.static.EscapeUI(Result.GetStringValue("journey_id")));
     if (bCampaignMode) class'XComGameState_TNBJourneyLabel'.static.Observe(Result);
-    UpdateCampaignControls();
+    UpdateCampaignStatus();
 }
 
 private function string ServiceStateText(string State)
